@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { completeOnboarding } from "./actions";
 import { getServerMessages } from "@/lib/i18n/messages";
+import { UsernameField } from "@/components/UsernameField";
 
 export default async function Onboarding({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
@@ -29,7 +30,7 @@ export default async function Onboarding({ searchParams }: { searchParams: Promi
             <p className="text-sm font-semibold flex items-center gap-2 text-gray-900"><span className="h-6 w-6 rounded-full bg-[#FF6B35] text-white flex items-center justify-center text-xs">1</span> {msg.onboarding.step1}</p>
             <div className="flex items-center gap-2 mt-3">
               <span className="text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-2">bizko.co/</span>
-              <input name="username" required pattern="[a-z0-9_]{3,30}" placeholder="tonnom" className="flex-1 h-11 rounded-lg border border-gray-200 bg-white px-4 text-sm outline-none focus:border-gray-900" />
+              <UsernameField />
             </div>
             <p className="text-xs text-gray-400 mt-2">{msg.onboarding.usernameHint}</p>
           </div>

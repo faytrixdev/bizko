@@ -86,7 +86,23 @@
     "phonePlaceholder": "+2250700000000",
     "emailPlaceholder": "Public email (optional)",
     "templateMinimal": "Minimal",
-    "templatePortfolio": "Portfolio"
+    "templatePortfolio": "Portfolio",
+    "titlePlaceholder": "Title",
+    "pricePlaceholder": "Price"
+  },
+  "demo": {
+    "createMine": "Create mine",
+    "examplePortfolio": "Example — Portfolio",
+    "service1Title": "Portrait shoot",
+    "service1Price": "75,000 XOF",
+    "service2Title": "Wedding — half day",
+    "service2Price": "250,000 XOF",
+    "service3Title": "Corporate event",
+    "service3Price": "150,000 XOF",
+    "sameLinkQuestion": "Want the same link?",
+    "sameLinkSubtitle": "Your Bizko in 3 minutes, free.",
+    "sameLinkCta": "Create my free Bizko",
+    "photoLabel": "Photo"
   },
   "profile": {
     "services": "Services",

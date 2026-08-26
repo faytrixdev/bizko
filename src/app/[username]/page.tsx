@@ -3,6 +3,7 @@ import { buildWaLink, buildMainWaMessage, buildServiceWaMessage } from "@/lib/ut
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getServerMessages } from "@/lib/i18n/messages";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -56,6 +57,8 @@ export default async function PublicProfile({ params }: Props) {
 
   supabase.from("events").insert({ profile_id: profile.id, type: "view" }).then(() => {});
 
+  const msg = await getServerMessages();
+
   const mainWaRaw = buildWaLink(profile.phone_e164, buildMainWaMessage(profile.display_name));
   const telLink = `tel:${profile.phone_e164}`;
   const isPortfolio = profile.template === "portfolio";
@@ -84,7 +87,7 @@ export default async function PublicProfile({ params }: Props) {
             <p className="text-xs text-gray-500 mt-2">{profile.city}, {profile.country}</p>
             {profile.bio && <p className="text-sm text-gray-600 mt-4 leading-6 text-left bg-gray-50 rounded-lg p-4 border border-gray-200">{profile.bio}</p>}
             <div className="mt-5 flex gap-3">
-              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="flex-1 h-11 rounded-lg bg-[#25D366] text-white font-semibold inline-flex items-center justify-center hover:bg-[#128C7E]">WhatsApp</a>
+              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="flex-1 h-11 rounded-lg bg-[#25D366] text-white font-semibold inline-flex items-center justify-center hover:bg-[#128C7E]">{msg.profile.whatsapp}</a>
               <a href={telLink} className="h-11 w-11 rounded-lg border border-gray-200 bg-white inline-flex items-center justify-center hover:bg-gray-50 text-gray-500">P</a>
             </div>
           </div>
@@ -103,8 +106,8 @@ export default async function PublicProfile({ params }: Props) {
             <p className="mt-3 text-xs tracking-widest uppercase text-gray-400">{profile.city} / {profile.country}</p>
             {profile.bio && <p className="mt-6 text-sm leading-7 text-gray-600 max-w-md border-t border-gray-200 pt-6">{profile.bio}</p>}
             <div className="mt-6 w-full max-w-[400px] flex flex-col gap-2">
-              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-11 w-full rounded-lg bg-[#25D366] text-white font-semibold inline-flex items-center justify-center hover:bg-[#128C7E]">WhatsApp — {profile.display_name.split(" ")[0]}</a>
-              <a href={telLink} className="h-10 w-full rounded-lg border border-gray-200 bg-white text-sm font-medium inline-flex items-center justify-center hover:bg-gray-50 text-gray-700">Appeler</a>
+              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-11 w-full rounded-lg bg-[#25D366] text-white font-semibold inline-flex items-center justify-center hover:bg-[#128C7E]">{msg.profile.whatsapp} — {profile.display_name.split(" ")[0]}</a>
+              <a href={telLink} className="h-10 w-full rounded-lg border border-gray-200 bg-white text-sm font-medium inline-flex items-center justify-center hover:bg-gray-50 text-gray-700">{msg.profile.call}</a>
             </div>
           </div>
         )}
@@ -113,7 +116,7 @@ export default async function PublicProfile({ params }: Props) {
         {services && services.length > 0 && (
           <div className="mt-6">
             <h2 className={`font-bold font-display px-1 mb-3 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
-              Services
+              {msg.profile.services}
             </h2>
             {isPortfolio ? (
               <div className="rounded-xl border border-gray-200 p-4 sm:p-5 grid gap-2.5">
@@ -126,7 +129,7 @@ export default async function PublicProfile({ params }: Props) {
                         {s.description && <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{s.description}</p>}
                         {s.price != null && <p className="text-sm font-bold text-[#FF6B35] mt-2">{s.price.toLocaleString()} {s.currency}</p>}
                       </div>
-                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="self-center shrink-0 h-9 px-4 rounded-lg bg-[#FF6B35] text-white text-xs font-semibold hover:bg-[#EA580C]">Demander</a>
+                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="self-center shrink-0 h-9 px-4 rounded-lg bg-[#FF6B35] text-white text-xs font-semibold hover:bg-[#EA580C]">{msg.profile.demandBtn}</a>
                     </div>
                   );
                 })}
@@ -142,7 +145,7 @@ export default async function PublicProfile({ params }: Props) {
                         {s.description && <p className="text-sm text-gray-500 mt-0.5">{s.description}</p>}
                         {s.price != null && <p className="text-sm text-gray-400 mt-1">{s.price.toLocaleString()} {s.currency}</p>}
                       </div>
-                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="shrink-0 text-xs font-semibold text-gray-900 underline underline-offset-4 decoration-gray-300 hover:decoration-gray-900">WhatsApp</a>
+                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="shrink-0 text-xs font-semibold text-gray-900 underline underline-offset-4 decoration-gray-300 hover:decoration-gray-900">{msg.profile.whatsapp}</a>
                     </div>
                   );
                 })}
@@ -155,7 +158,7 @@ export default async function PublicProfile({ params }: Props) {
         {portfolio && portfolio.length > 0 && (
           <div className="mt-6">
             <h2 className={`font-bold font-display px-1 mb-3 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
-              Realisations
+              {msg.profile.portfolio}
             </h2>
             <div className={isPortfolio ? "grid grid-cols-2 gap-2.5" : "grid grid-cols-3 gap-2"}>
               {portfolio.map((p) => (
@@ -178,7 +181,7 @@ export default async function PublicProfile({ params }: Props) {
         {socials && socials.length > 0 && (
           <div className="mt-6">
             <h2 className={`font-bold font-display px-1 mb-3 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
-              Retrouver
+              {msg.profile.socials}
             </h2>
             {isPortfolio ? (
               <div className="flex flex-wrap gap-2">
@@ -198,14 +201,14 @@ export default async function PublicProfile({ params }: Props) {
 
         {/* Footer */}
         <p className="text-center text-xs text-gray-400 mt-10">
-          Fait avec <Link href="/" className="font-medium text-[#FF6B35]">Bizko</Link> — bizko.co/{profile.username}
+          {msg.profile.madeWith} <Link href="/" className="font-medium text-[#FF6B35]">Bizko</Link> — bizko.co/{profile.username}
         </p>
       </div>
 
       {/* Sticky WhatsApp CTA — mobile only */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white p-4 flex justify-center sm:hidden z-50">
         <a href={trackClick("click_sticky", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-12 w-full max-w-[640px] rounded-lg bg-[#25D366] text-white font-semibold inline-flex items-center justify-center">
-          Discuter sur WhatsApp
+          {msg.profile.stickyWa}
         </a>
       </div>
     </div>

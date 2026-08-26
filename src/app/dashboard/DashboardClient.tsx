@@ -5,16 +5,9 @@ import Link from "next/link";
 import { logout } from "@/app/(auth)/actions";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
+import { useI18n } from "@/lib/i18n/provider";
 
 type Tab = "apercu" | "services" | "portfolio" | "reseaux" | "reglages";
-
-const TABS: { id: Tab; label: string }[] = [
-  { id: "apercu", label: "Apercu" },
-  { id: "services", label: "Services" },
-  { id: "portfolio", label: "Portfolio" },
-  { id: "reseaux", label: "Reseaux" },
-  { id: "reglages", label: "Reglages" },
-];
 
 interface Profile {
   id: string;
@@ -74,7 +67,16 @@ export function DashboardClient({
   publicUrl,
   error,
 }: DashboardClientProps) {
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("apercu");
+
+  const TABS: { id: Tab; label: string }[] = [
+    { id: "apercu", label: t("dashboard.tabs.apercu") },
+    { id: "services", label: t("dashboard.tabs.services") },
+    { id: "portfolio", label: t("dashboard.tabs.portfolio") },
+    { id: "reseaux", label: t("dashboard.tabs.reseaux") },
+    { id: "reglages", label: t("dashboard.tabs.reglages") },
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -87,11 +89,11 @@ export function DashboardClient({
           <div className="flex items-center gap-3">
             <LocaleSwitch />
             <Link href={`/${profile.username}`} target="_blank" className="text-xs font-medium text-gray-500 hover:text-gray-900">
-              Voir mon profil
+              {t("dashboard.viewProfile")}
             </Link>
             <form action={logout}>
               <button className="text-xs border border-gray-200 bg-white rounded-lg px-3 py-1.5 text-gray-700 hover:bg-gray-50">
-                Deconnexion
+                {t("dashboard.logout")}
               </button>
             </form>
           </div>
@@ -107,17 +109,17 @@ export function DashboardClient({
 
         {/* Tab bar */}
         <nav className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-6">
-          {TABS.map((t) => (
+          {TABS.map((tabItem) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
+              key={tabItem.id}
+              onClick={() => setTab(tabItem.id)}
               className={`flex-1 h-9 rounded-lg text-xs font-medium transition ${
-                tab === t.id
+                tab === tabItem.id
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              {t.label}
+              {tabItem.label}
             </button>
           ))}
         </nav>

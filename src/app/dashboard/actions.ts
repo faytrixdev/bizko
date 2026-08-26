@@ -77,3 +77,29 @@ export async function deletePortfolio(formData: FormData) {
   await supabase.from("portfolio_items").delete().eq("id", id);
   revalidatePath("/dashboard");
 }
+
+export async function reorderServices(orderedIds: string[]) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const updates = orderedIds.map((id, index) =>
+    supabase.from("services").update({ position: index }).eq("id", id).eq("profile_id", user.id)
+  );
+
+  await Promise.all(updates);
+  revalidatePath("/dashboard");
+}
+
+export async function reorderPortfolio(orderedIds: string[]) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const updates = orderedIds.map((id, index) =>
+    supabase.from("portfolio_items").update({ position: index }).eq("id", id).eq("profile_id", user.id)
+  );
+
+  await Promise.all(updates);
+  revalidatePath("/dashboard");
+}

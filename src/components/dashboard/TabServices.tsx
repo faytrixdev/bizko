@@ -1,6 +1,7 @@
 "use client";
 
-import { addService, deleteService } from "@/app/dashboard/actions";
+import { addService } from "@/app/dashboard/actions";
+import { ServiceList } from "./ServiceList";
 import { useI18n } from "@/lib/i18n/provider";
 
 interface Service {
@@ -38,26 +39,7 @@ export function TabServices({ services }: TabServicesProps) {
           </button>
         </form>
       )}
-      <div className="mt-4 flex flex-col gap-2">
-        {services.map((s) => (
-          <div key={s.id} className="flex items-center justify-between border border-gray-200 bg-gray-50 rounded-lg px-3 py-2.5">
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate text-gray-900">{s.title}</p>
-              {s.price != null && (
-                <p className="text-xs text-gray-500">
-                  {s.price.toLocaleString()} {s.currency}
-                </p>
-              )}
-            </div>
-            <form action={deleteService}>
-              <input type="hidden" name="id" value={s.id} />
-              <button className="text-xs text-red-600 hover:underline shrink-0 ml-3">
-                {t("dashboard.delete")}
-              </button>
-            </form>
-          </div>
-        ))}
-      </div>
+      <ServiceList services={services} />
     </div>
   );
 }

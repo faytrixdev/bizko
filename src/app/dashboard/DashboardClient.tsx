@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { logout } from "@/app/(auth)/actions";
-import { LocaleSwitch } from "@/lib/i18n/provider";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 
 type Tab = "apercu" | "services" | "portfolio" | "reseaux" | "reglages";

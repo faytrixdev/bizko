@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LocaleSwitch } from "@/lib/i18n/provider";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 
 export default function Home() {
   return (

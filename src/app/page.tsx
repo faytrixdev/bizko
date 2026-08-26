@@ -45,7 +45,7 @@ export default async function Home() {
             <div className="h-10 w-10 rounded-full bg-gray-900 flex items-center justify-center text-white font-bold text-xs">AD</div>
             <div className="min-w-0">
               <div className="text-sm font-semibold text-gray-900">Aminata Diallo</div>
-              <div className="text-xs text-gray-500">Photographe — Abidjan, CI</div>
+              <div className="text-xs text-gray-500">{msg.landing.previewDescription}</div>
             </div>
             <span className="ml-auto inline-flex h-7 items-center rounded-full bg-[#25D366] px-3 text-[11px] font-medium text-white">{msg.profile.whatsapp}</span>
           </div>

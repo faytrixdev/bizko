@@ -6,7 +6,8 @@
     "cta": "Create my free link",
     "example": "See an example",
     "login": "Log in",
-    "footer": "Bizko 2026"
+    "footer": "Bizko 2026",
+    "previewDescription": "Photographer — Abidjan, CI"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -102,7 +103,11 @@
     "sameLinkQuestion": "Want the same link?",
     "sameLinkSubtitle": "Your Bizko in 3 minutes, free.",
     "sameLinkCta": "Create my free Bizko",
-    "photoLabel": "Photo"
+    "photoLabel": "Photo",
+    "profile": {
+      "tagline": "Photographer in Abidjan",
+      "bio": "I capture your precious moments — weddings, portraits, events. Reply within 2h on WhatsApp."
+    }
   },
   "profile": {
     "services": "Services",

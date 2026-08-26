@@ -23,10 +23,10 @@ export default async function Demo() {
         <div className="rounded-xl border border-gray-200 bg-white p-6 text-center">
           <div className="h-20 w-20 rounded-full bg-gray-900 mx-auto flex items-center justify-center text-white font-bold text-xl">AD</div>
           <h1 className="text-[26px] font-bold font-display mt-3 text-gray-900">Aminata Diallo</h1>
-          <p className="text-sm font-medium text-[#FF6B35] mt-1">Photographe a Abidjan</p>
+          <p className="text-sm font-medium text-[#FF6B35] mt-1">{msg.demo.profile.tagline}</p>
           <p className="text-xs text-gray-500 mt-2">Abidjan, CI</p>
           <p className="text-sm text-gray-600 mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200 text-left">
-            Je capture tes moments precieux — mariage, portrait, evenement. Reponse en 2h sur WhatsApp.
+            {msg.demo.profile.bio}
           </p>
           <div className="mt-5 flex gap-3">
             <span className="flex-1 h-11 rounded-lg bg-[#25D366] text-white font-semibold inline-flex items-center justify-center">{msg.profile.whatsapp}</span>

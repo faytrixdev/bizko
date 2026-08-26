@@ -17,6 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("is_public", true)
     .single();
 
+  // NOTE: Metadata is FR-only for MVP. generateMetadata lacks access to locale context.
+  // Profile data comes from the database; adding a locale field to profiles would enable full i18n.
   if (!profile) return { title: "Profil introuvable — Bizko" };
 
   const title = `${profile.display_name} — ${profile.tagline} | Bizko`;

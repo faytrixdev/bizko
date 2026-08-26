@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AuthShell, Alert } from "../components";
+import { AuthShell, Alert } from "@/components/auth";
 
 export default async function VerifyEmail({ searchParams }: { searchParams: Promise<{ email?: string }> }) {
   const { email } = await searchParams;

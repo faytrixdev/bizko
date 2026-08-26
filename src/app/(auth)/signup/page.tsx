@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { signup } from "../actions";
-import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert } from "../components";
+import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert } from "@/components/auth";
 
 export default async function Signup({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;

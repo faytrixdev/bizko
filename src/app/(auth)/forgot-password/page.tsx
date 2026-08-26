@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { forgotPassword } from "../actions";
-import { AuthShell, Field, Input, SubmitButton, Alert } from "../components";
+import { AuthShell, Field, Input, SubmitButton, Alert } from "@/components/auth";
 
 export default async function ForgotPassword({
   searchParams,

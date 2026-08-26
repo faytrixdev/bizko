@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { login } from "../actions";
-import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert } from "../components";
+import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert } from "@/components/auth";
 
 export default async function Login({
   searchParams,

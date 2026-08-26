@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { resetPassword } from "../actions";
-import { AuthShell, Field, PasswordInput, SubmitButton, Alert } from "../components";
+import { AuthShell, Field, PasswordInput, SubmitButton, Alert } from "@/components/auth";
 
 export default async function ResetPassword({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;

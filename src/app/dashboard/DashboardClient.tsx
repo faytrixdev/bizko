@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { logout } from "@/app/(auth)/actions";
 import { updateProfile, addService, deleteService, addSocial, deleteSocial, deletePortfolio } from "./actions";
-import { QrShare } from "./QrShare";
-import { AvatarUpload, PortfolioUpload } from "./Upload";
+import { QrShare } from "@/components/QrShare";
+import { AvatarUpload, PortfolioUpload } from "@/components/Upload";
 import { LocaleSwitch } from "@/lib/i18n/provider";
 
 type Tab = "apercu" | "services" | "portfolio" | "reseaux" | "reglages";

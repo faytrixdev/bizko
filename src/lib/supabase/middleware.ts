@@ -25,7 +25,80 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+
+  const publicRoutes = [
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+    "/verify-email",
+  ];
+  const publicApiRoutes = [
+    "/api/check-username",
+    "/api/track-click",
+    "/api/supabase-health",
+  ];
+  const isPublicRoute = publicRoutes.includes(pathname);
+  const isPublicApi = publicApiRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  if (isPublicApi) {
+    return supabaseResponse;
+  }
+
+  if (user) {
+    if (isPublicRoute) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    if (pathname === "/onboarding") {
+      const {
+        data: profile,
+      } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (profile) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+    }
+
+    if (
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/account")
+    ) {
+      const {
+        data: profile,
+      } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile) {
+        return NextResponse.redirect(new URL("/onboarding", request.url));
+      }
+    }
+  } else {
+    if (
+      !isPublicRoute &&
+      !pathname.startsWith("/api/") &&
+      pathname !== "/" &&
+      !pathname.startsWith("/[username]") &&
+      pathname !== "/demo"
+    ) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
 
   return supabaseResponse;
 }

@@ -52,7 +52,23 @@ export default async function Onboarding({ searchParams }: { searchParams: Promi
             <p className="text-sm font-semibold flex items-center gap-2 text-gray-900"><span className="h-6 w-6 rounded-full bg-[#FF6B35] text-white flex items-center justify-center text-xs">3</span> {msg.onboarding.step3}</p>
             <div className="flex flex-col gap-3 mt-3">
               <input name="service_title" required placeholder={msg.onboarding.servicePlaceholder} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
-              <input name="service_price" type="number" placeholder={msg.onboarding.pricePlaceholder} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
+              <div className="flex gap-2">
+                <input name="service_price" type="number" placeholder={msg.onboarding.pricePlaceholder} className="flex-1 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
+                <select name="service_currency" defaultValue="XOF" className="w-24 h-11 rounded-lg border border-gray-200 px-2 text-sm outline-none focus:border-gray-900 bg-white">
+                  <option value="XOF">XOF</option>
+                  <option value="XAF">XAF</option>
+                  <option value="NGN">NGN</option>
+                  <option value="KES">KES</option>
+                  <option value="ZAR">ZAR</option>
+                  <option value="DZD">DZD</option>
+                  <option value="GHS">GHS</option>
+                  <option value="TZS">TZS</option>
+                  <option value="UGX">UGX</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                </select>
+              </div>
             </div>
           </div>
 

@@ -16,6 +16,7 @@ export async function completeOnboarding(formData: FormData) {
   const phone_e164 = (formData.get("phone_e164") as string).replace(/\s/g, "");
   const service_title = formData.get("service_title") as string;
   const service_price = formData.get("service_price") as string;
+  const service_currency = (formData.get("service_currency") as string) || "XOF";
 
   // Validate username
   if (!/^[a-z0-9_]{3,30}$/.test(username)) {
@@ -43,7 +44,7 @@ export async function completeOnboarding(formData: FormData) {
       profile_id: user.id,
       title: service_title,
       price: service_price ? parseInt(service_price, 10) : null,
-      currency: "XOF",
+      currency: service_currency,
       position: 0,
     });
   }

@@ -63,7 +63,7 @@ export function UsernameField() {
     ) : null;
 
   return (
-    <>
+    <div className="flex-1 min-w-0">
       <input
         name="username"
         required
@@ -71,9 +71,9 @@ export function UsernameField() {
         placeholder="tonnom"
         value={value}
         onChange={(e) => setValue(e.target.value.toLowerCase())}
-        className={`flex-1 h-11 rounded-lg border bg-white px-4 text-sm outline-none transition-colors ${borderColor}`}
+        className={`w-full h-11 rounded-lg border bg-white px-4 text-sm outline-none transition-colors ${borderColor}`}
       />
       {message}
-    </>
+    </div>
   );
 }

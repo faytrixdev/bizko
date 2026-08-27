@@ -42,8 +42,8 @@ export default async function Onboarding({ searchParams }: { searchParams: Promi
               <input name="display_name" required placeholder={msg.onboarding.namePlaceholder} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
               <input name="tagline" required placeholder={msg.onboarding.taglinePlaceholder} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
               <div className="flex gap-3">
-                <input name="city" required placeholder={msg.onboarding.cityPlaceholder} className="flex-1 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
-                <CountrySelect name="country" defaultValue="CI" required className="w-40 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900 bg-white" />
+                <input name="city" required placeholder={msg.onboarding.cityPlaceholder} className="flex-1 min-w-0 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
+                <CountrySelect name="country" defaultValue="CI" required className="w-full sm:w-40 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900 bg-white" />
               </div>
               <input name="phone_e164" required placeholder={msg.onboarding.phonePlaceholder} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
             </div>

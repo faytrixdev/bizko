@@ -32,7 +32,7 @@ export function TabServices({ services }: TabServicesProps) {
           <input name="title" required placeholder={t("dashboard.titlePlaceholder")} maxLength={60} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
           <div className="flex gap-2">
             <input name="price" type="number" placeholder={t("dashboard.pricePlaceholder")} min={0} className="flex-1 h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-            <select name="currency" defaultValue="XOF" className="w-24 h-10 rounded-lg border border-gray-200 px-2 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200 bg-white">
+            <select name="currency" defaultValue="XOF" className="w-24 h-10 rounded-lg border border-gray-200 px-2 pr-8 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200 bg-white">
               <option value="XOF">XOF</option>
               <option value="XAF">XAF</option>
               <option value="NGN">NGN</option>

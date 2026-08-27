@@ -30,7 +30,7 @@ export function TabSettings({ profile }: TabSettingsProps) {
         </div>
         <input name="phone_e164" defaultValue={profile.phone_e164} required placeholder={t("dashboard.phonePlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
         <input name="email_public" defaultValue={profile.email_public || ""} placeholder={t("dashboard.emailPlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-        <select name="template" defaultValue={profile.template} className="h-10 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:ring-2 focus:ring-gray-900/10 transition-all duration-200">
+        <select name="template" defaultValue={profile.template} className="h-10 rounded-lg border border-gray-200 bg-white px-3 pr-8 text-sm focus:ring-2 focus:ring-gray-900/10 transition-all duration-200">
           <option value="minimal">{t("dashboard.templateMinimal")}</option>
           <option value="portfolio">{t("dashboard.templatePortfolio")}</option>
         </select>

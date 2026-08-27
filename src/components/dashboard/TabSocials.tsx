@@ -26,7 +26,7 @@ export function TabSocials({ socials }: TabSocialsProps) {
         </p>
       ) : (
         <form action={addSocial} className="mt-3 flex flex-col gap-2">
-          <select name="platform" className="h-10 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:ring-2 focus:ring-gray-900/10 transition-all duration-200">
+          <select name="platform" className="h-10 rounded-lg border border-gray-200 bg-white px-3 pr-8 text-sm focus:ring-2 focus:ring-gray-900/10 transition-all duration-200">
             <option value="instagram">Instagram</option>
             <option value="tiktok">TikTok</option>
             <option value="linkedin">LinkedIn</option>

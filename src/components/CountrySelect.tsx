@@ -13,7 +13,7 @@ export function CountrySelect({ name = "country", defaultValue, required, classN
       name={name}
       defaultValue={defaultValue}
       required={required}
-      className={className}
+      className={`${className} pr-8`}
     >
       <option value="">Pays...</option>
       {AFRICAN_COUNTRIES.map((c) => (

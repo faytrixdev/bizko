@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { updateProfile } from "@/app/dashboard/actions";
 import { AvatarUpload } from "@/components/Upload";
 import { useI18n } from "@/lib/i18n/provider";
@@ -36,6 +37,18 @@ export function TabSettings({ profile }: TabSettingsProps) {
           {t("dashboard.save")}
         </button>
       </form>
+
+      <div className="mt-6 pt-4 border-t border-gray-100">
+        <Link
+          href="/account"
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors duration-200"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+          Mon compte
+        </Link>
+      </div>
     </div>
   );
 }

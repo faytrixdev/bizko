@@ -115,7 +115,7 @@ export default async function Home() {
 
           {/* Mockup - below everything */}
           <SectionReveal delay={300}>
-            <div className="mt-14 sm:mt-20 mx-auto max-w-[480px]">
+            <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px]">
               <ProfileMockup
                 name="Aminata Diallo"
                 initials="AD"
@@ -128,6 +128,7 @@ export default async function Home() {
                   { title: "Événement entreprise", price: "150 000 FCFA" },
                 ]}
                 variant="detailed"
+                frame
                 portfolio={[
                   { label: "Photo" },
                   { label: "Photo" },

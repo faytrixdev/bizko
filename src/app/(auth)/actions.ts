@@ -24,7 +24,7 @@ export async function signup(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent("fetch failed: " + msg)}`);
   }
   revalidatePath("/", "layout");
-  redirect("/onboarding");
+  redirect("/verify-email");
 }
 
 export async function login(formData: FormData) {
@@ -47,19 +47,126 @@ export async function login(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent("fetch failed: " + msg)}`);
   }
 
-  // Check if profile exists -> onboarding or dashboard
-  const { data: user } = await supabase.auth.getUser();
-  if (user.user) {
+  const { data: userData } = await supabase.auth.getUser();
+  const user = userData?.user;
+
+  if (user?.email_confirmed_at === null) {
+    redirect(`/login?error=${encodeURIComponent("Veuillez confirmer votre email. Vérifiez votre boîte de réception.")}`);
+  }
+
+  if (user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("id")
-      .eq("id", user.user.id)
+      .eq("id", user.id)
       .single();
     revalidatePath("/", "layout");
     if (!profile) redirect("/onboarding");
     redirect("/dashboard");
   }
   redirect("/dashboard");
+}
+
+export async function loginWithGoogle() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  if (data.url) {
+    redirect(data.url);
+  }
+}
+
+export async function changePassword(formData: FormData) {
+  const supabase = await createClient();
+
+  const currentPassword = formData.get("currentPassword") as string;
+  const newPassword = formData.get("newPassword") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+
+  if (newPassword !== confirmPassword) {
+    return { error: "Les mots de passe ne correspondent pas." };
+  }
+
+  if (newPassword.length < 6) {
+    return { error: "Le mot de passe doit contenir au moins 6 caractères." };
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user?.email) {
+    return { error: "Utilisateur non trouvé." };
+  }
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword,
+  });
+
+  if (signInError) {
+    return { error: "Mot de passe actuel incorrect." };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: "Mot de passe modifié avec succès." };
+}
+
+export async function deleteAccount() {
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Utilisateur non trouvé." };
+  }
+
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .delete()
+    .eq("id", user.id);
+
+  if (profileError) {
+    return { error: "Erreur lors de la suppression du profil." };
+  }
+
+  const { error: signOutError } = await supabase.auth.signOut();
+
+  if (signOutError) {
+    return { error: "Erreur lors de la déconnexion." };
+  }
+
+  redirect("/");
+}
+
+export async function resendConfirmationEmail(email: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: email,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: "Email de confirmation renvoyé." };
 }
 
 export async function logout() {

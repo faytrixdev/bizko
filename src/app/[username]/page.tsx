@@ -77,7 +77,6 @@ export default async function PublicProfile({ params }: Props) {
         {isPortfolio ? (
           <div className="rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm">
             {profile.avatar_url ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={profile.avatar_url} alt={profile.display_name} className="h-24 w-24 rounded-full object-cover mx-auto shadow-lg ring-4 ring-white" />
             ) : (
               <div className="h-24 w-24 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white font-bold text-2xl mx-auto shadow-lg ring-4 ring-white">
@@ -111,7 +110,6 @@ export default async function PublicProfile({ params }: Props) {
         ) : (
           <div className="flex flex-col items-center text-center">
             {profile.avatar_url ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={profile.avatar_url} alt={profile.display_name} className="h-24 w-24 rounded-full object-cover shadow-lg ring-4 ring-white" />
             ) : (
               <div className="h-24 w-24 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white font-bold text-2xl shadow-lg ring-4 ring-white">
@@ -205,7 +203,6 @@ export default async function PublicProfile({ params }: Props) {
             <div className={isPortfolio ? "grid grid-cols-2 gap-3" : "grid grid-cols-2 gap-3"}>
               {portfolio.map((p) => (
                 <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={p.image_url} alt={p.title || ""} className="aspect-square w-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   {p.title && (

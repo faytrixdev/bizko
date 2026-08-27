@@ -202,18 +202,18 @@ export default async function PublicProfile({ params }: Props) {
             <h2 className={`font-bold font-display px-1 mb-4 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
               {msg.profile.portfolio}
             </h2>
-            <div className={isPortfolio ? "grid grid-cols-2 gap-3" : "grid grid-cols-3 gap-3"}>
+            <div className={isPortfolio ? "grid grid-cols-2 gap-3" : "grid grid-cols-2 gap-3"}>
               {portfolio.map((p) => (
-                isPortfolio ? (
-                  <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={p.image_url} alt={p.title || ""} className="aspect-square w-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
-                    {p.title && <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3"><p className="text-xs font-medium text-white truncate">{p.title}</p></div>}
-                  </div>
-                ) : (
+                <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300">
                   /* eslint-disable-next-line @next/next/no-img-element */
-                  <img key={p.id} src={p.image_url} alt={p.title || ""} className="aspect-square w-full object-cover rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300" />
-                )
+                  <img src={p.image_url} alt={p.title || ""} className="aspect-square w-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {p.title && (
+                    <div className="absolute inset-x-0 bottom-0 p-3 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <p className="text-xs font-medium text-white truncate">{p.title}</p>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>

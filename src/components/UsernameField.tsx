@@ -59,8 +59,10 @@ export function UsernameField() {
     ) : status === "unavailable" ? (
       <span className="text-xs text-red-600">Username already taken</span>
     ) : status === "invalid" ? (
-      <span className="text-xs text-red-600">3-30 characters, lowercase letters, numbers, underscores</span>
-    ) : null;
+      <span className="text-xs text-red-600">3-30 caractères, lettres minuscules, chiffres, _</span>
+    ) : (
+      <span className="text-xs text-gray-400">3-30 caractères, lettres minuscules, chiffres, _</span>
+    );
 
   return (
     <div className="flex-1 min-w-0 relative">

@@ -34,7 +34,6 @@ export default async function Onboarding({ searchParams }: { searchParams: Promi
               <span className="shrink-0 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg px-3 h-11 inline-flex items-center">bizko.co/</span>
               <UsernameField />
             </div>
-            <p className="text-xs text-gray-400 mt-2">{msg.onboarding.usernameHint}</p>
           </div>
 
           <div className="border-t border-gray-200 pt-6">

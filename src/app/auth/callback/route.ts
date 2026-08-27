@@ -9,27 +9,22 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    
+
     if (!error) {
-      // Check if profile exists
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (user) {
         const { data: profile } = await supabase
           .from('profiles')
           .select('id')
           .eq('id', user.id)
           .single();
-        
-        if (profile) {
-          return NextResponse.redirect(`${origin}/dashboard`);
-        } else {
-          return NextResponse.redirect(`${origin}/onboarding`);
-        }
+
+        const redirectUrl = profile ? `${origin}/dashboard` : `${origin}/onboarding`;
+        return NextResponse.redirect(redirectUrl);
       }
     }
   }
 
-  // Return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/login?error=auth_callback_error`);
 }

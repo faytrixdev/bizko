@@ -22,7 +22,7 @@ export default async function VerifyEmail({ searchParams }: { searchParams: Prom
 
         <div className="mt-6 flex flex-col gap-3">
           <Link href="/login" className="h-11 rounded-lg bg-[#FF6B35] text-white inline-flex items-center justify-center text-sm font-semibold hover:bg-[#EA580C] transition">
-            J'ai verifie — me connecter
+            J'ai verifie - me connecter
           </Link>
           <Link href="/signup" className="h-11 rounded-lg border border-gray-200 bg-white inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:bg-gray-50">
             Renvoyer le lien

@@ -10,7 +10,7 @@ export default async function Login({
   const { error, success } = await searchParams;
 
   return (
-    <AuthShell title="Welcome back" subtitle="Ravis de te revoir — connecte-toi pour gerer ton Bizko.">
+    <AuthShell title="Welcome back" subtitle="Ravis de te revoir - connecte-toi pour gerer ton Bizko.">
       {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
       {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
 

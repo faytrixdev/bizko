@@ -7,17 +7,17 @@
     "example": "See an example",
     "login": "Log in",
     "footer": "Bizko 2026",
-    "previewDescription": "Photographer — Abidjan, CI"
+    "previewDescription": "Photographer - Abidjan, CI"
   },
   "auth": {
     "loginTitle": "Welcome back",
-    "loginSubtitle": "Good to see you again — log in to manage your Bizko.",
+    "loginSubtitle": "Good to see you again - log in to manage your Bizko.",
     "signupTitle": "Create your account",
-    "signupSubtitle": "Start for free — your link will be ready to share.",
+    "signupSubtitle": "Start for free - your link will be ready to share.",
     "forgotTitle": "Forgot password?",
     "forgotSubtitle": "We'll send you a secure link to create a new one.",
     "resetTitle": "New password",
-    "resetSubtitle": "Almost there — choose something strong.",
+    "resetSubtitle": "Almost there - choose something strong.",
     "verifyTitle": "Verify your email",
     "verifySubtitle": "We sent you a confirmation link.",
     "email": "Email",
@@ -39,7 +39,7 @@
   "onboarding": {
     "step": "Onboarding",
     "title": "Create your Bizko in 3 minutes",
-    "subtitle": "Let's go fast — your link will be ready to share.",
+    "subtitle": "Let's go fast - your link will be ready to share.",
     "step1": "Your link",
     "step2": "Your identity",
     "step3": "Your first service",
@@ -74,7 +74,7 @@
     "delete": "Delete",
     "portfolioTitle": "Portfolio",
     "portfolioFull": "Limit reached",
-    "noImages": "No images — add your work to stand out.",
+    "noImages": "No images - add your work to stand out.",
     "socialsTitle": "Social media",
     "socialsFull": "6 link limit reached.",
     "settingsTitle": "Profile settings",
@@ -93,10 +93,10 @@
   },
   "demo": {
     "createMine": "Create mine",
-    "examplePortfolio": "Example — Portfolio",
+    "examplePortfolio": "Example - Portfolio",
     "service1Title": "Portrait shoot",
     "service1Price": "75,000 XOF",
-    "service2Title": "Wedding — half day",
+    "service2Title": "Wedding - half day",
     "service2Price": "250,000 XOF",
     "service3Title": "Corporate event",
     "service3Price": "150,000 XOF",
@@ -106,7 +106,7 @@
     "photoLabel": "Photo",
     "profile": {
       "tagline": "Photographer in Abidjan",
-      "bio": "I capture your precious moments — weddings, portraits, events. Reply within 2h on WhatsApp."
+      "bio": "I capture your precious moments - weddings, portraits, events. Reply within 2h on WhatsApp."
     }
   },
   "profile": {

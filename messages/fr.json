@@ -7,17 +7,17 @@
     "example": "Voir un exemple",
     "login": "Se connecter",
     "footer": "Bizko 2026",
-    "previewDescription": "Photographe — Abidjan, CI"
+    "previewDescription": "Photographe - Abidjan, CI"
   },
   "auth": {
     "loginTitle": "Welcome back",
-    "loginSubtitle": "Ravis de te revoir — connecte-toi pour gerer ton Bizko.",
+    "loginSubtitle": "Ravis de te revoir - connecte-toi pour gerer ton Bizko.",
     "signupTitle": "Creer ton compte",
-    "signupSubtitle": "Commence gratuitement — ton lien sera pret a partager.",
+    "signupSubtitle": "Commence gratuitement - ton lien sera pret a partager.",
     "forgotTitle": "Mot de passe oublie ?",
     "forgotSubtitle": "On t'envoie un lien securise pour en creer un nouveau.",
     "resetTitle": "Nouveau mot de passe",
-    "resetSubtitle": "Tu y es presque — choisis quelque chose de solide.",
+    "resetSubtitle": "Tu y es presque - choisis quelque chose de solide.",
     "verifyTitle": "Verifie ton email",
     "verifySubtitle": "On t'a envoye un lien de confirmation.",
     "email": "Email",
@@ -39,7 +39,7 @@
   "onboarding": {
     "step": "Onboarding",
     "title": "Cree ton Bizko en 3 minutes",
-    "subtitle": "On va vite — ton lien sera pret a partager.",
+    "subtitle": "On va vite - ton lien sera pret a partager.",
     "step1": "Ton lien",
     "step2": "Ton identite",
     "step3": "Ton premier service",
@@ -74,7 +74,7 @@
     "delete": "Supprimer",
     "portfolioTitle": "Portfolio",
     "portfolioFull": "Limite atteinte",
-    "noImages": "Aucune image — ajoute tes realisations.",
+    "noImages": "Aucune image - ajoute tes realisations.",
     "socialsTitle": "Reseaux sociaux",
     "socialsFull": "Limite 6 liens atteinte.",
     "settingsTitle": "Parametres du profil",
@@ -93,10 +93,10 @@
   },
   "demo": {
     "createMine": "Creer le mien",
-    "examplePortfolio": "Exemple — Portfolio",
+    "examplePortfolio": "Exemple - Portfolio",
     "service1Title": "Shooting portrait",
     "service1Price": "75 000 XOF",
-    "service2Title": "Mariage — demi-journee",
+    "service2Title": "Mariage - demi-journee",
     "service2Price": "250 000 XOF",
     "service3Title": "Evenement entreprise",
     "service3Price": "150 000 XOF",
@@ -106,7 +106,7 @@
     "photoLabel": "Photo",
     "profile": {
       "tagline": "Photographe a Abidjan",
-      "bio": "Je capture tes moments precieux — mariage, portrait, evenement. Reponse en 2h sur WhatsApp."
+      "bio": "Je capture tes moments precieux - mariage, portrait, evenement. Reponse en 2h sur WhatsApp."
     }
   },
   "profile": {

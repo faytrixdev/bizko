@@ -87,7 +87,7 @@ export async function forgotPassword(formData: FormData) {
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
     redirect(`/forgot-password?error=${encodeURIComponent(String(e))}`);
   }
-  redirect(`/forgot-password?success=${encodeURIComponent("Lien envoyé — vérifie ta boîte mail.")}`);
+  redirect(`/forgot-password?success=${encodeURIComponent("Lien envoyé - vérifie ta boîte mail.")}`);
 }
 
 export async function resetPassword(formData: FormData) {
@@ -108,5 +108,5 @@ export async function resetPassword(formData: FormData) {
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
     redirect(`/reset-password?error=${encodeURIComponent(String(e))}`);
   }
-  redirect("/login?success=Mot de passe mis à jour — connecte-toi.");
+  redirect("/login?success=Mot de passe mis à jour - connecte-toi.");
 }

@@ -4,7 +4,7 @@ import "./globals.css";
 import { I18nProvider } from "@/lib/i18n/provider";
 
 export const metadata: Metadata = {
-  title: "Bizko — Ton business en un lien",
+  title: "Bizko - Ton business en un lien",
   description:
     "Cree ton profil pro en 3 minutes. Partage-le partout. Convertis tes visiteurs en clients WhatsApp.",
 };

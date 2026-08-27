@@ -6,7 +6,7 @@ export default async function Signup({ searchParams }: { searchParams: Promise<{
   const { error } = await searchParams;
 
   return (
-    <AuthShell title="Creer ton compte" subtitle="Commence gratuitement — ton lien sera pret a partager.">
+    <AuthShell title="Creer ton compte" subtitle="Commence gratuitement - ton lien sera pret a partager.">
       {error && (
         <div className="mb-5">
           <Alert type="error">{decodeURIComponent(error)}</Alert>

@@ -6,7 +6,7 @@ export default async function ResetPassword({ searchParams }: { searchParams: Pr
   const { error } = await searchParams;
 
   return (
-    <AuthShell title="Nouveau mot de passe" subtitle="Tu y es presque — choisis quelque chose de solide.">
+    <AuthShell title="Nouveau mot de passe" subtitle="Tu y es presque - choisis quelque chose de solide.">
       {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
 
       <form action={resetPassword} className="flex flex-col gap-4">

@@ -47,7 +47,7 @@ export default function Onboarding() {
               <span className="shrink-0 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg px-3 h-11 inline-flex items-center">bizko.co/</span>
               <UsernameField onStatusChange={handleStatusChange} />
             </div>
-            <div className="mt-1.5 ml-16">{usernameMessage}</div>
+            <div className="mt-1.5">{usernameMessage}</div>
           </div>
 
           <div className="border-t border-gray-200 pt-6">

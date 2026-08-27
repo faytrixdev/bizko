@@ -36,7 +36,7 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
       {list.map((p, i) => (
         <div key={p.id} className="relative group">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.image_url} alt="" className="aspect-square object-cover rounded-lg border border-gray-200" />
+          <img src={p.image_url} alt="" className="aspect-square object-cover rounded-xl border border-gray-100 hover:ring-2 hover:ring-gray-200 transition-all duration-300" />
           <div className="absolute top-1 left-1 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => handleMove(i, "up")}

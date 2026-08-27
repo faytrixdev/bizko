@@ -1,4 +1,4 @@
-export function Alert({ type = "error", children }: { type?: "error" | "success"; children: React.ReactNode }) {
+export function Alert({ type = "error", children }: { type?: "error" | "success"; children?: React.ReactNode }) {
   if (!children) return null;
   return (
     <div

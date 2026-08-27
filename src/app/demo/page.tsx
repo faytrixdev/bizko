@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getServerMessages } from "@/lib/i18n/messages";
+import { getServerMessages } from "@/lib/i18n/messages-server";
 
 export default async function Demo() {
   const msg = await getServerMessages();

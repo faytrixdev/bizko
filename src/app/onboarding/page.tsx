@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { completeOnboarding } from "./actions";
-import { getServerMessages } from "@/lib/i18n/messages";
+import { getServerMessages } from "@/lib/i18n/messages-server";
 import { UsernameField } from "@/components/UsernameField";
 
 export default async function Onboarding({ searchParams }: { searchParams: Promise<{ error?: string }> }) {

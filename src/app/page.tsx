@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
-import { getServerMessages } from "@/lib/i18n/messages";
+import { getServerMessages } from "@/lib/i18n/messages-server";
 
 export default async function Home() {
   const msg = await getServerMessages();

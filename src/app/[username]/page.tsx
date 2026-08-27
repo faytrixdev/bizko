@@ -3,7 +3,7 @@ import { buildWaLink, buildMainWaMessage, buildServiceWaMessage } from "@/lib/ut
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getServerMessages } from "@/lib/i18n/messages";
+import { getServerMessages } from "@/lib/i18n/messages-server";
 
 type Props = { params: Promise<{ username: string }> };
 

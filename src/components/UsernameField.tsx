@@ -2,11 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type Status = "idle" | "checking" | "available" | "unavailable" | "invalid";
+export type UsernameStatus = "idle" | "checking" | "available" | "unavailable" | "invalid";
 
-export function UsernameField() {
+interface UsernameFieldProps {
+  onStatusChange?: (status: UsernameStatus) => void;
+}
+
+export function UsernameField({ onStatusChange }: UsernameFieldProps) {
   const [value, setValue] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
+  const [status, setStatus] = useState<UsernameStatus>("idle");
   const abortRef = useRef<AbortController | null>(null);
 
   const check = useCallback(async (username: string) => {
@@ -46,6 +50,10 @@ export function UsernameField() {
     return () => clearTimeout(timer);
   }, [value, check]);
 
+  useEffect(() => {
+    onStatusChange?.(status);
+  }, [status, onStatusChange]);
+
   const borderColor =
     status === "available"
       ? "border-green-500 focus:border-green-600"
@@ -53,31 +61,15 @@ export function UsernameField() {
         ? "border-red-400 focus:border-red-500"
         : "border-gray-200 focus:border-gray-900";
 
-  const message =
-    status === "available" ? (
-      <span className="text-xs text-green-600">Username available</span>
-    ) : status === "unavailable" ? (
-      <span className="text-xs text-red-600">Username already taken</span>
-    ) : status === "invalid" ? (
-      <span className="text-xs text-red-600">3-30 caractères, lettres minuscules, chiffres, _</span>
-    ) : (
-      <span className="text-xs text-gray-400">3-30 caractères, lettres minuscules, chiffres, _</span>
-    );
-
   return (
-    <div className="flex-1 min-w-0">
-      <input
-        name="username"
-        required
-        pattern="[a-z0-9_]{3,30}"
-        placeholder="tonnom"
-        value={value}
-        onChange={(e) => setValue(e.target.value.toLowerCase())}
-        className={`w-full h-11 rounded-lg border bg-white px-4 text-sm outline-none transition-colors ${borderColor}`}
-      />
-      <div className="h-5 mt-0.5">
-        {message}
-      </div>
-    </div>
+    <input
+      name="username"
+      required
+      pattern="[a-z0-9_]{3,30}"
+      placeholder="tonnom"
+      value={value}
+      onChange={(e) => setValue(e.target.value.toLowerCase())}
+      className={`flex-1 min-w-0 h-11 rounded-lg border bg-white px-4 text-sm outline-none transition-colors ${borderColor}`}
+    />
   );
 }

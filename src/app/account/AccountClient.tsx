@@ -27,7 +27,7 @@ export function AccountClient({ user, profile }: AccountClientProps) {
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)] border-b border-gray-100/60">
         <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="inline-flex">
-            <img src="/logo.png" alt="Bizko" className="h-7" />
+            <img src="/logo.png" alt="Bizko" className="h-10" />
           </Link>
           <div className="flex items-center gap-1.5">
             <Link

@@ -13,7 +13,7 @@ export function AuthShell({
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-[360px]">
         <Link href="/" className="inline-flex items-center mb-8 mx-auto">
-          <img src="/logo.png" alt="Bizko" className="h-8" />
+          <img src="/logo.png" alt="Bizko" className="h-12" />
         </Link>
         <div className="text-center mb-6">
           <h1 className="text-[26px] font-bold tracking-tight font-display text-gray-900">{title}</h1>

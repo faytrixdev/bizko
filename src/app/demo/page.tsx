@@ -9,7 +9,7 @@ export default async function Demo() {
       <header className="border-b border-gray-200">
         <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="inline-flex">
-            <img src="/logo.png" alt="Bizko" className="h-7" />
+            <img src="/logo.png" alt="Bizko" className="h-10" />
           </Link>
           <Link href="/signup" className="text-sm font-medium bg-gray-900 text-white px-4 py-1.5 rounded-lg">
             {msg.demo.createMine}

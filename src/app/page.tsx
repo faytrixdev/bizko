@@ -9,7 +9,7 @@ export default async function Home() {
     <div className="min-h-screen bg-white">
       <header className="border-b border-gray-200">
         <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
-          <span className="font-bold font-display text-gray-900">Bizko<span className="text-[#FF6B35]">.</span></span>
+          <img src="/logo.png" alt="Bizko" className="h-7" />
           <div className="flex items-center gap-3">
             <LocaleSwitch />
             <Link href="/login" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">

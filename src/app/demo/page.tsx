@@ -8,8 +8,8 @@ export default async function Demo() {
     <div className="min-h-screen bg-white">
       <header className="border-b border-gray-200">
         <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold font-display text-gray-900">
-            Bizko<span className="text-[#FF6B35]">.</span>
+          <Link href="/" className="inline-flex">
+            <img src="/logo.png" alt="Bizko" className="h-7" />
           </Link>
           <Link href="/signup" className="text-sm font-medium bg-gray-900 text-white px-4 py-1.5 rounded-lg">
             {msg.demo.createMine}

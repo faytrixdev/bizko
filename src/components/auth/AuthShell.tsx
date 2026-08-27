@@ -12,10 +12,8 @@ export function AuthShell({
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-[360px]">
-        <Link href="/" className="inline-flex items-center gap-2 mb-8 mx-auto">
-          <span className="font-bold font-display text-gray-900 text-lg">
-            Bizko<span className="text-[#FF6B35]">.</span>
-          </span>
+        <Link href="/" className="inline-flex items-center mb-8 mx-auto">
+          <img src="/logo.png" alt="Bizko" className="h-8" />
         </Link>
         <div className="text-center mb-6">
           <h1 className="text-[26px] font-bold tracking-tight font-display text-gray-900">{title}</h1>

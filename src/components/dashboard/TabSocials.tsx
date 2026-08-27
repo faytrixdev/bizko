@@ -2,6 +2,7 @@
 
 import { addSocial, deleteSocial } from "@/app/dashboard/actions";
 import { useI18n } from "@/lib/i18n/provider";
+import { CustomSelect } from "@/components/CustomSelect";
 
 interface SocialLink {
   id: string;
@@ -26,15 +27,20 @@ export function TabSocials({ socials }: TabSocialsProps) {
         </p>
       ) : (
         <form action={addSocial} className="mt-3 flex flex-col gap-2">
-          <select name="platform" className="h-10 rounded-lg border border-gray-200 bg-white px-3 pr-10 text-sm focus:ring-2 focus:ring-gray-900/10 transition-all duration-200 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%222%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_8px_center] bg-no-repeat">
-            <option value="instagram">Instagram</option>
-            <option value="tiktok">TikTok</option>
-            <option value="linkedin">LinkedIn</option>
-            <option value="facebook">Facebook</option>
-            <option value="x">X</option>
-            <option value="youtube">YouTube</option>
-            <option value="website">Website</option>
-          </select>
+          <CustomSelect
+            name="platform"
+            placeholder="Plateforme..."
+            options={[
+              { value: "instagram", label: "Instagram" },
+              { value: "tiktok", label: "TikTok" },
+              { value: "linkedin", label: "LinkedIn" },
+              { value: "facebook", label: "Facebook" },
+              { value: "x", label: "X" },
+              { value: "youtube", label: "YouTube" },
+              { value: "website", label: "Website" },
+            ]}
+            className="h-10"
+          />
           <input name="url" required placeholder="https://..." className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
           <button className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm">
             {t("dashboard.add")}

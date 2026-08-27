@@ -4,6 +4,7 @@ import { completeOnboarding } from "./actions";
 import { getServerMessages } from "@/lib/i18n/messages-server";
 import { UsernameField } from "@/components/UsernameField";
 import { CountrySelect } from "@/components/CountrySelect";
+import { CustomSelect } from "@/components/CustomSelect";
 
 export default async function Onboarding({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
@@ -55,20 +56,25 @@ export default async function Onboarding({ searchParams }: { searchParams: Promi
               <input name="service_title" required placeholder={msg.onboarding.servicePlaceholder} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
               <div className="flex gap-2">
                 <input name="service_price" type="number" placeholder={msg.onboarding.pricePlaceholder} className="flex-1 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
-                <select name="service_currency" defaultValue="XOF" className="w-28 h-11 rounded-lg border border-gray-200 px-2 pr-10 text-sm outline-none focus:border-gray-900 bg-white appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%222%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_8px_center] bg-no-repeat">
-                  <option value="XOF">XOF</option>
-                  <option value="XAF">XAF</option>
-                  <option value="NGN">NGN</option>
-                  <option value="KES">KES</option>
-                  <option value="ZAR">ZAR</option>
-                  <option value="DZD">DZD</option>
-                  <option value="GHS">GHS</option>
-                  <option value="TZS">TZS</option>
-                  <option value="UGX">UGX</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                </select>
+                <CustomSelect
+                  name="service_currency"
+                  defaultValue="XOF"
+                  options={[
+                    { value: "XOF", label: "XOF" },
+                    { value: "XAF", label: "XAF" },
+                    { value: "NGN", label: "NGN" },
+                    { value: "KES", label: "KES" },
+                    { value: "ZAR", label: "ZAR" },
+                    { value: "DZD", label: "DZD" },
+                    { value: "GHS", label: "GHS" },
+                    { value: "TZS", label: "TZS" },
+                    { value: "UGX", label: "UGX" },
+                    { value: "USD", label: "USD" },
+                    { value: "EUR", label: "EUR" },
+                    { value: "GBP", label: "GBP" },
+                  ]}
+                  className="w-28 h-11"
+                />
               </div>
             </div>
           </div>

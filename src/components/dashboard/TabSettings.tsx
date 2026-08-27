@@ -3,20 +3,7 @@
 import { updateProfile } from "@/app/dashboard/actions";
 import { AvatarUpload } from "@/components/Upload";
 import { useI18n } from "@/lib/i18n/provider";
-
-interface Profile {
-  id: string;
-  username: string;
-  display_name: string;
-  tagline: string;
-  bio: string | null;
-  city: string;
-  country: string;
-  phone_e164: string;
-  email_public: string | null;
-  template: string;
-  avatar_url: string | null;
-}
+import type { Profile } from "@/types/database";
 
 interface TabSettingsProps {
   profile: Profile;

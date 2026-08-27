@@ -6,45 +6,9 @@ import { logout } from "@/app/(auth)/actions";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
+import type { Profile, Service, PortfolioItem, SocialLink } from "@/types/database";
 
 type Tab = "apercu" | "services" | "portfolio" | "reseaux" | "reglages";
-
-interface Profile {
-  id: string;
-  username: string;
-  display_name: string;
-  tagline: string;
-  bio: string | null;
-  city: string;
-  country: string;
-  phone_e164: string;
-  email_public: string | null;
-  template: string;
-  avatar_url: string | null;
-}
-
-interface Service {
-  id: string;
-  title: string;
-  description: string | null;
-  price: number | null;
-  currency: string;
-  position: number;
-}
-
-interface PortfolioItem {
-  id: string;
-  image_url: string;
-  title: string | null;
-  position: number;
-}
-
-interface SocialLink {
-  id: string;
-  platform: string;
-  url: string;
-  position: number;
-}
 
 interface DashboardClientProps {
   profile: Profile;

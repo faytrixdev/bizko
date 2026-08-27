@@ -135,7 +135,7 @@ export default async function Home() {
                 socials={[
                   { platform: "instagram", url: "#" },
                   { platform: "tiktok", url: "#" },
-                  { platform: "whatsapp", url: "#" },
+                  { platform: "facebook", url: "#" },
                 ]}
                 variant="detailed"
                 frame

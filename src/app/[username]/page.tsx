@@ -164,7 +164,7 @@ export default async function PublicProfile({ params }: Props) {
                         {s.description && <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{s.description}</p>}
                         {s.price != null && <p className="text-sm font-bold text-[#FF6B35] mt-2">{s.price.toLocaleString()} {s.currency}</p>}
                       </div>
-                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="self-center shrink-0 h-9 px-4 rounded-xl bg-[#FF6B35] text-white text-xs font-semibold hover:bg-[#EA580C] transition-all duration-200 shadow-sm shadow-[#FF6B35]/20">{msg.profile.demandBtn}</a>
+                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="self-center shrink-0 h-9 px-4 rounded-xl bg-[#FF6B35] text-white text-xs font-semibold inline-flex items-center justify-center hover:bg-[#EA580C] transition-all duration-200 shadow-sm shadow-[#FF6B35]/20">{msg.profile.demandBtn}</a>
                     </div>
                   );
                 })}

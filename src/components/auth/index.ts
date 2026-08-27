@@ -4,3 +4,4 @@ export { Input } from "./Input";
 export { PasswordInput } from "./PasswordInput";
 export { SubmitButton } from "./SubmitButton";
 export { Alert } from "./Alert";
+export { GoogleOAuthButton } from "./GoogleOAuthButton";

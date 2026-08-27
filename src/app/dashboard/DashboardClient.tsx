@@ -116,21 +116,21 @@ export function DashboardClient({
         )}
 
         {/* Tab bar */}
-        <nav className="flex border-b border-gray-200 mb-6">
+        <nav className="flex border-b border-gray-200 mb-6 overflow-x-auto">
           {TABS.map((tabItem) => (
             <button
               key={tabItem.id}
               onClick={() => setTab(tabItem.id)}
-              className={`relative flex-1 flex items-center justify-center gap-1.5 h-11 text-xs font-medium transition-colors duration-200 ${
+              className={`relative flex-shrink-0 flex items-center justify-center gap-1.5 h-11 px-3 sm:px-4 text-xs font-medium transition-colors duration-200 ${
                 tab === tabItem.id
                   ? "text-gray-900"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
               {tabItem.icon}
-              {tabItem.label}
+              <span className="hidden sm:inline">{tabItem.label}</span>
               {tab === tabItem.id && (
-                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-gray-900 rounded-full" />
+                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-gray-900 rounded-full" />
               )}
             </button>
           ))}

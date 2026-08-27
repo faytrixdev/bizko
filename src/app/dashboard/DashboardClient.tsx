@@ -86,22 +86,22 @@ export function DashboardClient({
           <Link href="/" className="font-bold font-display text-gray-900 text-lg tracking-tight">
             Bizko<span className="text-[#FF6B35]">.</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <LocaleSwitch />
-            <div className="w-px h-5 bg-gray-200 mx-1" />
+            <div className="w-px h-5 bg-gray-200 mx-0.5 sm:mx-1" />
             <Link href={`/${profile.username}`} target="_blank"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              className="inline-flex items-center justify-center h-8 w-8 sm:w-auto sm:px-2 sm:h-auto sm:py-1.5 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200 rounded-lg hover:bg-gray-50">
+              <svg className="w-4 h-4 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
-              {t("dashboard.viewProfile")}
+              <span className="hidden sm:inline ml-1.5">{t("dashboard.viewProfile")}</span>
             </Link>
             <form action={logout}>
-              <button className="inline-flex items-center gap-1.5 text-xs font-medium border border-gray-200/80 bg-white rounded-lg px-3 py-1.5 text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all duration-200">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <button className="inline-flex items-center justify-center h-8 w-8 sm:w-auto sm:px-2.5 sm:h-auto sm:py-1.5 text-xs font-medium border border-gray-200/80 bg-white rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all duration-200">
+                <svg className="w-4 h-4 sm:w-3.5 sm:h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                 </svg>
-                {t("dashboard.logout")}
+                <span className="hidden sm:inline ml-1.5">{t("dashboard.logout")}</span>
               </button>
             </form>
           </div>

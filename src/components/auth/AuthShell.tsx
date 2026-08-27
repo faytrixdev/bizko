@@ -13,9 +13,9 @@ export function AuthShell({
   subtitle?: string;
 }) {
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-white flex flex-col items-center px-4 pt-12 pb-12">
       <div className="w-full max-w-[360px]">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <Link href="/" className="inline-flex">
             <img src="/logo.png" alt="Bizko" className="h-8" />
           </Link>

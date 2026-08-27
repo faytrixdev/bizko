@@ -6,6 +6,7 @@ import { updateProfile } from "@/app/dashboard/actions";
 import { Input } from "@/components/auth/Input";
 import { Field } from "@/components/auth/Field";
 import { Alert } from "@/components/auth/Alert";
+import { CountrySelect } from "@/components/CountrySelect";
 import type { Profile } from "@/types/database";
 
 interface AccountFormProps {
@@ -70,11 +71,11 @@ export function AccountForm({ profile }: AccountFormProps) {
       </Field>
 
       <Field label="Pays">
-        <Input
+        <CountrySelect
           name="country"
           defaultValue={profile.country}
-          placeholder="Sénégal"
           required
+          className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900 bg-white"
         />
       </Field>
 

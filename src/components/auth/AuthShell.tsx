@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 
 export function AuthShell({
   children,
@@ -11,6 +14,9 @@ export function AuthShell({
 }) {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12">
+      <div className="fixed top-4 right-4 z-50">
+        <LocaleSwitch />
+      </div>
       <div className="w-full max-w-[360px]">
         <Link href="/" className="inline-flex items-center mb-8 mx-auto">
           <img src="/logo.png" alt="Bizko" className="h-8" />

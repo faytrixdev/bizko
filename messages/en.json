@@ -34,6 +34,15 @@
     "goLogin": "Log in",
     "backLogin": "Back to login",
     "conditions": "By creating an account, you accept our terms.",
+    "or": "or",
+    "rememberPassword": "Remember your password?",
+    "backToLogin": "Back to login",
+    "wrongEmail": "Wrong email?",
+    "restart": "Try again",
+    "verifyHint": "If you don't receive anything in 2 minutes, try again with the same address.",
+    "resendEmail": "Resend email",
+    "resetNewPassword": "New password",
+    "resetConfirm": "Confirm",
     "protected": "Protected by Supabase."
   },
   "onboarding": {

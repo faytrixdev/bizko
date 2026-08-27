@@ -1,16 +1,19 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { login } from "../actions";
 import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert, GoogleOAuthButton } from "@/components/auth";
+import { useI18n } from "@/lib/i18n/provider";
 
-export default async function Login({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string; success?: string }>;
-}) {
-  const { error, success } = await searchParams;
+export default function Login() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error") || undefined;
+  const success = searchParams.get("success") || undefined;
+  const { t } = useI18n();
 
   return (
-    <AuthShell title="Welcome back" subtitle="Ravis de te revoir - connecte-toi pour gerer ton Bizko.">
+    <AuthShell title={t("auth.loginTitle")} subtitle={t("auth.loginSubtitle")}>
       {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
       {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
 
@@ -21,20 +24,20 @@ export default async function Login({
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="bg-white px-2 text-gray-500">ou</span>
+          <span className="bg-white px-2 text-gray-500">{t("auth.or")}</span>
         </div>
       </div>
 
       <form action={login} className="flex flex-col gap-4">
-        <Field label="Email">
+        <Field label={t("auth.email")}>
           <Input name="email" type="email" required autoComplete="email" placeholder="toi@exemple.com" />
         </Field>
 
         <Field
-          label="Mot de passe"
+          label={t("auth.password")}
           hint={
             <Link href="/forgot-password" className="text-gray-500 hover:text-gray-900 underline underline-offset-4">
-              Oublie ?
+              {t("auth.forgotLink")}
             </Link>
           }
         >
@@ -42,14 +45,14 @@ export default async function Login({
         </Field>
 
         <div className="pt-2">
-          <SubmitButton>Se connecter</SubmitButton>
+          <SubmitButton>{t("auth.loginBtn")}</SubmitButton>
         </div>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500">
-        Pas de compte ?{" "}
+        {t("auth.noAccount")}{" "}
         <Link href="/signup" className="font-medium text-gray-900 underline underline-offset-4 decoration-gray-300 hover:decoration-gray-900">
-          Creer ton Bizko
+          {t("auth.createAccount")}
         </Link>
       </p>
     </AuthShell>

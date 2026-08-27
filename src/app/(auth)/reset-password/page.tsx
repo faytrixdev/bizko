@@ -1,29 +1,35 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { resetPassword } from "../actions";
 import { AuthShell, Field, PasswordInput, SubmitButton, Alert } from "@/components/auth";
+import { useI18n } from "@/lib/i18n/provider";
 
-export default async function ResetPassword({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const { error } = await searchParams;
+export default function ResetPassword() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error") || undefined;
+  const { t } = useI18n();
 
   return (
-    <AuthShell title="Nouveau mot de passe" subtitle="Tu y es presque - choisis quelque chose de solide.">
+    <AuthShell title={t("auth.resetTitle")} subtitle={t("auth.resetSubtitle")}>
       {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
 
       <form action={resetPassword} className="flex flex-col gap-4">
-        <Field label="Nouveau mot de passe" hint="6+ caracteres">
+        <Field label={t("auth.resetNewPassword")} hint={t("auth.passwordHint")}>
           <PasswordInput name="password" required autoComplete="new-password" placeholder="••••••••" />
         </Field>
-        <Field label="Confirmer">
+        <Field label={t("auth.resetConfirm")}>
           <PasswordInput name="confirm" required autoComplete="new-password" placeholder="••••••••" />
         </Field>
         <div className="pt-2">
-          <SubmitButton>Mettre a jour</SubmitButton>
+          <SubmitButton>{t("auth.resetBtn")}</SubmitButton>
         </div>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500">
         <Link href="/login" className="font-medium text-gray-900 underline underline-offset-4 decoration-gray-300 hover:decoration-gray-900">
-          Retour au login
+          {t("auth.backLogin")}
         </Link>
       </p>
     </AuthShell>

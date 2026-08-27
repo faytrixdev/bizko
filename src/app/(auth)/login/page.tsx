@@ -52,10 +52,6 @@ export default async function Login({
           Creer ton Bizko
         </Link>
       </p>
-
-      <p className="mt-8 text-center text-xs leading-4 text-gray-400">
-        Protege par Supabase.
-      </p>
     </AuthShell>
   );
 }

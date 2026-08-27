@@ -19,83 +19,126 @@ export default async function Home() {
       <LandingNavbar msg={msg} />
 
       {/* ─── HERO ─── */}
-      <section className="pt-28 pb-16 sm:pt-36 sm:pb-24">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Text */}
-            <div className="max-w-xl">
-              <SectionReveal>
-                <span className="inline-flex items-center rounded-full bg-gray-100 px-3.5 py-1 text-xs font-medium text-gray-600 mb-6">
+      <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden">
+        {/* Subtle grid background */}
+        <div
+          className="absolute inset-0 opacity-[0.035] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
+          {/* Badge */}
+          <SectionReveal>
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex items-center gap-2 border border-gray-200 hover:border-gray-300/70 rounded-full px-4 py-2 transition-colors cursor-default">
+                <span className="text-xs sm:text-sm text-gray-600">
                   Pour les indépendants qui vendent leur expertise
                 </span>
-              </SectionReveal>
-
-              <SectionReveal delay={80}>
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.05] font-display text-gray-900">
-                  Ton business.
-                  <br />
-                  <span className="text-[#FF6B35]">Un seul lien.</span>
-                </h1>
-              </SectionReveal>
-
-              <SectionReveal delay={160}>
-                <p className="mt-5 text-base sm:text-lg text-gray-500 leading-7 max-w-md">
-                  Présente tes services, tes prix, ton portfolio et ton WhatsApp
-                  dans un profil professionnel que tu peux partager partout.
-                </p>
-              </SectionReveal>
-
-              <SectionReveal delay={240}>
-                <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/signup"
-                    className="inline-flex h-12 items-center justify-center rounded-xl bg-[#FF6B35] px-8 text-sm font-semibold text-white hover:bg-[#EA580C] transition-all duration-200 shadow-sm shadow-[#FF6B35]/20 hover:shadow-md hover:shadow-[#FF6B35]/25"
-                  >
-                    Créer mon Bizko
-                    <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                    </svg>
-                  </Link>
-                </div>
-              </SectionReveal>
-
-              <SectionReveal delay={320}>
-                <p className="mt-3 text-xs text-gray-400">
-                  Gratuit · Prêt en 3 minutes
-                </p>
-                <p className="mt-2 text-sm text-gray-400 font-mono">
-                  bizko.me/tonnom
-                </p>
-              </SectionReveal>
-            </div>
-
-            {/* Mockup */}
-            <SectionReveal delay={200} className="lg:justify-self-end">
-              <div className="w-full max-w-[420px] mx-auto lg:mx-0">
-                <ProfileMockup
-                  name="Aminata Diallo"
-                  initials="AD"
-                  profession="Photographe"
-                  bio="Je capture tes moments précieux — mariage, portrait, événement. Réponse en 2h sur WhatsApp."
-                  location="Abidjan, CI"
-                  services={[
-                    { title: "Shooting portrait", price: "75 000 FCFA" },
-                    { title: "Mariage - demi-journée", price: "250 000 FCFA" },
-                    { title: "Événement entreprise", price: "150 000 FCFA" },
-                  ]}
-                  variant="detailed"
-                  portfolio={[
-                    { label: "Photo" },
-                    { label: "Photo" },
-                    { label: "Photo" },
-                    { label: "Photo" },
-                    { label: "Photo" },
-                    { label: "+6" },
-                  ]}
-                />
+                <svg
+                  className="w-3.5 h-3.5 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
               </div>
-            </SectionReveal>
-          </div>
+            </div>
+          </SectionReveal>
+
+          {/* Headline */}
+          <SectionReveal delay={80}>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] font-display text-gray-900 text-center max-w-[850px] mx-auto">
+              Ton business.
+              <br />
+              <span className="text-[#FF6B35]">Un seul lien.</span>
+            </h1>
+          </SectionReveal>
+
+          {/* Subtitle */}
+          <SectionReveal delay={160}>
+            <p className="text-sm sm:text-base md:text-lg mx-auto max-w-2xl text-center mt-6 text-gray-500 leading-7 max-md:px-2">
+              Présente tes services, tes prix, ton portfolio et ton WhatsApp
+              dans un profil professionnel que tu peux partager partout.
+            </p>
+          </SectionReveal>
+
+          {/* CTA buttons */}
+          <SectionReveal delay={240}>
+            <div className="mx-auto w-full flex items-center justify-center gap-3 mt-8">
+              <Link
+                href="/signup"
+                className="bg-[#FF6B35] hover:bg-[#EA580C] text-white px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#FF6B35]/20 inline-flex items-center"
+              >
+                Créer mon Bizko
+              </Link>
+              <Link
+                href="/demo"
+                className="flex items-center gap-2 border border-gray-300 hover:bg-gray-100/50 rounded-full px-7 py-3.5 text-sm font-medium text-gray-700 transition-colors"
+              >
+                <span>Voir un exemple</span>
+                <svg
+                  className="w-3.5 h-3.5 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </SectionReveal>
+
+          {/* Subtext */}
+          <SectionReveal delay={280}>
+            <p className="text-center text-xs text-gray-400 mt-4">
+              Gratuit · Prêt en 3 minutes
+            </p>
+            <p className="text-center text-sm text-gray-400 font-mono mt-1.5">
+              bizko.me/tonnom
+            </p>
+          </SectionReveal>
+
+          {/* Mockup - below everything */}
+          <SectionReveal delay={300}>
+            <div className="mt-14 sm:mt-20 mx-auto max-w-[480px]">
+              <ProfileMockup
+                name="Aminata Diallo"
+                initials="AD"
+                profession="Photographe"
+                bio="Je capture tes moments précieux — mariage, portrait, événement. Réponse en 2h sur WhatsApp."
+                location="Abidjan, CI"
+                services={[
+                  { title: "Shooting portrait", price: "75 000 FCFA" },
+                  { title: "Mariage - demi-journée", price: "250 000 FCFA" },
+                  { title: "Événement entreprise", price: "150 000 FCFA" },
+                ]}
+                variant="detailed"
+                portfolio={[
+                  { label: "Photo" },
+                  { label: "Photo" },
+                  { label: "Photo" },
+                  { label: "Photo" },
+                  { label: "Photo" },
+                  { label: "+6" },
+                ]}
+              />
+            </div>
+          </SectionReveal>
         </div>
       </section>
 

@@ -75,7 +75,7 @@ export function AccountForm({ profile }: AccountFormProps) {
           name="country"
           defaultValue={profile.country}
           required
-          className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900 bg-white"
+          className="h-11"
         />
       </Field>
 

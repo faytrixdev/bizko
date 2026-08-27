@@ -27,7 +27,7 @@ export function TabSettings({ profile }: TabSettingsProps) {
         <textarea name="bio" defaultValue={profile.bio || ""} placeholder={t("dashboard.bioPlaceholder")} maxLength={280} className="rounded-lg border border-gray-200 p-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200 resize-none" rows={3} />
         <div className="flex gap-3">
           <input name="city" defaultValue={profile.city} required placeholder={t("dashboard.cityPlaceholder")} className="flex-1 min-w-0 h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-          <CountrySelect name="country" defaultValue={profile.country} required className="flex-1 min-w-0 h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200 bg-white" />
+          <CountrySelect name="country" defaultValue={profile.country} required className="flex-1 min-w-0 h-10" />
         </div>
         <input name="phone_e164" defaultValue={profile.phone_e164} required placeholder={t("dashboard.phonePlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
         <input name="email_public" defaultValue={profile.email_public || ""} placeholder={t("dashboard.emailPlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { signup } from "../actions";
-import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert } from "@/components/auth";
+import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert, GoogleOAuthButton } from "@/components/auth";
 
 export default async function Signup({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
@@ -12,6 +12,17 @@ export default async function Signup({ searchParams }: { searchParams: Promise<{
           <Alert type="error">{decodeURIComponent(error)}</Alert>
         </div>
       )}
+
+      <GoogleOAuthButton mode="signup" />
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300" />
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-2 text-gray-500">ou</span>
+        </div>
+      </div>
 
       <form action={signup} className="flex flex-col gap-4">
         <Field label="Email">

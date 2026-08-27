@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { login } from "../actions";
-import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert } from "@/components/auth";
+import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert, GoogleOAuthButton } from "@/components/auth";
 
 export default async function Login({
   searchParams,
@@ -13,6 +13,17 @@ export default async function Login({
     <AuthShell title="Welcome back" subtitle="Ravis de te revoir - connecte-toi pour gerer ton Bizko.">
       {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
       {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
+
+      <GoogleOAuthButton mode="login" />
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300" />
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-2 text-gray-500">ou</span>
+        </div>
+      </div>
 
       <form action={login} className="flex flex-col gap-4">
         <Field label="Email">

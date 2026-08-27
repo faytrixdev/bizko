@@ -43,7 +43,7 @@ profiles 1 → N services
 | title | text | not null, max 60 |
 | description | text | nullable, max 140 |
 | price | integer | nullable (>=0, en plus petite unité) |
-| currency | text | enum XOF/EUR/USD défaut XOF |
+| currency | text | enum XOF/XAF/NGN/KES/ZAR/DZD/GHS/TZS/UGX/USD/EUR/GBP défaut XOF |
 | position | integer | not null, défaut 0 |
 
 Index : `index(profile_id, position)`. Contrainte : max 8 par profile (check via RLS/function ou app).

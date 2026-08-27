@@ -32,7 +32,20 @@ export function TabServices({ services }: TabServicesProps) {
           <input name="title" required placeholder={t("dashboard.titlePlaceholder")} maxLength={60} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
           <div className="flex gap-2">
             <input name="price" type="number" placeholder={t("dashboard.pricePlaceholder")} min={0} className="flex-1 h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-            <input name="currency" defaultValue="XOF" className="w-20 h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
+            <select name="currency" defaultValue="XOF" className="w-24 h-10 rounded-lg border border-gray-200 px-2 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200 bg-white">
+              <option value="XOF">XOF</option>
+              <option value="XAF">XAF</option>
+              <option value="NGN">NGN</option>
+              <option value="KES">KES</option>
+              <option value="ZAR">ZAR</option>
+              <option value="DZD">DZD</option>
+              <option value="GHS">GHS</option>
+              <option value="TZS">TZS</option>
+              <option value="UGX">UGX</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
           </div>
           <button className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm">
             {t("dashboard.add")}

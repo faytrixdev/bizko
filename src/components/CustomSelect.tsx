@@ -39,7 +39,7 @@ export function CustomSelect({ name, options, defaultValue, placeholder = "Chois
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full h-full rounded-lg border border-gray-200 bg-white px-3 pr-10 text-sm text-left outline-none transition-all duration-200 ${
+        className={`w-full h-11 rounded-lg border border-gray-200 bg-white px-3 pr-10 text-sm text-left outline-none transition-all duration-200 ${
           selected ? "text-gray-900" : "text-gray-400"
         } focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10`}
       >

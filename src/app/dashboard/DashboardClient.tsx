@@ -127,8 +127,8 @@ export function DashboardClient({
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
-              {tabItem.icon}
-              <span className="hidden sm:inline">{tabItem.label}</span>
+              <span className="hidden sm:inline">{tabItem.icon}</span>
+              {tabItem.label}
               {tab === tabItem.id && (
                 <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-gray-900 rounded-full" />
               )}

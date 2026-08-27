@@ -20,9 +20,9 @@ export function TabPortfolio({ portfolio, profileId }: TabPortfolioProps) {
   const { t } = useI18n();
 
   return (
-    <div className="border border-gray-200 rounded-xl p-5">
+    <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold font-display text-sm text-gray-900">{t("dashboard.portfolioTitle")} ({portfolio.length}/9)</h2>
+        <h2 className="font-semibold font-display text-sm text-gray-900 uppercase tracking-wider text-xs">{t("dashboard.portfolioTitle")} ({portfolio.length}/9)</h2>
         {portfolio.length >= 9 ? (
           <span className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-0.5">
             {t("dashboard.portfolioFull")}

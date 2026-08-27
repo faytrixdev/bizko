@@ -119,7 +119,8 @@ export default async function Home() {
               <ProfileMockup
                 name="Aminata Diallo"
                 initials="AD"
-                profession="Photographe"
+                avatarUrl="/mockup/photo-profile.jpg"
+                profession="Photographe à Abidjan"
                 bio="Je capture tes moments précieux — mariage, portrait, événement. Réponse en 2h sur WhatsApp."
                 location="Abidjan, CI"
                 services={[
@@ -127,16 +128,17 @@ export default async function Home() {
                   { title: "Mariage - demi-journée", price: "250 000 FCFA" },
                   { title: "Événement entreprise", price: "150 000 FCFA" },
                 ]}
+                portfolio={[
+                  { image: "/mockup/realisation1.jpg", label: "Mariage" },
+                  { image: "/mockup/realisation2.jpg", label: "Portrait" },
+                ]}
+                socials={[
+                  { platform: "instagram", url: "#" },
+                  { platform: "tiktok", url: "#" },
+                  { platform: "whatsapp", url: "#" },
+                ]}
                 variant="detailed"
                 frame
-                portfolio={[
-                  { label: "Photo" },
-                  { label: "Photo" },
-                  { label: "Photo" },
-                  { label: "Photo" },
-                  { label: "Photo" },
-                  { label: "+6" },
-                ]}
               />
             </div>
           </SectionReveal>
@@ -360,14 +362,6 @@ export default async function Home() {
                     { title: "Audit technique", price: "50 000 FCFA" },
                   ]}
                   variant="detailed"
-                  portfolio={[
-                    { label: "Projet" },
-                    { label: "Projet" },
-                    { label: "Projet" },
-                    { label: "Projet" },
-                    { label: "Projet" },
-                    { label: "+3" },
-                  ]}
                 />
               </div>
             </SectionReveal>

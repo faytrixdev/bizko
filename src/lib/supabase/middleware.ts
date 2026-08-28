@@ -58,6 +58,27 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith(route)
   );
 
+  // Réservé à l'app : routes qui ne sont PAS des profils publics à la racine
+  const reservedRootPrefixes = [
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+    "/verify-email",
+    "/auth",
+    "/api",
+    "/legal",
+    "/dashboard",
+    "/account",
+    "/onboarding",
+    "/demo",
+  ];
+  // Un profil public est servi à la racine sur un seul segment : /<username>
+  const isRootPublicProfile =
+    pathname !== "/" &&
+    !pathname.includes("/", 1) &&
+    !reservedRootPrefixes.some((route) => pathname === route || pathname.startsWith(route + "/"));
+
   if (isPublicApi) {
     return supabaseResponse;
   }
@@ -100,10 +121,10 @@ export async function updateSession(request: NextRequest) {
   } else {
     if (
       !isPublicRoute &&
+      !isRootPublicProfile &&
       !pathname.startsWith("/api/") &&
       !pathname.startsWith("/legal") &&
       pathname !== "/" &&
-      !pathname.startsWith("/[username]") &&
       pathname !== "/demo"
     ) {
       return NextResponse.redirect(new URL("/login", request.url));

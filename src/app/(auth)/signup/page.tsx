@@ -32,7 +32,7 @@ export default function Signup() {
 
       <form action={signup} className="flex flex-col gap-4">
         <Field label={t("auth.email")}>
-          <Input name="email" type="email" required autoComplete="email" placeholder="toi@exemple.com" />
+          <Input name="email" type="email" required autoComplete="email" placeholder={t("auth.emailPlaceholder")} />
         </Field>
 
         <Field label={t("auth.password")} hint={t("auth.passwordHint")}>
@@ -43,9 +43,9 @@ export default function Signup() {
           <SubmitButton>{t("auth.signupBtn")}</SubmitButton>
         </div>
         <p className="text-center text-xs text-gray-400">
-          En creant un compte, tu acceptes nos{" "}
+          {t("auth.conditionsPrefix")}{" "}
           <Link href="/legal/terms" className="underline underline-offset-2 hover:text-gray-600">
-            conditions
+            {t("auth.conditionsLink")}
           </Link>.
         </p>
       </form>

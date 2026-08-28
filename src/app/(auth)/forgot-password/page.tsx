@@ -19,7 +19,7 @@ export default function ForgotPassword() {
 
       <form action={forgotPassword} className="flex flex-col gap-4">
         <Field label={t("auth.email")}>
-          <Input name="email" type="email" required autoComplete="email" placeholder="toi@exemple.com" />
+          <Input name="email" type="email" required autoComplete="email" placeholder={t("auth.emailPlaceholder")} />
         </Field>
         <div className="pt-2">
           <SubmitButton>{t("auth.forgotBtn")}</SubmitButton>

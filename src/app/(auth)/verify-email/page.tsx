@@ -13,7 +13,7 @@ export default function VerifyEmail() {
   const [state, formAction] = useActionState(
     async (_prev: ResendState | null, formData: FormData): Promise<ResendState> => {
       const email = (formData.get("email") as string)?.trim();
-      if (!email) return { error: "Veuillez saisir une adresse email." };
+      if (!email) return { error: t("auth.emailRequired") };
       return resendConfirmationEmail(email);
     },
     null
@@ -48,7 +48,7 @@ export default function VerifyEmail() {
 
         <form action={formAction} className="mt-6 flex flex-col gap-4">
           <Field label={t("auth.email")}>
-            <Input name="email" type="email" required autoComplete="email" placeholder="toi@exemple.com" />
+            <Input name="email" type="email" required autoComplete="email" placeholder={t("auth.emailPlaceholder")} />
           </Field>
           <SubmitButton>{t("auth.resendEmail")}</SubmitButton>
         </form>

@@ -14,14 +14,15 @@ interface DeleteAccountDialogProps {
 export function DeleteAccountDialog({ user }: DeleteAccountDialogProps) {
   const { t } = useI18n();
   const [confirmation, setConfirmation] = useState("");
+  const [password, setPassword] = useState("");
   const [state, formAction, isPending] = useActionState(
     async (_prev: { error?: string } | null, _formData: FormData) => {
-      return await deleteAccount();
+      return await deleteAccount(_formData);
     },
     null
   );
 
-  const isConfirmed = confirmation === "SUPPRIMER";
+  const isConfirmed = confirmation === "SUPPRIMER" && password.trim().length > 0;
 
   return (
     <div className="flex flex-col gap-5">
@@ -55,7 +56,15 @@ export function DeleteAccountDialog({ user }: DeleteAccountDialogProps) {
         />
       </div>
 
-      <form action={formAction}>
+      <form action={formAction} className="flex flex-col gap-3">
+        <Input
+          type="password"
+          name="currentPassword"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={t("deleteAccount.passwordPlaceholder")}
+          autoComplete="current-password"
+        />
         <button
           type="submit"
           disabled={!isConfirmed || isPending}

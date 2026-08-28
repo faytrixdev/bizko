@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signup } from "../actions";
 import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert, GoogleOAuthButton } from "@/components/auth";
+import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
 
 export default function Signup() {
@@ -13,9 +14,9 @@ export default function Signup() {
 
   return (
     <AuthShell title={t("auth.signupTitle")} subtitle={t("auth.signupSubtitle")}>
-      {error && (
+      {authErrorText(t, error) && (
         <div className="mb-5">
-          <Alert type="error">{decodeURIComponent(error)}</Alert>
+          <Alert type="error">{authErrorText(t, error)}</Alert>
         </div>
       )}
 

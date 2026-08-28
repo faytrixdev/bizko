@@ -21,15 +21,14 @@ export async function signup(formData: FormData) {
     });
     if (error) {
       console.error("signup error:", error);
-      redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+      redirect(`/signup?error=${encodeURIComponent("signup_failed")}`);
     }
   } catch (e: unknown) {
     if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
     const digest = (e as { digest?: string })?.digest;
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
-    const msg = e instanceof Error ? `${e.message} ${"cause" in e ? String((e as { cause?: unknown }).cause) : ""}` : String(e);
     console.error("signup fetch exception:", e);
-    redirect(`/signup?error=${encodeURIComponent("fetch failed: " + msg)}`);
+    redirect(`/signup?error=${encodeURIComponent("fetch_failed")}`);
   }
   revalidatePath("/", "layout");
   redirect(`/verify-email?email=${encodeURIComponent(email)}`);
@@ -44,15 +43,14 @@ export async function login(formData: FormData) {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       console.error("login error:", error);
-      redirect(`/login?error=${encodeURIComponent(error.message)}`);
+      redirect(`/login?error=${encodeURIComponent("identifiants_invalid")}`);
     }
   } catch (e: unknown) {
     if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
     const digest = (e as { digest?: string })?.digest;
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
-    const msg = e instanceof Error ? e.message : String(e);
     console.error("login fetch exception:", e);
-    redirect(`/login?error=${encodeURIComponent("fetch failed: " + msg)}`);
+    redirect(`/login?error=${encodeURIComponent("fetch_failed")}`);
   }
 
   const { data: userData } = await supabase.auth.getUser();
@@ -135,13 +133,32 @@ export async function changePassword(formData: FormData) {
   return { success: "Mot de passe modifié avec succès." };
 }
 
-export async function deleteAccount() {
+export async function deleteAccount(formData: FormData) {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return { error: "Utilisateur non trouvé." };
+  }
+
+  const currentPassword = formData.get("currentPassword") as string;
+  if (!currentPassword) {
+    return { error: "Mot de passe actuel requis pour supprimer le compte." };
+  }
+
+  if (!user.email) {
+    return { error: "Impossible de re-vérifier le compte (email manquant)." };
+  }
+
+  // Re-authenticate before any destructive operation. Prevents account
+  // deletion by a compromised/unattended session.
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword,
+  });
+  if (signInError) {
+    return { error: "Mot de passe actuel incorrect." };
   }
 
   const uid = user.id;
@@ -215,13 +232,13 @@ export async function forgotPassword(formData: FormData) {
     });
     if (error) {
       console.error("forgot error:", error);
-      redirect(`/forgot-password?error=${encodeURIComponent(error.message)}`);
+      redirect(`/forgot-password?error=${encodeURIComponent("forgot_failed")}`);
     }
   } catch (e: unknown) {
     if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
     const digest = (e as { digest?: string })?.digest;
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
-    redirect(`/forgot-password?error=${encodeURIComponent(String(e))}`);
+    redirect(`/forgot-password?error=${encodeURIComponent("forgot_failed")}`);
   }
   redirect(`/forgot-password?success=${encodeURIComponent("Lien envoyé - vérifie ta boîte mail.")}`);
 }
@@ -236,13 +253,13 @@ export async function resetPassword(formData: FormData) {
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       console.error("reset error:", error);
-      redirect(`/reset-password?error=${encodeURIComponent(error.message)}`);
+      redirect(`/reset-password?error=${encodeURIComponent("fetch_failed")}`);
     }
   } catch (e: unknown) {
     if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
     const digest = (e as { digest?: string })?.digest;
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
-    redirect(`/reset-password?error=${encodeURIComponent(String(e))}`);
+    redirect(`/reset-password?error=${encodeURIComponent("fetch_failed")}`);
   }
   redirect("/login?success=Mot de passe mis à jour - connecte-toi.");
 }

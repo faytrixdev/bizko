@@ -20,7 +20,12 @@ Voir `docs/`:
 
 1. `npm install`
 2. Crée projet Supabase → copie URL + anon/service keys dans `.env.local` (voir `.env.example`)
-3. Supabase SQL Editor → run `supabase/migrations/20250826000001_initial.sql` puis `20250826000002_storage.sql`
+3. Supabase SQL Editor → applique TOUTES les migrations de `supabase/migrations/` dans l'ordre (ou `npx supabase db push`) :
+   - `20250826000001_initial.sql` (schéma + RLS)
+   - `20250826000002_storage.sql` (buckets storage)
+   - `20250826000003_fix_events_type_check.sql`
+   - `20250826000004_expand_currencies.sql`
+   - `20250826000005_secure_events_and_storage.sql` (**obligatoire** : verrouille le storage par ownership et supprime le policy anon sur `events` — à ne pas omettre en production)
 4. `npm run dev` → http://localhost:3000
 5. `npm run build` doit passer
 

@@ -344,6 +344,7 @@
     "typeConfirm": "pour confirmer la suppression de votre compte",
     "emailUnavailable": "email non disponible",
     "placeholder": "Tapez SUPPRIMER",
+    "passwordPlaceholder": "Votre mot de passe actuel",
     "btn": "Supprimer mon compte",
     "error": "Erreur lors de la suppression du profil."
   },
@@ -372,7 +373,11 @@
     "googleError": "Une erreur est survenue. Veuillez reessayer.",
     "verifyEmailRequired": "Veuillez confirmer votre email. Verifiez votre boite de reception.",
     "userNotFound": "Utilisateur non trouve.",
-    "logoutError": "Erreur lors de la deconnexion."
+    "logoutError": "Erreur lors de la deconnexion.",
+    "errorInvalidCredentials": "Email ou mot de passe incorrect.",
+    "errorSignupFailed": "Inscription impossible. Verifie tes informations ou reessaie.",
+    "errorForgotFailed": "Impossible d'envoyer le lien. Verifie ton email ou reessaie.",
+    "errorFetchFailed": "Une erreur est survenue. Reessaie dans un instant."
   },
   "username": {
     "available": "Username disponible",
@@ -405,6 +410,7 @@
     "deleteItem4": "Votre compte d'authentification",
     "deleteTypeConfirm": "Tapez DELETE pour confirmer",
     "deletePlaceholder": "Tapez DELETE",
+    "deletePasswordPlaceholder": "Votre mot de passe actuel",
     "deleteCancel": "Annuler",
     "deleteConfirmBtn": "Supprimer le compte",
     "passwordCurrent": "Mot de passe actuel",

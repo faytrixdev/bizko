@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function GET(request: NextRequest) {
+  const { allowed, retryAfterSeconds } = rateLimit(request, {
+    limit: 60,
+    windowMs: 60_000,
+  });
+  if (!allowed) {
+    return NextResponse.json(
+      { available: false, reason: "rate_limited" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(retryAfterSeconds) },
+      }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const username = searchParams.get("username");
 

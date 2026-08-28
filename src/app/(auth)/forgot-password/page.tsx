@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { forgotPassword } from "../actions";
 import { AuthShell, Field, Input, SubmitButton, Alert } from "@/components/auth";
+import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
 
 export default function ForgotPassword() {
@@ -14,7 +15,7 @@ export default function ForgotPassword() {
 
   return (
     <AuthShell title={t("auth.forgotTitle")} subtitle={t("auth.forgotSubtitle")}>
-      {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
+      {authErrorText(t, error) && <div className="mb-5"><Alert type="error">{authErrorText(t, error)}</Alert></div>}
       {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
 
       <form action={forgotPassword} className="flex flex-col gap-4">

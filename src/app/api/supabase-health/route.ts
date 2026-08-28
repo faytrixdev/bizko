@@ -1,12 +1,32 @@
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rateLimit";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { allowed, retryAfterSeconds } = rateLimit(request, {
+    limit: 10,
+    windowMs: 60_000,
+  });
+  if (!allowed) {
+    return NextResponse.json(
+      { ok: false },
+      {
+        status: 429,
+        headers: { "Retry-After": String(retryAfterSeconds) },
+      }
+    );
+  }
+
   try {
     const supabase = await createClient();
     const { data, error } = await supabase.from("profiles").select("count").limit(1);
-    if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
-    return Response.json({ ok: true, profiles: data });
+    if (error) {
+      console.error("supabase-health: query failed", error.message);
+      return NextResponse.json({ ok: false }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true, profiles: data });
   } catch (e) {
-    return Response.json({ ok: false, exception: String(e), cause: (e as Error)?.cause ? String((e as Error & {cause?: unknown}).cause) : undefined }, { status: 500 });
+    console.error("supabase-health: exception", e);
+    return NextResponse.json({ ok: false }, { status: 500 });
   }
 }

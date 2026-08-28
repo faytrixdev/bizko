@@ -344,6 +344,7 @@
     "typeConfirm": "to confirm deletion of your account",
     "emailUnavailable": "email not available",
     "placeholder": "Type DELETE",
+    "passwordPlaceholder": "Your current password",
     "btn": "Delete my account",
     "error": "Error deleting profile."
   },
@@ -372,7 +373,11 @@
     "googleError": "An error occurred. Please try again.",
     "verifyEmailRequired": "Please verify your email. Check your inbox.",
     "userNotFound": "User not found.",
-    "logoutError": "Error during logout."
+    "logoutError": "Error during logout.",
+    "errorInvalidCredentials": "Incorrect email or password.",
+    "errorSignupFailed": "Sign up failed. Check your details or try again.",
+    "errorForgotFailed": "Unable to send the link. Check your email or try again.",
+    "errorFetchFailed": "An error occurred. Please try again in a moment."
   },
   "username": {
     "available": "Username available",
@@ -405,6 +410,7 @@
     "deleteItem4": "Your authentication account",
     "deleteTypeConfirm": "Type DELETE to confirm",
     "deletePlaceholder": "Type DELETE",
+    "deletePasswordPlaceholder": "Your current password",
     "deleteCancel": "Cancel",
     "deleteConfirmBtn": "Delete account",
     "passwordCurrent": "Current password",

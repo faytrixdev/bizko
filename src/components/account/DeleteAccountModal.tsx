@@ -17,9 +17,10 @@ export function DeleteAccountModal({ open, onClose, user }: DeleteAccountModalPr
   const { t } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [confirmation, setConfirmation] = useState("");
+  const [password, setPassword] = useState("");
   const [state, formAction, isPending] = useActionState(
     async (_prev: { error?: string } | null, _formData: FormData) => {
-      return await deleteAccount();
+      return await deleteAccount(_formData);
     },
     null
   );
@@ -36,10 +37,11 @@ export function DeleteAccountModal({ open, onClose, user }: DeleteAccountModalPr
 
   function handleClose() {
     setConfirmation("");
+    setPassword("");
     onClose();
   }
 
-  const isConfirmed = confirmation === "DELETE";
+  const isConfirmed = confirmation === "DELETE" && password.trim().length > 0;
 
   return (
     <dialog
@@ -75,26 +77,35 @@ export function DeleteAccountModal({ open, onClose, user }: DeleteAccountModalPr
           />
         </div>
 
-        <div className="flex gap-3 mt-2">
-          <button
-            type="button"
-            onClick={handleClose}
-            disabled={isPending}
-            className="flex-1 h-10 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200 disabled:opacity-60"
-          >
-            {t("accountPage.deleteCancel")}
-          </button>
-          <form action={formAction} className="flex-1">
+        <form action={formAction} className="flex flex-col gap-3 mt-2">
+          <Input
+            type="password"
+            name="currentPassword"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={t("accountPage.deletePasswordPlaceholder")}
+            autoComplete="current-password"
+          />
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={isPending}
+              className="flex-1 h-10 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200 disabled:opacity-60"
+            >
+              {t("accountPage.deleteCancel")}
+            </button>
             <button
               type="submit"
               disabled={!isConfirmed || isPending}
-              className="w-full h-10 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+              className="flex-1 h-10 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
             >
               {isPending && <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />}
               {t("accountPage.deleteConfirmBtn")}
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </dialog>
   );

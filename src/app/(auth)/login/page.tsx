@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { login } from "../actions";
 import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert, GoogleOAuthButton } from "@/components/auth";
+import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
 
 export default function Login() {
@@ -15,7 +16,7 @@ export default function Login() {
   return (
     <AuthShell title={t("auth.loginTitle")} subtitle={t("auth.loginSubtitle")}>
       {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
-      {error && <div className="mb-5"><Alert type="error">{decodeURIComponent(error)}</Alert></div>}
+      {authErrorText(t, error) && <div className="mb-5"><Alert type="error">{authErrorText(t, error)}</Alert></div>}
 
       <GoogleOAuthButton mode="login" />
 

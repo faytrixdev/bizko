@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rateLimit";
 
 const SAFE_FALLBACK = "https://wa.me";
 
@@ -15,6 +16,17 @@ function isSafeWaLink(to: string | null): to is string {
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+
+  const { allowed, retryAfterSeconds } = rateLimit(request, {
+    limit: 30,
+    windowMs: 60_000,
+  });
+  if (!allowed) {
+    return NextResponse.redirect(SAFE_FALLBACK, {
+      status: 429,
+      headers: { "Retry-After": String(retryAfterSeconds) },
+    });
+  }
   const profileId = searchParams.get("pid");
   const type = searchParams.get("type");
   const to = searchParams.get("to");

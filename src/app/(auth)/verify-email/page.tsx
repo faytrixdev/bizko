@@ -1,27 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
 import Link from "next/link";
-import { AuthShell, Alert, Field, Input, SubmitButton } from "@/components/auth";
-import { resendConfirmationEmail } from "../actions";
+import { AuthShell } from "@/components/auth";
 import { useI18n } from "@/lib/i18n/provider";
-
-type ResendState = { error: string } | { success: string };
 
 export default function VerifyEmail() {
   const { t } = useI18n();
-  const [state, formAction] = useActionState(
-    async (_prev: ResendState | null, formData: FormData): Promise<ResendState> => {
-      const email = (formData.get("email") as string)?.trim();
-      if (!email) return { error: t("auth.emailRequired") };
-      return resendConfirmationEmail(email);
-    },
-    null
-  );
-
-  const isSuccess = state != null && "success" in state;
-  const isError = state != null && "error" in state;
-  const hasSubmitted = isSuccess || isError;
 
   return (
     <AuthShell title={t("auth.verifyTitle")} subtitle={t("auth.verifySubtitle")}>
@@ -35,36 +19,14 @@ export default function VerifyEmail() {
           </div>
         </div>
 
-        {/* Alerts */}
-        {isSuccess && (
-          <Alert type="success">{state.success}</Alert>
-        )}
-        {isError && (
-          <Alert type="error">{state.error}</Alert>
-        )}
+        <p className="text-sm text-gray-500 mb-6">{t("auth.verifyHint")}</p>
 
-        {/* Hint - only before first submit */}
-        {!hasSubmitted && (
-          <p className="text-sm text-gray-500 mb-5">{t("auth.verifyHint")}</p>
-        )}
-
-        {/* Resend form */}
-        <form action={formAction} className="flex flex-col gap-4">
-          <Field label={t("auth.email")}>
-            <Input name="email" type="email" required autoComplete="email" placeholder={t("auth.emailPlaceholder")} />
-          </Field>
-          <SubmitButton>{t("auth.resendEmail")}</SubmitButton>
-        </form>
-
-        {/* Footer links */}
-        <div className="mt-6 pt-5 border-t border-gray-100">
-          <Link
-            href="/login"
-            className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            {t("auth.backToLogin")}
+        <p className="text-sm text-gray-500">
+          {t("auth.wrongEmail")}{" "}
+          <Link href="/signup" className="font-medium text-gray-900 underline underline-offset-4 decoration-gray-300 hover:decoration-gray-900">
+            {t("auth.restart")}
           </Link>
-        </div>
+        </p>
       </div>
     </AuthShell>
   );

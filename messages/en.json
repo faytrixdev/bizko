@@ -203,6 +203,8 @@
     "or": "or",
     "rememberPassword": "Remember your password?",
     "backToLogin": "Back to login",
+    "wrongEmail": "Wrong email?",
+    "restart": "Try again",
     "verifyHint": "If you don't receive anything in 2 minutes, try again with the same address.",
     "resendEmail": "Resend email",
     "resetNewPassword": "New password",

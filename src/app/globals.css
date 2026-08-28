@@ -84,6 +84,16 @@ html {
   transform: translateY(0);
 }
 
+/* Center modals */
+dialog[open] {
+  margin: auto;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .section-reveal {
     opacity: 1;

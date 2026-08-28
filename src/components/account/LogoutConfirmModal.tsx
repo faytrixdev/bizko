@@ -41,7 +41,7 @@ export function LogoutConfirmModal({ open, onClose }: LogoutConfirmModalProps) {
     <dialog
       ref={dialogRef}
       onClose={handleClose}
-      className="backdrop:bg-black/40 backdrop:backdrop-blur-sm rounded-2xl border border-gray-200 shadow-2xl p-0 w-full max-w-sm"
+      className="rounded-2xl border border-gray-200 shadow-2xl p-0 w-full max-w-sm"
     >
       <div className="flex flex-col gap-4 p-6">
         <h2 className="text-lg font-semibold text-gray-900">{t("accountPage.logoutTitle")}</h2>

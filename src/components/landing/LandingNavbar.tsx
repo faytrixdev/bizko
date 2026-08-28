@@ -21,7 +21,6 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
     { name: msg.landing.navFeatures, href: "#fonctionnalités" },
     { name: msg.landing.navHowItWorks, href: "#comment-ça-marche" },
     { name: msg.landing.navExamples, href: "#exemples" },
-    { name: msg.landing.navPricing, href: "#tarifs" },
     { name: msg.landing.navFaq, href: "#faq" },
   ];
 

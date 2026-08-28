@@ -884,14 +884,14 @@ export default async function Home() {
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <span className="text-sm text-gray-400 cursor-default">
+                  <Link href="/legal/terms" className="text-sm text-gray-400 hover:text-gray-600 transition-colors duration-200">
                     {msg.landing.footerTerms}
-                  </span>
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-sm text-gray-400 cursor-default">
+                  <Link href="/legal/privacy" className="text-sm text-gray-400 hover:text-gray-600 transition-colors duration-200">
                     {msg.landing.footerPrivacy}
-                  </span>
+                  </Link>
                 </li>
               </ul>
             </div>

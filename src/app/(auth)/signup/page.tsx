@@ -42,7 +42,12 @@ export default function Signup() {
         <div className="pt-2">
           <SubmitButton>{t("auth.signupBtn")}</SubmitButton>
         </div>
-        <p className="text-center text-xs text-gray-400">{t("auth.conditions")}</p>
+        <p className="text-center text-xs text-gray-400">
+          En creant un compte, tu acceptes nos{" "}
+          <Link href="/legal/terms" className="underline underline-offset-2 hover:text-gray-600">
+            conditions
+          </Link>.
+        </p>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500">

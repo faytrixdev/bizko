@@ -77,13 +77,13 @@ export default async function Home() {
             <div className="mx-auto w-full flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
               <Link
                 href="/signup"
-                className="bg-[#FF6B35] hover:bg-[#EA580C] text-white px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#FF6B35]/20 inline-flex items-center"
+                className="w-full sm:w-auto bg-[#FF6B35] hover:bg-[#EA580C] text-white px-9 py-3.5 rounded-full font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#FF6B35]/20 inline-flex items-center justify-center"
               >
                 Créer mon Bizko
               </Link>
               <Link
                 href="/demo"
-                className="flex items-center gap-2 border border-gray-300 hover:bg-gray-100/50 rounded-full px-7 py-3.5 text-sm font-medium text-gray-700 transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-100/50 rounded-full px-9 py-3.5 text-sm font-medium text-gray-700 transition-colors"
               >
                 <span>Voir un exemple</span>
                 <svg

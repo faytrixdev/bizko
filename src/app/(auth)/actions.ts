@@ -162,30 +162,25 @@ export async function deleteAccount(formData: FormData) {
   }
 
   const uid = user.id;
+  const admin = createAdminClient();
 
-  // Delete the user's storage files before removing data / signing out.
+  // Best-effort: delete the user's storage files using the service role so we
+  // don't depend on the user session token (which dies once the user is gone),
+  // and so a storage failure never blocks the account deletion.
   for (const bucket of ["avatars", "portfolio"]) {
-    const { data: objects } = await supabase.storage.from(bucket).list(uid);
+    const { data: objects } = await admin.storage.from(bucket).list(uid);
     if (objects && objects.length > 0) {
       const paths = objects.map((o) => `${uid}/${o.name}`);
-      await supabase.storage.from(bucket).remove(paths);
+      await admin.storage.from(bucket).remove(paths);
     }
   }
 
-  // Profile deletion cascades to services, portfolio_items, social_links, events.
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .delete()
-    .eq("id", uid);
-
-  if (profileError) {
-    return { error: "Erreur lors de la suppression du profil." };
-  }
-
   // Delete the auth user via the server-side service role client.
-  // Runs on the server only; the key never reaches the browser, and we only
-  // ever target the id of the currently authenticated session.
-  const { error: deleteUserError } = await createAdminClient().auth.admin.deleteUser(uid);
+  // The FK profiles.id -> auth.users(id) ON DELETE CASCADE then removes the
+  // profile, which cascades to services, portfolio_items, social_links & events.
+  // Deleting the auth user FIRST means a failure here never leaves the account
+  // alive without its data (no orphaned profile / partial deletion).
+  const { error: deleteUserError } = await admin.auth.admin.deleteUser(uid);
 
   if (deleteUserError) {
     return { error: "Erreur lors de la suppression du compte." };

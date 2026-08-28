@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+const MAX_SERVICES = 8;
+const MAX_SOCIALS = 6;
+
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -37,6 +40,9 @@ export async function addService(formData: FormData) {
   const currency = (formData.get("currency") as string) || "XOF";
   const description = (formData.get("description") as string) || null;
 
+  const { count } = await supabase.from("services").select("*", { count: "exact", head: true }).eq("profile_id", user.id);
+  if ((count ?? 0) >= MAX_SERVICES) redirect("/dashboard?error=" + encodeURIComponent("Limite de 8 services atteinte."));
+
   const { data: existing } = await supabase.from("services").select("position").eq("profile_id", user.id).order("position", { ascending: false }).limit(1);
   const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
 
@@ -49,8 +55,10 @@ export async function addService(formData: FormData) {
 
 export async function deleteService(formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
   const id = formData.get("id") as string;
-  await supabase.from("services").delete().eq("id", id);
+  await supabase.from("services").delete().eq("id", id).eq("profile_id", user.id);
   revalidatePath("/dashboard");
 }
 
@@ -60,6 +68,10 @@ export async function addSocial(formData: FormData) {
   if (!user) redirect("/login");
   const platform = formData.get("platform") as string;
   const url = formData.get("url") as string;
+
+  const { count } = await supabase.from("social_links").select("*", { count: "exact", head: true }).eq("profile_id", user.id);
+  if ((count ?? 0) >= MAX_SOCIALS) redirect("/dashboard?error=" + encodeURIComponent("Limite de 6 liens sociaux atteinte."));
+
   const { error } = await supabase.from("social_links").insert({ profile_id: user.id, platform, url, position: 0 });
   if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
   revalidatePath("/dashboard");
@@ -67,15 +79,19 @@ export async function addSocial(formData: FormData) {
 
 export async function deleteSocial(formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
   const id = formData.get("id") as string;
-  await supabase.from("social_links").delete().eq("id", id);
+  await supabase.from("social_links").delete().eq("id", id).eq("profile_id", user.id);
   revalidatePath("/dashboard");
 }
 
 export async function deletePortfolio(formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
   const id = formData.get("id") as string;
-  await supabase.from("portfolio_items").delete().eq("id", id);
+  await supabase.from("portfolio_items").delete().eq("id", id).eq("profile_id", user.id);
   revalidatePath("/dashboard");
 }
 

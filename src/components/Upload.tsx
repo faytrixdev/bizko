@@ -95,6 +95,10 @@ async function cropToSquare(file: File): Promise<File> {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas non supporté");
 
+  // Fond blanc : élimine la transparence des PNG, le rond reste toujours plein
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, size, size);
+
   // Crop carré centré : le sujet occupe tout le rond
   ctx.drawImage(
     img,
@@ -108,10 +112,10 @@ async function cropToSquare(file: File): Promise<File> {
     size
   );
 
-  const type = file.type === "image/png" ? "image/png" : "image/jpeg";
+  // Sortie en JPEG : pas d'alpha, garantit un rond opaque
   const blob = await new Promise<Blob>((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Conversion impossible"))), type, 0.95)
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Conversion impossible"))), "image/jpeg", 0.92)
   );
-  return new File([blob], file.name.replace(/\.[^.]+$/, `.${type === "image/png" ? "png" : "jpg"}`), { type });
+  return new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
 }
 

@@ -58,24 +58,23 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
           )}
         >
           <div className="relative flex flex-wrap items-center gap-4 lg:gap-0 py-2">
-            {/* Logo + Hamburger */}
-            <div className="flex w-full justify-between lg:w-auto lg:mr-8">
+            {/* Logo */}
+            <div className="flex items-center lg:w-40 shrink-0">
               <Link href="/" aria-label="Bizko" className="flex items-center">
                 <img src="/logo.png" alt="Bizko" className="h-7" />
               </Link>
-
               <button
                 onClick={() => setMenuState(!menuState)}
                 aria-label={menuState ? "Fermer le menu" : "Ouvrir le menu"}
-                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
+                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden ml-auto"
               >
                 <Equal className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 text-gray-600 duration-200" />
                 <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 text-gray-600 duration-200" />
               </button>
             </div>
 
-            {/* Desktop nav links */}
-            <div className="hidden lg:flex lg:items-center lg:gap-5">
+            {/* Desktop nav links - centered */}
+            <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1 lg:gap-5">
               {menuItems.map((item, index) => (
                 <a
                   key={index}
@@ -86,9 +85,6 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
                 </a>
               ))}
             </div>
-
-            {/* Spacer */}
-            <div className="hidden lg:block lg:flex-1" />
 
             {/* Mobile dropdown + Desktop auth */}
             <div

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { Logo } from "@/components/Logo";
 
 export function AuthShell({
   children,
@@ -17,7 +18,7 @@ export function AuthShell({
       <div className="w-full max-w-[360px]">
         <div className="flex items-center justify-between mb-6">
           <Link href="/" className="inline-flex">
-            <img src="/logo.png" alt="Bizko" className="h-8" />
+            <Logo size="md" />
           </Link>
           <LocaleSwitch />
         </div>

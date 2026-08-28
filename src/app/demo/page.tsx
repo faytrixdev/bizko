@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getServerMessages } from "@/lib/i18n/messages-server";
+import { Logo } from "@/components/Logo";
 
 export default async function Demo() {
   const msg = await getServerMessages();
@@ -9,7 +10,7 @@ export default async function Demo() {
       <header className="border-b border-gray-200">
         <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="inline-flex">
-            <img src="/logo.png" alt="Bizko" className="h-7" />
+            <Logo size="md" />
           </Link>
           <Link
             href="/signup"

@@ -6,6 +6,7 @@ import { PasswordChangeModal } from "@/components/account/PasswordChangeModal";
 import { LogoutConfirmModal } from "@/components/account/LogoutConfirmModal";
 import { DeleteAccountModal } from "@/components/account/DeleteAccountModal";
 import { useI18n } from "@/lib/i18n/provider";
+import { Logo } from "@/components/Logo";
 import type { Profile } from "@/types/database";
 
 interface AccountClientProps {
@@ -24,7 +25,7 @@ export function AccountClient({ user, profile }: AccountClientProps) {
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)] border-b border-gray-100/60">
         <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="inline-flex">
-            <img src="/logo.png" alt="Bizko" className="h-7" />
+            <Logo size="md" />
           </Link>
           <div className="flex items-center gap-1.5">
             <Link

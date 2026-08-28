@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { Logo } from "@/components/Logo";
 import { useI18n } from "@/lib/i18n/provider";
 
 export function LegalHeader() {
@@ -10,7 +11,7 @@ export function LegalHeader() {
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)] border-b border-gray-100/60">
       <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/" className="inline-flex">
-          <img src="/logo.png" alt="Bizko" className="h-7" />
+          <Logo size="md" />
         </Link>
         <div className="flex items-center gap-2">
           <LocaleSwitch />

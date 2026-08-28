@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { Logo } from "@/components/Logo";
 
 interface LandingNavbarProps {
   msg: {
@@ -60,7 +61,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
             {/* Logo */}
             <div className="flex items-center shrink-0 justify-start">
               <Link href="/" aria-label="Bizko" className="flex items-center">
-                <img src="/logo.png" alt="Bizko" className="h-7" />
+                <Logo size="lg" />
               </Link>
             </div>
 
@@ -97,7 +98,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
           <div className="relative flex flex-wrap items-center justify-between gap-4 py-2 lg:hidden">
             <div className="flex w-full justify-between">
               <Link href="/" aria-label="Bizko" className="flex items-center">
-                <img src="/logo.png" alt="Bizko" className="h-7" />
+                <Logo size="lg" />
               </Link>
               <button
                 onClick={() => setMenuState(!menuState)}

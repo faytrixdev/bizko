@@ -29,13 +29,13 @@ export function DeleteAccountModal({ open, onClose, user }: DeleteAccountModalPr
     if (!dialog) return;
     if (open) {
       dialog.showModal();
-      setConfirmation("");
     } else {
       dialog.close();
     }
   }, [open]);
 
   function handleClose() {
+    setConfirmation("");
     onClose();
   }
 

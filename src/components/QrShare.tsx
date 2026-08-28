@@ -7,11 +7,7 @@ export function QrShare({ url }: { url: string }) {
   const { t } = useI18n();
   const [qr, setQr] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [hasShare, setHasShare] = useState(false);
-
-  useEffect(() => {
-    setHasShare(typeof navigator !== "undefined" && !!navigator.share);
-  }, []);
+  const [hasShare] = useState(() => typeof navigator !== "undefined" && !!navigator.share);
 
   useEffect(() => {
     if (open) QRCode.toDataURL(url, { width: 400, margin: 2 }).then(setQr);

@@ -3,9 +3,27 @@ import { renderHook, waitFor, cleanup } from "@testing-library/react";
 import { useSession } from "../useSession";
 import { createClient } from "@/lib/supabase/client";
 
+type MockSupabase = ReturnType<typeof createClient>;
+
 vi.mock("@/lib/supabase/client", () => ({
   createClient: vi.fn(),
 }));
+
+function mockSessionClient({ single }: { single: ReturnType<typeof vi.fn> }) {
+  const client = {
+    auth: {
+      getUser: vi.fn(),
+      onAuthStateChange: vi.fn().mockReturnValue({
+        data: { subscription: { unsubscribe: vi.fn() } },
+      }),
+    },
+    from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single,
+  } as unknown as MockSupabase;
+  return client;
+}
 
 afterEach(() => {
   cleanup();
@@ -13,18 +31,9 @@ afterEach(() => {
 
 describe("useSession", () => {
   it("returns initial loading state", () => {
-    vi.mocked(createClient).mockReturnValue({
-      auth: {
-        getUser: vi.fn().mockResolvedValue({ data: { user: null } }),
-        onAuthStateChange: vi.fn().mockReturnValue({
-          data: { subscription: { unsubscribe: vi.fn() } },
-        }),
-      },
-      from: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null }),
-    } as any);
+    const client = mockSessionClient({ single: vi.fn().mockResolvedValue({ data: null }) });
+    vi.mocked(createClient).mockReturnValue(client);
+    client.auth.getUser = vi.fn().mockResolvedValue({ data: { user: null } });
 
     const { result } = renderHook(() => useSession());
     expect(result.current.loading).toBe(true);
@@ -37,18 +46,9 @@ describe("useSession", () => {
     const mockUser = { id: "123", email: "test@example.com" };
     const mockProfile = { id: "123", username: "testuser" };
 
-    vi.mocked(createClient).mockReturnValue({
-      auth: {
-        getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
-        onAuthStateChange: vi.fn().mockReturnValue({
-          data: { subscription: { unsubscribe: vi.fn() } },
-        }),
-      },
-      from: vi.fn().mockReturnThis(),
-      select: vi.fn().mockReturnThis(),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: mockProfile }),
-    } as any);
+    const client = mockSessionClient({ single: vi.fn().mockResolvedValue({ data: mockProfile }) });
+    vi.mocked(createClient).mockReturnValue(client);
+    client.auth.getUser = vi.fn().mockResolvedValue({ data: { user: mockUser } });
 
     const { result } = renderHook(() => useSession());
 

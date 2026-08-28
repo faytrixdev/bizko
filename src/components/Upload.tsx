@@ -18,8 +18,8 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
     try {
       const squared = await cropToSquare(file);
       const compressed = await imageCompression(squared, { maxSizeMB: 0.3, maxWidthOrHeight: 800, useWebWorker: true });
-      const path = `${profileId}/avatar-${Date.now()}.webp`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, compressed, { upsert: true, contentType: "image/webp" });
+      const path = `${profileId}/avatar-${Date.now()}.jpg`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
       await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", profileId);
@@ -53,8 +53,9 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     if (!file) return;
     setUploading(true);
     try {
-      const compressed = await imageCompression(file, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true });
-      const path = `${profileId}/${Date.now()}-${file.name.replace(/\s/g, "-")}.webp`;
+      const compressed = await imageCompression(file, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
+      const safeName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9-_]/g, "-");
+      const path = `${profileId}/${Date.now()}-${safeName}.webp`;
       const { error: upErr } = await supabase.storage.from("portfolio").upload(path, compressed, { contentType: "image/webp" });
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("portfolio").getPublicUrl(path);

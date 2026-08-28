@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
@@ -143,13 +144,34 @@ export async function deleteAccount() {
     return { error: "Utilisateur non trouvé." };
   }
 
+  const uid = user.id;
+
+  // Delete the user's storage files before removing data / signing out.
+  for (const bucket of ["avatars", "portfolio"]) {
+    const { data: objects } = await supabase.storage.from(bucket).list(uid);
+    if (objects && objects.length > 0) {
+      const paths = objects.map((o) => `${uid}/${o.name}`);
+      await supabase.storage.from(bucket).remove(paths);
+    }
+  }
+
+  // Profile deletion cascades to services, portfolio_items, social_links, events.
   const { error: profileError } = await supabase
     .from("profiles")
     .delete()
-    .eq("id", user.id);
+    .eq("id", uid);
 
   if (profileError) {
     return { error: "Erreur lors de la suppression du profil." };
+  }
+
+  // Delete the auth user via the server-side service role client.
+  // Runs on the server only; the key never reaches the browser, and we only
+  // ever target the id of the currently authenticated session.
+  const { error: deleteUserError } = await createAdminClient().auth.admin.deleteUser(uid);
+
+  if (deleteUserError) {
+    return { error: "Erreur lors de la suppression du compte." };
   }
 
   const { error: signOutError } = await supabase.auth.signOut();

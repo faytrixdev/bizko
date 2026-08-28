@@ -16,18 +16,21 @@ function getNested(obj: Record<string, unknown>, path: string): string {
 }
 
 export function I18nProvider({ children, initialLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
-  const [locale, setLocaleState] = useState<Locale>(initialLocale || defaultLocale);
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    if (initialLocale) return initialLocale;
+    if (typeof window !== "undefined") {
+      const saved = window.localStorage.getItem("bizko-locale");
+      return saved === "fr" || saved === "en" ? saved : defaultLocale;
+    }
+    return defaultLocale;
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem("bizko-locale") as Locale | null;
-    if (saved && (saved === "fr" || saved === "en")) {
-      setLocaleState(saved);
-      document.documentElement.lang = saved;
-    } else {
-      // Pas de préférence sauvegardée : le site est en français par défaut
-      document.documentElement.lang = "fr";
-    }
-  }, []);
+    // Keep the cookie in sync with the effective locale so SSR matches the client
+    // on subsequent requests (only relevant when initialLocale was not provided).
+    document.cookie = `bizko-locale=${locale}; path=/; max-age=31536000`;
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const setLocale = (l: Locale) => {
     setLocaleState(l);

@@ -17,7 +17,6 @@ export default function VerifyEmail() {
   const email = searchParams.get("email") || "";
 
   const [cooldown, setCooldown] = useState(COOLDOWN_SECONDS);
-  const [hasResent, setHasResent] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Start cooldown on mount (email already auto-filled)
@@ -30,15 +29,10 @@ export default function VerifyEmail() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!hasResent) return;
-    setCooldown(COOLDOWN_SECONDS);
-  }, [hasResent]);
-
   const [state, formAction] = useActionState(
     async (_prev: ResendState | null, formData: FormData): Promise<ResendState> => {
       const result = await resendConfirmationEmail(email);
-      setHasResent(true);
+      setCooldown(COOLDOWN_SECONDS);
       return result;
     },
     null

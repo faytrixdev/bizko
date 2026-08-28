@@ -43,7 +43,18 @@ export function useSession(): SessionState {
   }, [supabase, fetchProfile]);
 
   useEffect(() => {
-    refresh();
+    let active = true;
+
+    (async () => {
+      try {
+        const { data: { user: currentUser } } = await supabase.auth.getUser();
+        if (!active) return;
+        setUser(currentUser);
+        setProfile(currentUser ? await fetchProfile(currentUser.id) : null);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -59,8 +70,11 @@ export function useSession(): SessionState {
       }
     );
 
-    return () => subscription.unsubscribe();
-  }, [supabase, fetchProfile, refresh]);
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, [supabase, fetchProfile]);
 
   return {
     user,

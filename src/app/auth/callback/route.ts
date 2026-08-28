@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+function safeNextPath(raw: string | null): string | null {
+  if (!raw) return null;
+  // Allow only same-origin relative paths (no protocol-relative "//", no "javascript:").
+  if (!raw.startsWith('/') || raw.startsWith('//')) return null;
+  return raw;
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') ?? '/dashboard';
+  const next = safeNextPath(searchParams.get('next'));
 
   if (code) {
     const supabase = await createClient();
@@ -20,8 +27,10 @@ export async function GET(request: Request) {
           .eq('id', user.id)
           .single();
 
-        const redirectUrl = profile ? `${origin}/dashboard` : `${origin}/onboarding`;
-        return NextResponse.redirect(redirectUrl);
+        // Only honor `next` when the user already has a profile; otherwise
+        // always push unonboarded users to onboarding.
+        const target = next && profile ? next : profile ? '/dashboard' : '/onboarding';
+        return NextResponse.redirect(`${origin}${target}`);
       }
     } else {
       console.error('exchangeCodeForSession error:', error);

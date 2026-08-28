@@ -59,7 +59,7 @@ export default async function PublicProfile({ params }: Props) {
     supabase.from("social_links").select("*").eq("profile_id", profile.id).order("position"),
   ]);
 
-  supabase.from("events").insert({ profile_id: profile.id, type: "view" }).then(() => {});
+  supabase.rpc("record_event", { p_profile_id: profile.id, p_type: "view" }).then(() => {});
 
   const msg = await getServerMessagesForLocale(profile.locale);
 

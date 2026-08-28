@@ -74,7 +74,7 @@ export default async function Home() {
 
           {/* CTA buttons */}
           <SectionReveal delay={240}>
-            <div className="mx-auto w-full flex items-center justify-center gap-3 mt-8">
+            <div className="mx-auto w-full flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
               <Link
                 href="/signup"
                 className="bg-[#FF6B35] hover:bg-[#EA580C] text-white px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#FF6B35]/20 inline-flex items-center"

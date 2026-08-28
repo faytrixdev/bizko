@@ -113,7 +113,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               </div>
 
               {/* Auth buttons */}
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0">
+              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0 md:w-fit">
                 <Button
                   asChild
                   variant="outline"

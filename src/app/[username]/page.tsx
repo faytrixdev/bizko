@@ -3,7 +3,9 @@ import { buildWaLink, buildMainWaMessage, buildServiceWaMessage } from "@/lib/ut
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getServerMessages, getServerMessagesForLocale } from "@/lib/i18n/messages-server";
+import { getServerMessagesForLocale } from "@/lib/i18n/messages-server";
+import { WhatsAppFloating } from "@/components/WhatsAppFloating";
+import { PortfolioGallery } from "@/components/Lightbox";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -31,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       images: profile.avatar_url ? [{ url: profile.avatar_url }] : undefined,
-      url: `https://bizko.co/${profile.username}`,
+      url: `https://bizko.me/${profile.username}`,
       type: "profile",
     },
     twitter: { card: "summary", title, description, images: profile.avatar_url ? [profile.avatar_url] : undefined },
@@ -200,19 +202,7 @@ export default async function PublicProfile({ params }: Props) {
             <h2 className={`font-bold font-display px-1 mb-4 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
               {msg.profile.portfolio}
             </h2>
-            <div className={isPortfolio ? "grid grid-cols-2 gap-3" : "grid grid-cols-2 gap-3"}>
-              {portfolio.map((p) => (
-                <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-                  <img src={p.image_url} alt={p.title || ""} className="aspect-square w-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  {p.title && (
-                    <div className="absolute inset-x-0 bottom-0 p-3 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <p className="text-xs font-medium text-white truncate">{p.title}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+            <PortfolioGallery items={portfolio} />
           </div>
         )}
 
@@ -251,7 +241,7 @@ export default async function PublicProfile({ params }: Props) {
 
         {/* Footer */}
         <p className="text-center text-xs text-gray-400 mt-12">
-          {msg.profile.madeWith} <Link href="/" className="font-medium text-[#FF6B35]">Bizko</Link> - bizko.co/{profile.username}
+          {msg.profile.madeWith} <Link href="/" className="font-medium text-[#FF6B35]">Bizko</Link> - bizko.me/{profile.username}
         </p>
       </div>
 
@@ -264,6 +254,9 @@ export default async function PublicProfile({ params }: Props) {
           {msg.profile.stickyWa}
         </a>
       </div>
+
+      {/* Floating WhatsApp - desktop only */}
+      <WhatsAppFloating href={trackClick("click_floating", mainWaRaw)} />
     </div>
   );
 }

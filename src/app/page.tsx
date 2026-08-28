@@ -145,7 +145,7 @@ export default async function Home() {
       </section>
 
       {/* ─── FEATURES ─── */}
-      <section id="fonctionnalités" className="py-20 sm:py-28 bg-gray-50/50">
+      <section id="fonctionnalites" className="py-20 sm:py-28 bg-gray-50/50">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <SectionReveal>
             <div className="text-center max-w-lg mx-auto mb-14">
@@ -625,7 +625,7 @@ export default async function Home() {
       </section>
 
       {/* ─── HOW IT WORKS ─── */}
-      <section id="comment-ça-marche" className="py-20 sm:py-28">
+      <section id="comment-ca-marche" className="py-20 sm:py-28">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <SectionReveal>
             <div className="text-center max-w-lg mx-auto mb-14">
@@ -835,10 +835,9 @@ export default async function Home() {
               </h4>
               <ul className="space-y-2">
                 {[
-                  { label: msg.landing.footerFeatures, href: "#fonctionnalités" },
-                  { label: msg.landing.footerHowItWorks, href: "#comment-ça-marche" },
+                  { label: msg.landing.footerFeatures, href: "#fonctionnalites" },
+                  { label: msg.landing.footerHowItWorks, href: "#comment-ca-marche" },
                   { label: msg.landing.footerExamples, href: "#exemples" },
-                  { label: msg.landing.footerPricing, href: "#tarifs" },
                   { label: msg.landing.footerFaq, href: "#faq" },
                 ].map((l) => (
                   <li key={l.label}>

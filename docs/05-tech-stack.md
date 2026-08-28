@@ -60,7 +60,7 @@ Alternative écartée : Firebase (moins SQL), custom Nest/Express (overkill).
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY= (serveur uniquement)
-NEXT_PUBLIC_SITE_URL=https://bizko.co
+NEXT_PUBLIC_SITE_URL=https://bizko.me
 RESEND_API_KEY= (optionnel MVP)
 ```
 

@@ -9,7 +9,7 @@ import { LocaleSwitch } from "@/components/LocaleSwitch";
 
 interface LandingNavbarProps {
   msg: {
-    landing: { login: string; heroCta: string; navFeatures: string; navHowItWorks: string; navExamples: string; navPricing: string; navFaq: string };
+    landing: { login: string; heroCta: string; navFeatures: string; navHowItWorks: string; navExamples: string; navFaq: string };
   };
 }
 
@@ -18,8 +18,8 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   const menuItems = [
-    { name: msg.landing.navFeatures, href: "#fonctionnalités" },
-    { name: msg.landing.navHowItWorks, href: "#comment-ça-marche" },
+    { name: msg.landing.navFeatures, href: "#fonctionnalites" },
+    { name: msg.landing.navHowItWorks, href: "#comment-ca-marche" },
     { name: msg.landing.navExamples, href: "#exemples" },
     { name: msg.landing.navFaq, href: "#faq" },
   ];
@@ -87,7 +87,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               <Button asChild size="sm" className={cn("bg-[#FF6B35] hover:bg-[#EA580C] text-white", isScrolled && "lg:hidden")}>
                 <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
               </Button>
-              <Button asChild size="sm" className={cn("bg-gray-900 text-white hover:bg-gray-800", isScrolled ? "lg:inline-flex" : "hidden")}>
+              <Button asChild size="sm" className={cn("bg-[#FF6B35] hover:bg-[#EA580C] text-white", isScrolled ? "lg:inline-flex" : "hidden")}>
                 <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
               </Button>
             </div>

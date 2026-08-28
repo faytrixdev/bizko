@@ -10,7 +10,6 @@
     "navFeatures": "Fonctionnalités",
     "navHowItWorks": "Comment ça marche",
     "navExamples": "Exemples",
-    "navPricing": "Tarifs",
     "navFaq": "FAQ",
     "previewDescription": "Photographe - Abidjan, CI",
     "badge": "Pour les indépendants qui vendent leur expertise",
@@ -162,7 +161,6 @@
     "footerFeatures": "Fonctionnalités",
     "footerHowItWorks": "Comment ça marche",
     "footerExamples": "Exemples",
-    "footerPricing": "Tarifs",
     "footerFaq": "FAQ",
     "footerAccount": "Compte",
     "footerLogin": "Connexion",
@@ -372,10 +370,10 @@
     "logoutError": "Erreur lors de la deconnexion."
   },
   "username": {
-    "available": "Username available",
-    "taken": "Username already taken",
-    "invalid": "3-30 caracteres, lettres minuscules, chiffres, _",
-    "idle": "3-30 caracteres, lettres minuscules, chiffres, _"
+    "available": "Username disponible",
+    "taken": "Username déjà pris",
+    "invalid": "3-30 caractères, lettres minuscules, chiffres, _",
+    "idle": "3-30 caractères, lettres minuscules, chiffres, _"
   },
   "accountPage": {
     "title": "Parametres du compte",
@@ -437,7 +435,7 @@
     "terms9Title": "9. Modifications",
     "terms9": "Nous nous reservons le droit de modifier ces conditions a tout moment. Les modifications entrent en vigueur des leur publication. L'utilisation continue du service apres modification constitue l'acceptation des nouvelles conditions.",
     "terms10Title": "10. Contact",
-    "terms10": "Pour toute question concernant ces conditions, contactez-nous a support@bizko.co.",
+    "terms10": "Pour toute question concernant ces conditions, contactez-nous a support@bizko.me.",
     "privacyTitle": "Politique de confidentialite",
     "privacyIntro": "Chez Bizko, la protection de vos donnees personnelles est une priorite. Cette politique explique quelles donnees nous collectons, comment nous les utilisons et quels sont vos droits.",
     "privacy1Title": "1. Donnees collectees",
@@ -459,6 +457,6 @@
     "privacy9Title": "9. Modifications",
     "privacy9": "Nous nous reservons le droit de modifier cette politique a tout moment. Les modifications sont notifiees par email ou via le service. L'utilisation continue apres modification constitue l'acceptation de la politique mise a jour.",
     "privacy10Title": "10. Contact",
-    "privacy10": "Pour toute question concernant cette politique ou pour exercer vos droits, contactez-nous a support@bizko.co."
+    "privacy10": "Pour toute question concernant cette politique ou pour exercer vos droits, contactez-nous a support@bizko.me."
   }
 }

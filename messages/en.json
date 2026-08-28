@@ -10,7 +10,6 @@
     "navFeatures": "Features",
     "navHowItWorks": "How it works",
     "navExamples": "Examples",
-    "navPricing": "Pricing",
     "navFaq": "FAQ",
     "previewDescription": "Photographer - Abidjan, CI",
     "badge": "For freelancers who sell their expertise",
@@ -162,7 +161,6 @@
     "footerFeatures": "Features",
     "footerHowItWorks": "How it works",
     "footerExamples": "Examples",
-    "footerPricing": "Pricing",
     "footerFaq": "FAQ",
     "footerAccount": "Account",
     "footerLogin": "Log in",
@@ -437,7 +435,7 @@
     "terms9Title": "9. Modifications",
     "terms9": "We reserve the right to modify these terms at any time. Modifications take effect upon publication. Continued use of the service after modification constitutes acceptance of the new terms.",
     "terms10Title": "10. Contact",
-    "terms10": "For any questions regarding these terms, contact us at support@bizko.co.",
+    "terms10": "For any questions regarding these terms, contact us at support@bizko.me.",
     "privacyTitle": "Privacy Policy",
     "privacyIntro": "At Bizko, protecting your personal data is a priority. This policy explains what data we collect, how we use it, and what your rights are.",
     "privacy1Title": "1. Data collected",
@@ -459,6 +457,6 @@
     "privacy9Title": "9. Modifications",
     "privacy9": "We reserve the right to modify this policy at any time. Modifications are notified by email or via the service. Continued use after modification constitutes acceptance of the updated policy.",
     "privacy10Title": "10. Contact",
-    "privacy10": "For any questions regarding this policy or to exercise your rights, contact us at support@bizko.co."
+    "privacy10": "For any questions regarding this policy or to exercise your rights, contact us at support@bizko.me."
   }
 }

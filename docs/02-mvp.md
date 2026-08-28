@@ -8,7 +8,7 @@ Objectif MVP : permettre à un indépendant service de créer et partager en < 5
 
 ### 1. Auth Email + Onboarding
 Objectif : friction 0, création compte en 30s.
-- Inscription/connexion email+password (Supabase Auth), vérification email optionnelle au MVP.
+- Inscription/connexion email+password (Supabase Auth), vérification email obligatoire.
 - Onboarding 3 étapes : (1) Choisir username, (2) Identité (nom, tagline, ville, WhatsApp), (3) Premier service.
 - Redirection vers éditeur après onboarding.
 
@@ -48,7 +48,7 @@ Objectif : choix esthétique sans complexité.
 
 ### 8. Username / URL unique
 Objectif : identité partageable.
-- `bizko.co/{username}`, unique, 3-30c, a-z0-9_, lowercased, check dispo en temps réel.
+- `bizko.me/{username}`, unique, 3-30c, a-z0-9_, lowercased, check dispo en temps réel.
 - Réservation à la création.
 
 ### 9. Partage + QR secondaire

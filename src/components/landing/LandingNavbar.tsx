@@ -71,7 +71,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
                 <a
                   key={index}
                   href={item.href}
-                  className="text-gray-500 hover:text-gray-900 duration-150 whitespace-nowrap text-sm"
+                  className="text-gray-500 hover:text-gray-900 duration-150 whitespace-nowrap text-[15px] font-medium"
                 >
                   {item.name}
                 </a>

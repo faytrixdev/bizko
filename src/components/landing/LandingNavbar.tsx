@@ -114,8 +114,9 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               </div>
 
               {/* Auth buttons */}
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0 md:w-fit">
+              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0 md:w-fit md:items-center">
                 <LocaleSwitch />
+                <div className="hidden sm:block w-px h-5 bg-gray-200" />
                 <Button
                   asChild
                   variant="outline"

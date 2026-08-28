@@ -14,6 +14,7 @@ export function LegalHeader() {
         </Link>
         <div className="flex items-center gap-2">
           <LocaleSwitch />
+          <div className="w-px h-5 bg-gray-200" />
           <Link
             href="/"
             className="inline-flex items-center justify-center h-8 px-2.5 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200 rounded-lg hover:bg-gray-50"

@@ -429,10 +429,11 @@ export default async function Home() {
 
             {/* Large Mockup */}
             <SectionReveal delay={150} className="lg:justify-self-end">
-              <div className="w-full max-w-[440px] mx-auto lg:mx-0">
+              <div className="w-full max-w-[340px] sm:max-w-[380px] mx-auto lg:mx-0">
                 <ProfileMockup
                   name="Karim Touré"
                   initials="KT"
+                  avatarUrl="/mockup/photo-profile.jpg"
                   profession="Développeur web"
                   bio="Je crée des sites web et applications mobiles pour les entreprises africaines. Stack : React, Next.js, Supabase."
                   location="Dakar, SN"
@@ -441,7 +442,12 @@ export default async function Home() {
                     { title: "Application mobile", price: "500 000 FCFA" },
                     { title: "Audit technique", price: "50 000 FCFA" },
                   ]}
+                  socials={[
+                    { platform: "instagram", url: "#" },
+                    { platform: "linkedin", url: "#" },
+                  ]}
                   variant="detailed"
+                  frame
                 />
               </div>
             </SectionReveal>

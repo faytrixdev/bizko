@@ -117,7 +117,7 @@ export default async function Home() {
           <SectionReveal delay={300}>
             <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px]">
               <ProfileMockup
-                name="Aminata Diallo"
+                name="Amadou Diallo"
                 initials="AD"
                 avatarUrl="/mockup/photo-profile.jpg"
                 profession="Photographe à Abidjan"

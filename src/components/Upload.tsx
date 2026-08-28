@@ -2,8 +2,10 @@
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import imageCompression from "browser-image-compression";
+import { useI18n } from "@/lib/i18n/provider";
 
 export function AvatarUpload({ profileId, currentUrl }: { profileId: string; currentUrl?: string | null }) {
+  const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
 
@@ -30,7 +32,7 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
     <div className="flex items-center gap-3">
       {currentUrl ? <img src={currentUrl} alt="avatar" className="h-12 w-12 rounded-full object-cover border border-gray-200" /> : <div className="h-12 w-12 rounded-full bg-gray-100" />}
       <label className="text-sm font-medium border border-gray-200 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 text-gray-700">
-        {uploading ? "Upload..." : "Changer avatar"}
+        {uploading ? "Upload..." : t("upload.changeAvatar")}
         <input type="file" accept="image/*" className="hidden" onChange={onChange} disabled={uploading} />
       </label>
     </div>
@@ -38,6 +40,7 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
 }
 
 export function PortfolioUpload({ profileId }: { profileId: string }) {
+  const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
 
@@ -64,7 +67,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
 
   return (
     <label className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700">
-      {uploading ? "Upload..." : "+ Ajouter image"}
+      {uploading ? "Upload..." : t("upload.addImage")}
       <input type="file" accept="image/*" className="hidden" onChange={onChange} disabled={uploading} />
     </label>
   );

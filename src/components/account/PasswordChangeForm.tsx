@@ -7,8 +7,10 @@ import { Input } from "@/components/auth/Input";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Field } from "@/components/auth/Field";
 import { Alert } from "@/components/auth/Alert";
+import { useI18n } from "@/lib/i18n/provider";
 
 export function PasswordChangeForm() {
+  const { t } = useI18n();
   const [state, formAction, isPending] = useActionState(
     async (_prev: { success?: string; error?: string } | null, formData: FormData) => {
       return await changePassword(formData);
@@ -21,7 +23,7 @@ export function PasswordChangeForm() {
       <Alert type="error">{state?.error}</Alert>
       <Alert type="success">{state?.success}</Alert>
 
-      <Field label="Mot de passe actuel">
+      <Field label={t("password.current")}>
         <PasswordInput
           name="currentPassword"
           required
@@ -29,7 +31,7 @@ export function PasswordChangeForm() {
         />
       </Field>
 
-      <Field label="Nouveau mot de passe" hint="6 caractères minimum">
+      <Field label={t("password.new")} hint={t("password.newHint")}>
         <PasswordInput
           name="newPassword"
           required
@@ -38,7 +40,7 @@ export function PasswordChangeForm() {
         />
       </Field>
 
-      <Field label="Confirmer le mot de passe">
+      <Field label={t("password.confirm")}>
         <PasswordInput
           name="confirmPassword"
           required
@@ -53,7 +55,7 @@ export function PasswordChangeForm() {
         className="h-11 w-full rounded-lg bg-[#FF6B35] text-white inline-flex items-center justify-center gap-2 text-sm font-semibold transition hover:bg-[#EA580C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {isPending && <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />}
-        Modifier le mot de passe
+        {t("password.changeBtn")}
       </button>
     </form>
   );

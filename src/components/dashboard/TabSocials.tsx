@@ -29,7 +29,7 @@ export function TabSocials({ socials }: TabSocialsProps) {
         <form action={addSocial} className="mt-3 flex flex-col gap-2">
           <CustomSelect
             name="platform"
-            placeholder="Plateforme..."
+            placeholder={t("socials.platformPlaceholder")}
             options={[
               { value: "instagram", label: "Instagram" },
               { value: "tiktok", label: "TikTok" },

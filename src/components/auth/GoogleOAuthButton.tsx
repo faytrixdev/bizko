@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { useI18n } from "@/lib/i18n/provider";
 
 interface GoogleOAuthButtonProps {
   mode: 'login' | 'signup';
 }
 
 export function GoogleOAuthButton({ mode }: GoogleOAuthButtonProps) {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
@@ -29,7 +31,7 @@ export function GoogleOAuthButton({ mode }: GoogleOAuthButtonProps) {
         setLoading(false);
       }
     } catch (err) {
-      setError('Une erreur est survenue. Veuillez réessayer.');
+      setError(t("auth2.googleError"));
       setLoading(false);
     }
   };
@@ -64,7 +66,7 @@ export function GoogleOAuthButton({ mode }: GoogleOAuthButtonProps) {
             />
           </svg>
         )}
-        {mode === 'login' ? 'Continuer avec Google' : 'S\'inscrire avec Google'}
+        {mode === 'login' ? t("auth2.googleLogin") : t("auth2.googleSignup")}
       </button>
       {error && (
         <p className="mt-2 text-sm text-red-600 text-center">{error}</p>

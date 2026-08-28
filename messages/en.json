@@ -133,5 +133,84 @@
     "subtitle": "Check the spelling or create your free link.",
     "cta": "Create your Bizko",
     "home": "Home"
+  },
+  "account": {
+    "title": "Account settings",
+    "security": "Security",
+    "account": "Account",
+    "displayName": "Display name",
+    "tagline": "Tagline",
+    "taglinePlaceholder": "Web & mobile developer",
+    "bio": "Bio",
+    "bioPlaceholder": "A few words about yourself...",
+    "city": "City",
+    "cityPlaceholder": "Dakar",
+    "country": "Country",
+    "phone": "Phone",
+    "phoneHint": "International format",
+    "save": "Save",
+    "success": "Profile updated successfully.",
+    "error": "An error occurred."
+  },
+  "password": {
+    "current": "Current password",
+    "new": "New password",
+    "newHint": "6 characters minimum",
+    "confirm": "Confirm password",
+    "changeBtn": "Change password",
+    "success": "Password changed successfully.",
+    "errorCurrent": "Current password is incorrect.",
+    "errorNotFound": "User not found.",
+    "errorMismatch": "Passwords do not match.",
+    "errorMin": "Password must contain at least 6 characters."
+  },
+  "deleteAccount": {
+    "zone": "Danger zone",
+    "warning": "Deleting your account is",
+    "irreversible": "irreversible",
+    "willDelete": "This will permanently delete:",
+    "item1": "Your public profile and all its data",
+    "item2": "All your services and portfolio items",
+    "item3": "Your social links and history",
+    "item4": "Your authentication account",
+    "typeInstruction": "Type",
+    "typeConfirm": "to confirm deletion of your account",
+    "emailUnavailable": "email not available",
+    "placeholder": "Type DELETE",
+    "btn": "Delete my account",
+    "error": "Error deleting profile."
+  },
+  "qr": {
+    "copied": "Link copied!",
+    "copyLink": "Copy link",
+    "close": "Close QR",
+    "generate": "Generate QR",
+    "myBizko": "My Bizko",
+    "share": "Share",
+    "download": "Download PNG"
+  },
+  "upload": {
+    "changeAvatar": "Change avatar",
+    "addImage": "+ Add image"
+  },
+  "settings": {
+    "myAccount": "My account"
+  },
+  "socials": {
+    "platformPlaceholder": "Platform..."
+  },
+  "auth2": {
+    "googleLogin": "Continue with Google",
+    "googleSignup": "Sign up with Google",
+    "googleError": "An error occurred. Please try again.",
+    "verifyEmailRequired": "Please verify your email. Check your inbox.",
+    "userNotFound": "User not found.",
+    "logoutError": "Error during logout."
+  },
+  "username": {
+    "available": "Username available",
+    "taken": "Username already taken",
+    "invalid": "3-30 characters, lowercase letters, numbers, _",
+    "idle": "3-30 characters, lowercase letters, numbers, _"
   }
 }

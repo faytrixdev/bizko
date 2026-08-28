@@ -75,8 +75,8 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
             </div>
 
             {/* Desktop nav links - centered */}
-            <div className="hidden lg:flex lg:justify-center lg:flex-1 lg:min-w-0">
-              <ul className="flex gap-6 text-sm shrink-0">
+            <div className="hidden lg:flex lg:justify-center lg:flex-none">
+              <ul className="flex gap-5 text-sm">
                 {menuItems.map((item, index) => (
                   <li key={index}>
                     <a

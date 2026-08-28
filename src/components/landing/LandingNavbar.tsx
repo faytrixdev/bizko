@@ -5,6 +5,7 @@ import { Equal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 
 interface LandingNavbarProps {
   msg: {
@@ -114,6 +115,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
 
               {/* Auth buttons */}
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0 md:w-fit">
+                <LocaleSwitch />
                 <Button
                   asChild
                   variant="outline"

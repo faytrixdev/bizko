@@ -55,7 +55,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user) {
-    if (isPublicRoute) {
+    if (isPublicRoute || pathname === "/" || pathname === "/demo") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 

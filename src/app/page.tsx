@@ -155,71 +155,151 @@ export default async function Home() {
               </h2>
               <p className="mt-4 text-gray-500 leading-7">
                 Bizko rassemble toutes les informations importantes au même
-                endroit — pour que tes prospects trouvent tout en un coup d&apos;œil.
+                endroit — pour que tes prospects trouvent tout en un coup
+                d&apos;œil.
               </p>
             </div>
           </SectionReveal>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                  </svg>
-                ),
-                title: "Ton identité",
-                desc: "Présente qui tu es et ce que tu fais.",
-              },
-              {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* ── Identité — large ── */}
+            <SectionReveal delay={0} className="sm:col-span-2">
+              <div className="group relative rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
+                <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center">
+                  <div className="flex-1 min-w-0">
+                    <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1">Ton identité</h3>
+                    <p className="text-sm text-gray-500 leading-6">
+                      Présente qui tu es et ce que tu fais — nom, photo, bio
+                      et localisation.
+                    </p>
+                  </div>
+                  {/* Mini-mockup identité */}
+                  <div className="w-48 shrink-0 rounded-xl border border-gray-100 bg-gray-50/50 p-4 flex flex-col items-center text-center">
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white font-bold text-[10px] shadow-md ring-2 ring-white">
+                      AD
+                    </div>
+                    <p className="mt-2 text-xs font-semibold text-gray-900">Aminata Diallo</p>
+                    <p className="text-[10px] text-[#FF6B35] font-medium">Photographe</p>
+                    <div className="mt-1.5 inline-flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5">
+                      <svg className="w-2.5 h-2.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                      </svg>
+                      <span className="text-[8px] text-gray-500">Abidjan</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SectionReveal>
+
+            {/* ── Services — petite ── */}
+            <SectionReveal delay={80}>
+              <div className="group rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
+                <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   </svg>
-                ),
-                title: "Tes services",
-                desc: "Montre clairement ce que tu proposes.",
-              },
-              {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659 1.171-1.671.121-.96M12 2.25l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 1.847 12.673 1.75 12 1.75c-.673 0-1.536.097-2.121.288C9.083.787 7.912.787 6.74 1.666c-1.171.879-1.171 2.303 0 3.182C7.744 5.726 8.607 5.823 9.28 5.823c.673 0 1.536-.097 2.121-.288L12 2.25Z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659 1.171-1.671.121-.96M12 2.25l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 1.847 12.673 1.75 12 1.75c-.673 0-1.536.097-2.121.288C9.083.787 7.912.787 6.74 1.666c-1.171.879-1.171 2.303 0 3.182C7.744 5.726 8.607 5.823 9.28 5.823c.673 0 1.536-.097 2.121-.288L12 2.25Z" />
-                  </svg>
-                ),
-                title: "Tes prix",
-                desc: "Affiche tes tarifs pour attirer des prospects qualifiés.",
-              },
-              {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
-                  </svg>
-                ),
-                title: "Ton portfolio",
-                desc: "Montre concrètement ce que tu sais faire.",
-              },
-              {
-                icon: (
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                ),
-                title: "WhatsApp",
-                desc: "Permet à tes visiteurs de te contacter en un clic.",
-              },
-            ].map((f, i) => (
-              <SectionReveal key={f.title} delay={i * 60}>
-                <div className="group rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:border-gray-200/80 transition-all duration-300">
-                  <div className="h-10 w-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
-                    {f.icon}
-                  </div>
-                  <h3 className="font-semibold text-gray-900 text-sm">{f.title}</h3>
-                  <p className="mt-1.5 text-sm text-gray-500 leading-6">{f.desc}</p>
                 </div>
-              </SectionReveal>
-            ))}
+                <h3 className="font-semibold text-gray-900 text-sm mb-1">Tes services</h3>
+                <p className="text-sm text-gray-500 leading-6">
+                  Montre clairement ce que tu proposes à tes clients.
+                </p>
+              </div>
+            </SectionReveal>
+
+            {/* ── Prix — petite ── */}
+            <SectionReveal delay={140}>
+              <div className="group rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
+                <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659 1.171-1.671.121-.96M12 2.25l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 1.847 12.673 1.75 12 1.75c-.673 0-1.536.097-2.121.288C9.083.787 7.912.787 6.74 1.666c-1.171.879-1.171 2.303 0 3.182C7.744 5.726 8.607 5.823 9.28 5.823c.673 0 1.536-.097 2.121-.288L12 2.25Z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659 1.171-1.671.121-.96M12 2.25l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 1.847 12.673 1.75 12 1.75c-.673 0-1.536.097-2.121.288C9.083.787 7.912.787 6.74 1.666c-1.171.879-1.171 2.303 0 3.182C7.744 5.726 8.607 5.823 9.28 5.823c.673 0 1.536-.097 2.121-.288L12 2.25Z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-gray-900 text-sm mb-1">Tes prix</h3>
+                <p className="text-sm text-gray-500 leading-6">
+                  Affiche tes tarifs pour attirer des prospects qualifiés.
+                </p>
+              </div>
+            </SectionReveal>
+
+            {/* ── Portfolio — large ── */}
+            <SectionReveal delay={200} className="sm:col-span-2">
+              <div className="group relative rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
+                <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center">
+                  <div className="flex-1 min-w-0">
+                    <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1">Ton portfolio</h3>
+                    <p className="text-sm text-gray-500 leading-6">
+                      Montre concrètement ce que tu sais faire avec des
+                      images de tes réalisations.
+                    </p>
+                  </div>
+                  {/* Mini-mockup portfolio */}
+                  <div className="w-48 shrink-0 grid grid-cols-2 gap-1.5 rounded-xl overflow-hidden">
+                    <div className="aspect-square bg-gradient-to-br from-rose-200 to-orange-100" />
+                    <div className="aspect-square bg-gradient-to-br from-sky-200 to-indigo-100" />
+                    <div className="aspect-square bg-gradient-to-br from-emerald-200 to-teal-100" />
+                    <div className="aspect-square bg-gradient-to-br from-violet-200 to-purple-100 flex items-center justify-center">
+                      <span className="text-[10px] font-semibold text-white/80">+4</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SectionReveal>
+
+            {/* ── WhatsApp — full width ── */}
+            <SectionReveal delay={260} className="sm:col-span-2 lg:col-span-3">
+              <div className="group rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300">
+                <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center">
+                  <div className="flex-1 min-w-0">
+                    <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#25D366] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                      Contact en 1 clic
+                    </h3>
+                    <p className="text-sm text-gray-500 leading-6 max-w-md">
+                      Tes visiteurs ouvrent WhatsApp avec un message
+                      pré-rempli — plus besoin de DM pour demander un prix.
+                    </p>
+                  </div>
+                  {/* Mini-mockup WhatsApp */}
+                  <div className="w-full sm:w-72 shrink-0 space-y-2">
+                    <div className="rounded-xl bg-gray-50 border border-gray-100 p-3 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-[11px] font-semibold text-gray-900">Shooting portrait</p>
+                        <p className="text-[10px] font-bold text-[#FF6B35]">75 000 FCFA</p>
+                      </div>
+                      <div className="shrink-0 h-6 px-2 rounded-lg bg-[#25D366] text-white text-[9px] font-semibold inline-flex items-center gap-1">
+                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg>
+                        Demander
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-gray-100 bg-[#DCF8C6]/30 p-3">
+                      <p className="text-[10px] text-gray-600 leading-4">
+                        &quot;Bonjour, je suis intéressé par <strong>Shooting portrait</strong> à <strong>75 000 FCFA</strong>.&quot;
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SectionReveal>
           </div>
         </div>
       </section>

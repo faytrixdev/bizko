@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/provider";
 import { completeOnboarding } from "./actions";
@@ -11,6 +12,22 @@ export default function Onboarding() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;
   const { t } = useI18n();
+  const [usernameStatus, setUsernameStatus] = useState("idle");
+
+  const handleStatusChange = useCallback((status: string) => {
+    setUsernameStatus(status);
+  }, []);
+
+  const usernameMessage =
+    usernameStatus === "available" ? (
+      <span className="text-xs text-green-600">Username available</span>
+    ) : usernameStatus === "unavailable" ? (
+      <span className="text-xs text-red-600">Username already taken</span>
+    ) : usernameStatus === "invalid" ? (
+      <span className="text-xs text-red-600">3-30 caractères, lettres minuscules, chiffres, _</span>
+    ) : (
+      <span className="text-xs text-gray-400">3-30 caractères, lettres minuscules, chiffres, _</span>
+    );
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-white">
@@ -27,8 +44,9 @@ export default function Onboarding() {
             <p className="text-sm font-semibold flex items-center gap-2 text-gray-900"><span className="h-6 w-6 rounded-full bg-[#FF6B35] text-white flex items-center justify-center text-xs">1</span> {t("onboarding.step1")}</p>
             <div className="flex items-center gap-2 mt-3">
               <span className="shrink-0 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg px-3 h-11 inline-flex items-center">bizko.co/</span>
-              <UsernameField />
+              <UsernameField onStatusChange={handleStatusChange} />
             </div>
+            <div className="mt-1.5">{usernameMessage}</div>
           </div>
 
           <div className="border-t border-gray-200 pt-6">

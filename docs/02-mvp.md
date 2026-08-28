@@ -1,10 +1,10 @@
-# 02 — MVP Bizko
+# 02 - MVP Bizko
 
 Objectif MVP : permettre à un indépendant service de créer et partager en < 5 min un profil qui convertit sur WhatsApp. Développable par 1 dev en 3-4 semaines. Gratuit total.
 
 ---
 
-## MUST HAVE — Indispensable au lancement
+## MUST HAVE - Indispensable au lancement
 
 ### 1. Auth Email + Onboarding
 Objectif : friction 0, création compte en 30s.
@@ -62,7 +62,7 @@ Objectif : couvrir Afrique francophone + anglophone.
 
 ---
 
-## SHOULD HAVE — Utile mais non bloquant (faire si temps)
+## SHOULD HAVE - Utile mais non bloquant (faire si temps)
 
 - **3ème template "Pro / Service"** : focus services + témoignages. Même structure.
 - **Témoignages** : 2-3 citations (texte + auteur) sous portfolio.
@@ -72,7 +72,7 @@ Si retard, décaler en V1.1 sans impacter lancement.
 
 ---
 
-## NOT NOW — Explicitement exclu du MVP
+## NOT NOW - Explicitement exclu du MVP
 
 Ne pas builder, ne pas designer, ne pas prévoir d’UI pour :
 - Catalogue produits physiques / stock / variantes

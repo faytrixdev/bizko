@@ -1,4 +1,4 @@
-# Dashboard Redesign — Clean Premium
+# Dashboard Redesign - Clean Premium
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -10,7 +10,7 @@
 
 ---
 
-## Phase 1 — Header premium
+## Phase 1 - Header premium
 
 ### Task 1.1: Refonte du header dashboard
 
@@ -78,7 +78,7 @@
 
 ---
 
-## Phase 2 — Tab bar moderne
+## Phase 2 - Tab bar moderne
 
 ### Task 2.1: Refonte de la tab bar
 
@@ -128,7 +128,7 @@
 
 ---
 
-## Phase 3 — Cards améliorées
+## Phase 3 - Cards améliorées
 
 ### Task 3.1: Redesign des cards du dashboard
 
@@ -158,7 +158,7 @@
 
 ---
 
-## Phase 4 — Analytics visuels
+## Phase 4 - Analytics visuels
 
 ### Task 4.1: Redesign des cartes analytics
 
@@ -205,7 +205,7 @@
 
 ---
 
-## Phase 5 — Micro-interactions
+## Phase 5 - Micro-interactions
 
 ### Task 5.1: Ajouter les transitions fluides
 

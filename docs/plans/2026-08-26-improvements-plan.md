@@ -1,4 +1,4 @@
-# Bizko — Plan d'améliorations MVP
+# Bizko - Plan d'améliorations MVP
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -10,7 +10,7 @@
 
 ---
 
-## Phase 1 — Extraction des composants réutilisables
+## Phase 1 - Extraction des composants réutilisables
 
 ### Task 1.1: Déplacer les composants auth vers `src/components/`
 
@@ -395,7 +395,7 @@ export function TabPortfolio({ portfolio, profileId }: TabPortfolioProps) {
       </div>
       {portfolio.length === 0 && (
         <p className="text-xs text-gray-500 mt-3 text-center py-8">
-          Aucune image — ajoute tes realisations.
+          Aucune image - ajoute tes realisations.
         </p>
       )}
     </div>
@@ -580,7 +580,7 @@ Expected: PASS
 
 ---
 
-## Phase 2 — Compléter l'i18n (textes hardcoded → traductions)
+## Phase 2 - Compléter l'i18n (textes hardcoded → traductions)
 
 ### Task 2.1: Ajouter les clés de traduction manquantes
 
@@ -659,7 +659,7 @@ Expected: PASS
 
 ---
 
-## Phase 3 — Configuration Next.js
+## Phase 3 - Configuration Next.js
 
 ### Task 3.1: Configurer next.config.ts
 
@@ -693,7 +693,7 @@ Expected: PASS
 
 ---
 
-## Phase 4 — Validation username temps réel
+## Phase 4 - Validation username temps réel
 
 ### Task 4.1: Créer l'API route de validation
 
@@ -744,7 +744,7 @@ Expected: PASS
 
 ---
 
-## Phase 5 — Drag & Drop services/portfolio
+## Phase 5 - Drag & Drop services/portfolio
 
 ### Task 5.1: Implémenter le réordonnancement des services
 
@@ -783,7 +783,7 @@ Expected: PASS
 
 ---
 
-## Phase 6 — Tests
+## Phase 6 - Tests
 
 ### Task 6.1: Installer Vitest
 

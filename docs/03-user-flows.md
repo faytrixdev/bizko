@@ -1,4 +1,4 @@
-# 03 — User Flows Bizko
+# 03 - User Flows Bizko
 
 ## Flow 1 : Landing → Inscription → Onboarding → Première publication
 

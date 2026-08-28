@@ -1,4 +1,4 @@
-# 04 — UI/UX Bizko
+# 04 - UI/UX Bizko
 
 ## Philosophie design
 - **Conversion-first, pas joli pour être joli.** Chaque pixel doit rapprocher du tap WhatsApp.
@@ -36,7 +36,7 @@
 - Services : liste verticale, carte blanche, border slate-200, radius 12px, titre + prix à droite + bouton "WhatsApp" outline vert petit.
 - Portfolio : grille 3 colonnes (mobile 2 colonnes si >6), gap 8px, radius 8px, lightbox minimal (overlay sombre, image centrée, croix).
 - Sociaux : rangée d’icônes 40px, border, hover.
-- Footer : texte 12px "Fait avec Bizko — Crée ton lien gratuit" (lien landing).
+- Footer : texte 12px "Fait avec Bizko - Crée ton lien gratuit" (lien landing).
 
 Performance : pas de carousel, pas de vidéo auto, images webp lazy-load.
 
@@ -64,7 +64,7 @@ Performance : pas de carousel, pas de vidéo auto, images webp lazy-load.
 
 ## États
 - Chargement : skeleton pour profil public (avatar cercle gris, lignes), spinner pour dashboard.
-- Vide : illustration simple + texte "Aucun service — Ajoute ton premier service pour convertir" + CTA.
+- Vide : illustration simple + texte "Aucun service - Ajoute ton premier service pour convertir" + CTA.
 - Erreur : inline sous input (rouge 12px), toast pour erreurs globales.
 - Succès : toast vert "Lien copié !" "Profil mis à jour", check inline username dispo.
 - 404 profil : "Ce Bizko n’existe pas" + CTA créer.

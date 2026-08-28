@@ -1,4 +1,4 @@
-# Auth System Design — Bizko
+# Auth System Design - Bizko
 
 ## Context
 
@@ -39,10 +39,10 @@ Flow : login/signup → signInWithOAuth({ provider: 'google', redirectTo: '/auth
 | Route | Auth | Profile | Redirect si |
 |-------|------|---------|-------------|
 | /login, /signup | Non | Non | Déjà connecté → /dashboard |
-| /forgot-password, /reset-password, /verify-email | Non | Non | — |
+| /forgot-password, /reset-password, /verify-email | Non | Non | - |
 | /onboarding | Oui | Non (doit pas exister) | Pas auth → /login, Profil existe → /dashboard |
 | /dashboard, /account | Oui | Oui | Pas auth → /login, Pas profil → /onboarding |
-| /{username}, / | Non | Non | — |
+| /{username}, / | Non | Non | - |
 
 ### Page Account
 

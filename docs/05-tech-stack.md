@@ -1,4 +1,4 @@
-# 05 — Tech Stack Bizko
+# 05 - Tech Stack Bizko
 
 Principes : simplicité, solo dev, déploiement rapide, coût quasi nul au MVP. Pas d’infra inutile. Online only, pas de PWA/service worker.
 

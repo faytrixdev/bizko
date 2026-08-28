@@ -1,4 +1,4 @@
-# Phase 3: Premium Card Styling — Design
+# Phase 3: Premium Card Styling - Design
 
 ## Goal
 Update all 5 dashboard tab components to have more premium-looking cards with better shadows, rounded corners, and hover states.

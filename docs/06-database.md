@@ -1,4 +1,4 @@
-# 06 — Database Bizko
+# 06 - Database Bizko
 
 Supabase Postgres, RLS activée. Uniquement tables MVP. Pas de table pour features NOT NOW.
 
@@ -93,12 +93,12 @@ Index : `index(profile_id, type, created_at)`.
 
 ## Relations
 ```
-auth.users 1 — 1 profiles
-profiles 1 — N services
-profiles 1 — N portfolio_items
-profiles 1 — N social_links
-profiles 1 — N events
-services 1 — N events (via service_id)
+auth.users 1 - 1 profiles
+profiles 1 - N services
+profiles 1 - N portfolio_items
+profiles 1 - N social_links
+profiles 1 - N events
+services 1 - N events (via service_id)
 ```
 
 ## Règles de sécurité (RLS)

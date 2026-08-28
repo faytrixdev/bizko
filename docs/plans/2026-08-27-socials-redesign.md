@@ -1,4 +1,4 @@
-# Socials Section Redesign — Brand-Colored Buttons
+# Socials Section Redesign - Brand-Colored Buttons
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 

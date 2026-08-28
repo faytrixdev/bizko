@@ -96,18 +96,21 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
 
           {/* Mobile layout */}
           <div className="relative flex flex-wrap items-center justify-between gap-4 py-2 lg:hidden">
-            <div className="flex w-full justify-between">
+            <div className="flex w-full items-center justify-between">
               <Link href="/" aria-label="Bizko" className="flex items-center">
                 <Logo size="lg" />
               </Link>
-              <button
-                onClick={() => setMenuState(!menuState)}
-                aria-label={menuState ? "Fermer le menu" : "Ouvrir le menu"}
-                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5"
-              >
-                <Equal className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 text-gray-600 duration-200" />
-                <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 text-gray-600 duration-200" />
-              </button>
+              <div className="flex items-center gap-2">
+                <LocaleSwitch />
+                <button
+                  onClick={() => setMenuState(!menuState)}
+                  aria-label={menuState ? "Fermer le menu" : "Ouvrir le menu"}
+                  className="relative z-20 block cursor-pointer p-2.5"
+                >
+                  <Equal className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 text-gray-600 duration-200" />
+                  <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 text-gray-600 duration-200" />
+                </button>
+              </div>
             </div>
 
             {/* Mobile dropdown */}
@@ -126,7 +129,6 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
                 ))}
               </ul>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0">
-                <LocaleSwitch />
                 <Button asChild variant="outline" size="sm">
                   <Link href="/login"><span>{msg.landing.login}</span></Link>
                 </Button>

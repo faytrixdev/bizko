@@ -160,7 +160,7 @@ export default async function Home() {
 
           {/* Bento Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* ── Identité — large ── */}
+            {/* ── Identité - large ── */}
             <SectionReveal delay={0} className="sm:col-span-2">
               <div className="group relative rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
                 <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center">
@@ -194,7 +194,7 @@ export default async function Home() {
               </div>
             </SectionReveal>
 
-            {/* ── Services — petite ── */}
+            {/* ── Services - petite ── */}
             <SectionReveal delay={80}>
               <div className="group rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
                 <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
@@ -210,7 +210,7 @@ export default async function Home() {
               </div>
             </SectionReveal>
 
-            {/* ── Prix — petite ── */}
+            {/* ── Prix - petite ── */}
             <SectionReveal delay={140}>
               <div className="group rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
                 <div className="h-9 w-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-700 mb-4 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:border-transparent transition-all duration-300">
@@ -226,7 +226,7 @@ export default async function Home() {
               </div>
             </SectionReveal>
 
-            {/* ── Portfolio — large ── */}
+            {/* ── Portfolio - large ── */}
             <SectionReveal delay={200} className="sm:col-span-2">
               <div className="group relative rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300 h-full">
                 <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center">
@@ -254,7 +254,7 @@ export default async function Home() {
               </div>
             </SectionReveal>
 
-            {/* ── WhatsApp — full width ── */}
+            {/* ── WhatsApp - full width ── */}
             <SectionReveal delay={260} className="sm:col-span-2 lg:col-span-3">
               <div className="group rounded-2xl border border-gray-100 bg-white overflow-hidden hover:shadow-[0_2px_16px_rgba(0,0,0,0.06)] transition-all duration-300">
                 <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center">

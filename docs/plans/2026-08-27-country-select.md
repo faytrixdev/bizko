@@ -1,4 +1,4 @@
-# Country Selector — African Countries Dropdown
+# Country Selector - African Countries Dropdown
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -132,8 +132,8 @@ export function CountrySelect({ name = "country", defaultValue, required, classN
 
 | Fichier | Changement |
 |---|---|
-| `src/lib/countries.ts` | Nouveau — liste des 54 pays africains |
-| `src/components/CountrySelect.tsx` | Nouveau — composant réutilisable |
+| `src/lib/countries.ts` | Nouveau - liste des 54 pays africains |
+| `src/components/CountrySelect.tsx` | Nouveau - composant réutilisable |
 | `src/app/onboarding/page.tsx` | Input → CountrySelect |
 | `src/components/dashboard/TabSettings.tsx` | Input → CountrySelect |
 | `src/components/account/AccountForm.tsx` | Input → CountrySelect |

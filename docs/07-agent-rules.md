@@ -1,4 +1,4 @@
-# 07 — Agent Rules Bizko
+# 07 - Agent Rules Bizko
 
 Manuel permanent pour tout agent de développement (humain ou IA) travaillant sur Bizko.
 
@@ -33,7 +33,7 @@ Manuel permanent pour tout agent de développement (humain ou IA) travaillant su
 - Ne pas créer de tables pour features NOT NOW (paiement, domaine, annuaire complet). Champs `is_public`, `city`, `category` déjà prévus pour futur.
 - Données publiques vs privées : ne jamais exposer `auth.users` côté client.
 
-## Développement — Workflow obligatoire
+## Développement - Workflow obligatoire
 Avant d’implémenter une fonctionnalité :
 1. Comprendre l’architecture existante (lire docs/ + code).
 2. Lire la documentation pertinente (00-06).

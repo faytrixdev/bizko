@@ -1,4 +1,4 @@
-# 00 — Vision Bizko
+# 00 - Vision Bizko
 
 ## Vision
 Devenir le lien par défaut des indépendants africains qui vendent un service. Un seul lien qui remplace bio Instagram, carte de visite et portfolio dispersé.

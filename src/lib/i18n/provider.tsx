@@ -24,11 +24,8 @@ export function I18nProvider({ children, initialLocale }: { children: React.Reac
       setLocaleState(saved);
       document.documentElement.lang = saved;
     } else {
-      const nav = navigator.language.slice(0, 2) as Locale;
-      if (nav === "en" || nav === "fr") {
-        setLocaleState(nav);
-        document.documentElement.lang = nav;
-      }
+      // Pas de préférence sauvegardée : le site est en français par défaut
+      document.documentElement.lang = "fr";
     }
   }, []);
 

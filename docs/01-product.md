@@ -1,4 +1,4 @@
-# 01 — Produit Bizko
+# 01 - Produit Bizko
 
 ## Concept principal
 Bizko est un outil utilitaire (pas une plateforme au MVP) qui permet à un indépendant service de créer un profil public unique `bizko.me/username` qui convertit.

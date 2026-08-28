@@ -2,13 +2,11 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { logout } from "@/app/(auth)/actions";
-import { PasswordChangeForm } from "@/components/account/PasswordChangeForm";
-import { DeleteAccountDialog } from "@/components/account/DeleteAccountDialog";
+import { PasswordChangeModal } from "@/components/account/PasswordChangeModal";
+import { LogoutConfirmModal } from "@/components/account/LogoutConfirmModal";
+import { DeleteAccountModal } from "@/components/account/DeleteAccountModal";
 import { useI18n } from "@/lib/i18n/provider";
 import type { Profile } from "@/types/database";
-
-type Tab = "securite" | "compte";
 
 interface AccountClientProps {
   user: { id: string; email?: string };
@@ -17,12 +15,9 @@ interface AccountClientProps {
 
 export function AccountClient({ user, profile }: AccountClientProps) {
   const { t } = useI18n();
-  const [tab, setTab] = useState<Tab>("securite");
-
-  const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: "securite", label: t("account.security"), icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg> },
-    { id: "compte", label: t("account.account"), icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg> },
-  ];
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
@@ -41,43 +36,111 @@ export function AccountClient({ user, profile }: AccountClientProps) {
               </svg>
               {t("dashboard.viewProfile")}
             </Link>
-            <form action={logout}>
-              <button className="inline-flex items-center justify-center h-8 px-2.5 text-xs font-medium border border-gray-200/80 bg-white rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all duration-200">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                </svg>
-              </button>
-            </form>
           </div>
         </div>
       </header>
 
       <div className="max-w-[640px] mx-auto px-4 py-6">
-        <h1 className="text-xl font-bold text-gray-900 mb-6">{t("account.title")}</h1>
+        <h1 className="text-xl font-bold text-gray-900 mb-6">{t("accountPage.title")}</h1>
 
-        <nav className="flex w-full border-b border-gray-200 mb-6">
-          {TABS.map((tabItem) => (
-            <button
-              key={tabItem.id}
-              onClick={() => setTab(tabItem.id)}
-              className={`relative flex-1 flex items-center justify-center gap-1.5 h-11 text-xs font-medium transition-colors duration-200 ${
-                tab === tabItem.id
-                  ? "text-gray-900"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
-            >
-              <span className="hidden sm:inline">{tabItem.icon}</span>
-              {tabItem.label}
-              {tab === tabItem.id && (
-                <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-gray-900 rounded-full" />
-              )}
-            </button>
-          ))}
-        </nav>
+        <div className="flex flex-col gap-4">
+          {/* Security Section */}
+          <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">{t("accountPage.security")}</h2>
+                <p className="text-xs text-gray-500">{t("accountPage.securityDesc")}</p>
+              </div>
+            </div>
 
-        {tab === "securite" && <PasswordChangeForm />}
-        {tab === "compte" && <DeleteAccountDialog user={user} />}
+            <div className="flex items-center justify-between py-3 border-t border-gray-100">
+              <div>
+                <p className="text-sm font-medium text-gray-900">{t("accountPage.passwordLabel")}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{t("accountPage.passwordDesc")}</p>
+              </div>
+              <button
+                onClick={() => setShowPasswordModal(true)}
+                className="h-9 px-4 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+              >
+                {t("accountPage.changePassword")}
+              </button>
+            </div>
+          </div>
+
+          {/* Session Section */}
+          <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">{t("accountPage.session")}</h2>
+                <p className="text-xs text-gray-500">{t("accountPage.sessionDesc")}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between py-3 border-t border-gray-100">
+              <div>
+                <p className="text-sm font-medium text-gray-900">{t("accountPage.logout")}</p>
+              </div>
+              <button
+                onClick={() => setShowLogoutModal(true)}
+                className="h-9 px-4 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+              >
+                {t("accountPage.logout")}
+              </button>
+            </div>
+          </div>
+
+          {/* Danger Zone */}
+          <div className="border border-red-200 rounded-2xl p-6 bg-red-50/50">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+                <svg className="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-red-800">{t("accountPage.dangerZone")}</h2>
+                <p className="text-xs text-red-600">{t("accountPage.dangerDesc")}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between py-3 border-t border-red-200">
+              <div>
+                <p className="text-sm font-medium text-red-800">{t("accountPage.deleteAccount")}</p>
+              </div>
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="h-9 px-4 rounded-lg border border-red-300 bg-white text-xs font-medium text-red-700 hover:bg-red-50 hover:border-red-400 transition-all duration-200"
+              >
+                {t("accountPage.deleteAccount")}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <PasswordChangeModal
+        open={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+      />
+      <LogoutConfirmModal
+        open={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+      />
+      <DeleteAccountModal
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        user={user}
+      />
     </div>
   );
 }

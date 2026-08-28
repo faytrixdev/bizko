@@ -1,3 +1,7 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n/provider";
+
 interface Social {
   platform: string;
   url: string;
@@ -117,6 +121,7 @@ function RealProfile({
   socials,
   avatarUrl,
 }: Omit<ProfileMockupProps, "frame" | "variant">) {
+  const { t } = useI18n();
   return (
     <div className="px-4 pb-6 pt-2">
       {/* Avatar */}
@@ -167,7 +172,7 @@ function RealProfile({
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
           </svg>
-          Appeler
+          {t("landing.mockupCall")}
         </div>
       </div>
 
@@ -175,7 +180,7 @@ function RealProfile({
       {services.length > 0 && (
         <div className="mt-5">
           <h2 className="text-[11px] font-bold font-display tracking-widest uppercase text-gray-400 px-1 mb-3">
-            Mes services
+            {t("landing.mockupServices")}
           </h2>
           <div className="space-y-2">
             {services.map((s, i) => (
@@ -189,7 +194,7 @@ function RealProfile({
                 </div>
                 <div className="shrink-0 inline-flex items-center gap-1 h-7 px-3 rounded-xl bg-[#25D366] text-white text-[10px] font-semibold shadow-sm shadow-[#25D366]/20">
                   {WHATSAPP_ICON}
-                  Demander
+                  {t("landing.mockupRequest")}
                 </div>
               </div>
             ))}
@@ -201,7 +206,7 @@ function RealProfile({
       {portfolio && portfolio.length > 0 && (
         <div className="mt-5">
           <h2 className="text-[11px] font-bold font-display tracking-widest uppercase text-gray-400 px-1 mb-3">
-            Mes réalisations
+            {t("landing.mockupPortfolio")}
           </h2>
           <div className="grid grid-cols-2 gap-2">
             {portfolio.map((p, i) => (
@@ -224,7 +229,7 @@ function RealProfile({
       {socials && socials.length > 0 && (
         <div className="mt-5">
           <h2 className="text-[11px] font-bold font-display tracking-widest uppercase text-gray-400 px-1 mb-3">
-            Me retrouver
+            {t("landing.mockupSocials")}
           </h2>
           <div className="space-y-2">
             {socials.map((s, i) => {
@@ -245,7 +250,7 @@ function RealProfile({
 
       {/* Footer */}
       <p className="text-center text-[10px] text-gray-300 mt-5">
-        Fait avec{" "}
+        {t("landing.mockupFooter")}{" "}
         <span className="font-medium text-[#FF6B35]">Bizko</span>{" "}
         — bizko.me/{name.toLowerCase().replace(/\s/g, "")}
       </p>
@@ -263,6 +268,7 @@ function CompactProfile({
   variant,
   avatarUrl,
 }: Omit<ProfileMockupProps, "frame" | "portfolio" | "socials">) {
+  const { t } = useI18n();
   return (
     <div className="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]">
       {/* Avatar */}
@@ -309,7 +315,7 @@ function CompactProfile({
       {services.length > 0 && (
         <div className="mt-5">
           <h2 className="text-[10px] font-bold font-display tracking-widest uppercase text-gray-400 text-center mb-2.5">
-            Mes services
+            {t("landing.mockupServices")}
           </h2>
           <div className="space-y-1.5">
             {services.map((s, i) => (
@@ -323,7 +329,7 @@ function CompactProfile({
                 </div>
                 <div className="shrink-0 inline-flex items-center gap-1 h-6 px-2.5 rounded-lg bg-[#25D366] text-white text-[9px] font-semibold shadow-sm shadow-[#25D366]/20">
                   {WHATSAPP_ICON}
-                  Demander
+                  {t("landing.mockupRequest")}
                 </div>
               </div>
             ))}
@@ -333,7 +339,7 @@ function CompactProfile({
 
       {/* Footer */}
       <p className="text-[9px] text-center text-gray-300 mt-4 font-medium">
-        Fait avec{" "}
+        {t("landing.mockupFooter")}{" "}
         <span className="font-medium text-[#FF6B35]">Bizko</span>{" "}
         — bizko.me/{name.toLowerCase().replace(/\s/g, "")}
       </p>

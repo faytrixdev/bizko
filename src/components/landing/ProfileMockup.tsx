@@ -264,51 +264,78 @@ function CompactProfile({
   avatarUrl,
 }: Omit<ProfileMockupProps, "frame" | "portfolio" | "socials">) {
   return (
-    <div className="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 text-left shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]">
-      {/* Header */}
-      <div className="flex items-center gap-3.5 mb-4">
+    <div className="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)]">
+      {/* Avatar */}
+      <div className="flex justify-center">
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt={name}
-            className="h-11 w-11 rounded-full object-cover shadow-md shrink-0"
+            className="h-16 w-16 rounded-full object-cover shadow-lg ring-4 ring-white"
           />
         ) : (
-          <div className="h-11 w-11 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-md">
+          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white font-bold text-base shadow-lg ring-4 ring-white">
             {initials}
           </div>
         )}
-        <div className="min-w-0">
-          <div className="text-sm font-semibold text-gray-900 truncate">{name}</div>
-          <div className="text-xs text-[#FF6B35] font-medium">{profession}</div>
-        </div>
-        <div className="ml-auto shrink-0 inline-flex items-center gap-1 bg-gray-100 rounded-full px-2.5 py-1">
+      </div>
+
+      {/* Name */}
+      <h1 className="mt-3 text-lg font-bold font-display text-center text-gray-900 leading-tight">
+        {name}
+      </h1>
+
+      {/* Tagline */}
+      <p className="mt-1 text-xs font-medium text-[#FF6B35] text-center">
+        {profession}
+      </p>
+
+      {/* Location pill */}
+      <div className="mt-2 flex justify-center">
+        <div className="inline-flex items-center gap-1.5 bg-gray-100 rounded-full px-3 py-1">
           {MAP_PIN}
           <span className="text-[10px] font-medium text-gray-500">{location}</span>
         </div>
       </div>
 
+      {/* Bio */}
       {variant !== "compact" && (
-        <p className="text-xs text-gray-500 leading-5 mb-4 line-clamp-2">{bio}</p>
+        <p className="mt-4 text-[11px] leading-5 text-gray-600 bg-gray-50/50 border border-gray-100 rounded-2xl p-3.5 shadow-sm text-left">
+          {bio}
+        </p>
       )}
 
-      <div className="space-y-2">
-        {services.map((s, i) => (
-          <div key={i} className="rounded-xl bg-gray-50 border border-gray-100 p-3 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="text-xs font-medium text-gray-900 truncate">{s.title}</div>
-              <div className="text-[11px] font-bold text-[#FF6B35] mt-0.5">{s.price}</div>
-            </div>
-            <div className="shrink-0 h-7 px-2.5 rounded-lg bg-[#25D366] text-white text-[10px] font-semibold flex items-center gap-1 shadow-sm shadow-[#25D366]/20">
-              {WHATSAPP_ICON}
-              WhatsApp
-            </div>
+      {/* Services */}
+      {services.length > 0 && (
+        <div className="mt-5">
+          <h2 className="text-[10px] font-bold font-display tracking-widest uppercase text-gray-400 text-center mb-2.5">
+            Mes services
+          </h2>
+          <div className="space-y-1.5">
+            {services.map((s, i) => (
+              <div
+                key={i}
+                className="bg-gray-50/50 border border-gray-100 rounded-xl p-3 shadow-sm flex items-center justify-between gap-2"
+              >
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold text-gray-900">{s.title}</p>
+                  <p className="text-[11px] font-bold text-[#FF6B35] mt-0.5">{s.price}</p>
+                </div>
+                <div className="shrink-0 inline-flex items-center gap-1 h-6 px-2.5 rounded-lg bg-[#25D366] text-white text-[9px] font-semibold shadow-sm shadow-[#25D366]/20">
+                  {WHATSAPP_ICON}
+                  Demander
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      <p className="text-[10px] text-center text-gray-300 mt-3 font-medium">
-        bizko.me/{name.toLowerCase().replace(/\s/g, "")}
+      {/* Footer */}
+      <p className="text-[9px] text-center text-gray-300 mt-4 font-medium">
+        Fait avec{" "}
+        <span className="font-medium text-[#FF6B35]">Bizko</span>{" "}
+        — bizko.me/{name.toLowerCase().replace(/\s/g, "")}
       </p>
     </div>
   );

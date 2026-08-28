@@ -429,7 +429,7 @@ export default async function Home() {
 
             {/* Large Mockup */}
             <SectionReveal delay={150} className="lg:justify-self-end">
-              <div className="w-full max-w-[340px] sm:max-w-[380px] mx-auto lg:mx-0">
+              <div className="w-full max-w-[440px] mx-auto lg:mx-0">
                 <ProfileMockup
                   name="Karim Touré"
                   initials="KT"
@@ -442,12 +442,7 @@ export default async function Home() {
                     { title: "Application mobile", price: "500 000 FCFA" },
                     { title: "Audit technique", price: "50 000 FCFA" },
                   ]}
-                  socials={[
-                    { platform: "instagram", url: "#" },
-                    { platform: "linkedin", url: "#" },
-                  ]}
                   variant="detailed"
-                  frame
                 />
               </div>
             </SectionReveal>

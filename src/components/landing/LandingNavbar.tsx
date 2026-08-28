@@ -57,7 +57,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               "bg-white/60 max-w-4xl rounded-2xl border border-gray-200/60 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] lg:px-5"
           )}
         >
-          <div className="relative flex flex-wrap items-center justify-between gap-6 lg:gap-0 py-2">
+          <div className="relative flex flex-wrap items-center justify-between gap-4 lg:gap-0 py-2">
             {/* Logo + Hamburger */}
             <div className="flex w-full justify-between lg:w-auto">
               <Link href="/" aria-label="Bizko" className="flex items-center">
@@ -75,13 +75,13 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
             </div>
 
             {/* Desktop nav links - centered */}
-            <div className="absolute inset-0 m-auto hidden size-fit lg:block">
-              <ul className="flex gap-8 text-sm">
+            <div className="hidden lg:flex lg:justify-center lg:flex-1 lg:min-w-0">
+              <ul className="flex gap-6 text-sm shrink-0">
                 {menuItems.map((item, index) => (
                   <li key={index}>
                     <a
                       href={item.href}
-                      className="text-gray-500 hover:text-gray-900 block duration-150"
+                      className="text-gray-500 hover:text-gray-900 block duration-150 whitespace-nowrap"
                     >
                       <span>{item.name}</span>
                     </a>

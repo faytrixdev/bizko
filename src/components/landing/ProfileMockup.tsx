@@ -175,7 +175,7 @@ function RealProfile({
       {services.length > 0 && (
         <div className="mt-5">
           <h2 className="text-[11px] font-bold font-display tracking-widest uppercase text-gray-400 px-1 mb-3">
-            Services
+            Mes services
           </h2>
           <div className="space-y-2">
             {services.map((s, i) => (
@@ -201,7 +201,7 @@ function RealProfile({
       {portfolio && portfolio.length > 0 && (
         <div className="mt-5">
           <h2 className="text-xs font-bold font-display text-gray-900 px-1 mb-3">
-            Réalisations
+            Mes réalisations
           </h2>
           <div className="grid grid-cols-2 gap-2">
             {portfolio.map((p, i) => (
@@ -224,7 +224,7 @@ function RealProfile({
       {socials && socials.length > 0 && (
         <div className="mt-5">
           <h2 className="text-[11px] font-bold font-display tracking-widest uppercase text-gray-400 px-1 mb-3">
-            Retrouver
+            Me retrouver
           </h2>
           <div className="space-y-2">
             {socials.map((s, i) => {

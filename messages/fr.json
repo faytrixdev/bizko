@@ -119,9 +119,9 @@
     }
   },
   "profile": {
-    "services": "Services",
-    "portfolio": "Realisations",
-    "socials": "Retrouver",
+    "services": "Mes services",
+    "portfolio": "Mes réalisations",
+    "socials": "Me retrouver",
     "whatsapp": "WhatsApp",
     "call": "Appeler",
     "demandBtn": "Demander",

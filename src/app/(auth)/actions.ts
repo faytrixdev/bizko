@@ -24,7 +24,7 @@ export async function signup(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent("fetch failed: " + msg)}`);
   }
   revalidatePath("/", "layout");
-  redirect("/verify-email");
+  redirect(`/verify-email?email=${encodeURIComponent(email)}`);
 }
 
 export async function login(formData: FormData) {
@@ -51,7 +51,7 @@ export async function login(formData: FormData) {
   const user = userData?.user;
 
   if (user?.email_confirmed_at === null) {
-    redirect(`/login?error=${encodeURIComponent("Veuillez confirmer votre email. Vérifiez votre boîte de réception.")}`);
+    redirect(`/verify-email?email=${encodeURIComponent(user.email || email)}`);
   }
 
   if (user) {

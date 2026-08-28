@@ -4,62 +4,117 @@
 -- 3) record_event: bound volume per profile to prevent analytics flooding
 
 -- ============================================================
--- 1) STORAGE — restrict upload content_type to images
+-- 1) STORAGE — restrict upload content type to images.
+--    Where the MIME lives differs by storage version: recent
+--    versions store it in metadata (jsonb), intermediate ones
+--    use a content_type column, old ones a mimetype column.
+--    We detect which exists and build the policies dynamically.
 -- ============================================================
 
-drop policy if exists "Authenticated users can upload avatars" on storage.objects;
-drop policy if exists "Authenticated users can upload portfolio" on storage.objects;
+do $$
+declare
+  mime_expr text;
+begin
+  -- The MIME column differs by storage version:
+  --   recent variants : metadata->>'mimetype' (jsonb, no dedicated column)
+  --   intermediate     : content_type column
+  --   old              : mimetype column
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'storage' and table_name = 'objects'
+      and column_name = 'content_type'
+  ) then
+    mime_expr := 'content_type';
+  elsif exists (
+    select 1 from information_schema.columns
+    where table_schema = 'storage' and table_name = 'objects'
+      and column_name = 'mimetype'
+  ) then
+    mime_expr := 'mimetype';
+  elsif exists (
+    select 1 from information_schema.columns
+    where table_schema = 'storage' and table_name = 'objects'
+      and column_name = 'metadata'
+  ) then
+    mime_expr := 'coalesce(metadata->>''mimetype'', metadata->>''contentType'', metadata->>''content_type'')';
+  else
+    raise exception 'storage.objects has no MIME column (mimetype/content_type/metadata)';
+  end if;
 
-create policy "Authenticated users can upload avatars"
-  on storage.objects for insert
-  with check (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-    and (storage.foldername(name))[1] = auth.uid()::text
-    and content_type in ('image/jpeg', 'image/png', 'image/webp', 'image/gif')
+  -- INSERT policies
+  execute format(
+    'drop policy if exists "Authenticated users can upload avatars" on storage.objects'
+  );
+  execute format(
+    'create policy "Authenticated users can upload avatars"
+       on storage.objects for insert
+       with check (
+         bucket_id = ''avatars''
+         and auth.role() = ''authenticated''
+         and (storage.foldername(name))[1] = auth.uid()::text
+         and (%s) in (''image/jpeg'', ''image/png'', ''image/webp'', ''image/gif'')
+       )',
+    mime_expr
   );
 
-create policy "Authenticated users can upload portfolio"
-  on storage.objects for insert
-  with check (
-    bucket_id = 'portfolio'
-    and auth.role() = 'authenticated'
-    and (storage.foldername(name))[1] = auth.uid()::text
-    and content_type in ('image/jpeg', 'image/png', 'image/webp', 'image/gif')
+  execute format(
+    'drop policy if exists "Authenticated users can upload portfolio" on storage.objects'
+  );
+  execute format(
+    'create policy "Authenticated users can upload portfolio"
+       on storage.objects for insert
+       with check (
+         bucket_id = ''portfolio''
+         and auth.role() = ''authenticated''
+         and (storage.foldername(name))[1] = auth.uid()::text
+         and (%s) in (''image/jpeg'', ''image/png'', ''image/webp'', ''image/gif'')
+       )',
+    mime_expr
   );
 
--- Also guard UPDATE (objects can be overwritten/upserted): keep the same
--- content_type restriction on the new version of the object.
-drop policy if exists "Owners can update own avatars" on storage.objects;
-drop policy if exists "Owners can update own portfolio" on storage.objects;
-
-create policy "Owners can update own avatars"
-  on storage.objects for update
-  using (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-    and (storage.foldername(name))[1] = auth.uid()::text
-  )
-  with check (
-    bucket_id = 'avatars'
-    and auth.role() = 'authenticated'
-    and (storage.foldername(name))[1] = auth.uid()::text
-    and content_type in ('image/jpeg', 'image/png', 'image/webp', 'image/gif')
+  -- UPDATE policies (objects can be overwritten/upserted): keep the same
+  -- content type restriction on the new version of the object.
+  execute format(
+    'drop policy if exists "Owners can update own avatars" on storage.objects'
+  );
+  execute format(
+    'create policy "Owners can update own avatars"
+       on storage.objects for update
+       using (
+         bucket_id = ''avatars''
+         and auth.role() = ''authenticated''
+         and (storage.foldername(name))[1] = auth.uid()::text
+       )
+       with check (
+         bucket_id = ''avatars''
+         and auth.role() = ''authenticated''
+         and (storage.foldername(name))[1] = auth.uid()::text
+         and (%s) in (''image/jpeg'', ''image/png'', ''image/webp'', ''image/gif'')
+       )',
+    mime_expr
   );
 
-create policy "Owners can update own portfolio"
-  on storage.objects for update
-  using (
-    bucket_id = 'portfolio'
-    and auth.role() = 'authenticated'
-    and (storage.foldername(name))[1] = auth.uid()::text
-  )
-  with check (
-    bucket_id = 'portfolio'
-    and auth.role() = 'authenticated'
-    and (storage.foldername(name))[1] = auth.uid()::text
-    and content_type in ('image/jpeg', 'image/png', 'image/webp', 'image/gif')
+  execute format(
+    'drop policy if exists "Owners can update own portfolio" on storage.objects'
   );
+  execute format(
+    'create policy "Owners can update own portfolio"
+       on storage.objects for update
+       using (
+         bucket_id = ''portfolio''
+         and auth.role() = ''authenticated''
+         and (storage.foldername(name))[1] = auth.uid()::text
+       )
+       with check (
+         bucket_id = ''portfolio''
+         and auth.role() = ''authenticated''
+         and (storage.foldername(name))[1] = auth.uid()::text
+         and (%s) in (''image/jpeg'', ''image/png'', ''image/webp'', ''image/gif'')
+       )',
+    mime_expr
+  );
+end;
+$$;
 
 -- ============================================================
 -- 2) is_username_available — SECURITY DEFINER to see all profiles

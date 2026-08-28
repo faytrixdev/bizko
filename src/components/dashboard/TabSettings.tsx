@@ -40,6 +40,15 @@ export function TabSettings({ profile }: TabSettingsProps) {
           ]}
           className="h-10"
         />
+        <CustomSelect
+          name="locale"
+          defaultValue={profile.locale || "fr"}
+          options={[
+            { value: "fr", label: "Français" },
+            { value: "en", label: "English" },
+          ]}
+          className="h-10"
+        />
         <button className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-semibold hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm active:scale-[0.98]">
           {t("dashboard.save")}
         </button>

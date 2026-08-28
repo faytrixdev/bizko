@@ -3,7 +3,7 @@ import { buildWaLink, buildMainWaMessage, buildServiceWaMessage } from "@/lib/ut
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getServerMessages } from "@/lib/i18n/messages-server";
+import { getServerMessages, getServerMessagesForLocale } from "@/lib/i18n/messages-server";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -59,7 +59,7 @@ export default async function PublicProfile({ params }: Props) {
 
   supabase.from("events").insert({ profile_id: profile.id, type: "view" }).then(() => {});
 
-  const msg = await getServerMessages();
+  const msg = await getServerMessagesForLocale(profile.locale);
 
   const mainWaRaw = buildWaLink(profile.phone_e164, buildMainWaMessage(profile.display_name));
   const telLink = `tel:${profile.phone_e164}`;

@@ -9,6 +9,7 @@ export interface Profile {
   phone_e164: string;
   email_public: string | null;
   template: string;
+  locale: string;
   avatar_url: string | null;
 }
 

@@ -17,9 +17,10 @@ export async function updateProfile(formData: FormData) {
   const phone_e164 = (formData.get("phone_e164") as string).replace(/\s/g, "");
   const email_public = (formData.get("email_public") as string) || null;
   const template = formData.get("template") as string;
+  const locale = formData.get("locale") as string;
 
   const { error } = await supabase.from("profiles").update({
-    display_name, tagline, bio: bio || null, city, country, phone_e164, email_public, template,
+    display_name, tagline, bio: bio || null, city, country, phone_e164, email_public, template, locale,
   }).eq("id", user.id);
 
   if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);

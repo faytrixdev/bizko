@@ -6,3 +6,8 @@ export async function getServerMessages() {
   const locale = (cookieStore.get("bizko-locale")?.value as Locale) || defaultLocale;
   return getMessages(locale);
 }
+
+export async function getServerMessagesForLocale(locale?: string | null) {
+  const lang = (locale === "en" ? "en" : "fr") as Locale;
+  return getMessages(lang);
+}

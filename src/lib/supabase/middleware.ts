@@ -31,6 +31,14 @@ export async function updateSession(request: NextRequest) {
 
   const url = new URL(request.url);
   const pathname = url.pathname;
+  const code = url.searchParams.get("code");
+
+  // Forward any auth code (e.g. email confirmation) landing outside /auth/callback
+  if (code && pathname !== "/auth/callback") {
+    return NextResponse.redirect(
+      new URL(`/auth/callback?code=${encodeURIComponent(code)}`, request.url)
+    );
+  }
 
   const publicRoutes = [
     "/login",

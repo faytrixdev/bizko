@@ -9,21 +9,21 @@ import { LocaleSwitch } from "@/components/LocaleSwitch";
 
 interface LandingNavbarProps {
   msg: {
-    landing: { login: string };
+    landing: { login: string; heroCta: string; navFeatures: string; navHowItWorks: string; navExamples: string; navPricing: string; navFaq: string };
   };
 }
-
-const menuItems = [
-  { name: "Fonctionnalités", href: "#fonctionnalités" },
-  { name: "Comment ça marche", href: "#comment-ça-marche" },
-  { name: "Exemples", href: "#exemples" },
-  { name: "Tarifs", href: "#tarifs" },
-  { name: "FAQ", href: "#faq" },
-];
 
 export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
   const [menuState, setMenuState] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
+
+  const menuItems = [
+    { name: msg.landing.navFeatures, href: "#fonctionnalités" },
+    { name: msg.landing.navHowItWorks, href: "#comment-ça-marche" },
+    { name: msg.landing.navExamples, href: "#exemples" },
+    { name: msg.landing.navPricing, href: "#tarifs" },
+    { name: msg.landing.navFaq, href: "#faq" },
+  ];
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -136,7 +136,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
                   )}
                 >
                   <Link href="/signup">
-                    <span>Créer mon Bizko</span>
+                    <span>{msg.landing.heroCta}</span>
                   </Link>
                 </Button>
                 <Button
@@ -148,7 +148,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
                   )}
                 >
                   <Link href="/signup">
-                    <span>Créer mon Bizko</span>
+                    <span>{msg.landing.heroCta}</span>
                   </Link>
                 </Button>
               </div>

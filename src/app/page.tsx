@@ -116,16 +116,16 @@ export default async function Home() {
           <SectionReveal delay={300}>
             <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px]">
               <ProfileMockup
-                name="Amadou Diallo"
+                name={msg.landing.mockupName}
                 initials="AD"
                 avatarUrl="/mockup/photo-profile.jpg"
-                profession="Photographe à Abidjan"
-                bio="Je capture tes moments précieux — mariage, portrait, événement. Réponse en 2h sur WhatsApp."
-                location="Abidjan, CI"
+                profession={msg.landing.mockupProfession}
+                bio={msg.landing.mockupBio}
+                location={msg.landing.mockupLocation}
                 services={[
-                  { title: "Shooting portrait", price: "75 000 FCFA" },
-                  { title: "Mariage - demi-journée", price: "250 000 FCFA" },
-                  { title: "Événement entreprise", price: "150 000 FCFA" },
+                  { title: msg.landing.mockupService1Title, price: msg.landing.mockupService1Price },
+                  { title: msg.landing.mockupService2Title, price: msg.landing.mockupService2Price },
+                  { title: msg.landing.mockupService3Title, price: msg.landing.mockupService3Price },
                 ]}
                 portfolio={[
                   { image: "/mockup/realisation1.jpg", label: "Mariage" },
@@ -275,19 +275,19 @@ export default async function Home() {
                   <div className="w-full sm:w-72 shrink-0 space-y-2">
                     <div className="rounded-xl bg-gray-50 border border-gray-100 p-3 flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-[11px] font-semibold text-gray-900">Shooting portrait</p>
-                        <p className="text-[10px] font-bold text-[#FF6B35]">75 000 FCFA</p>
+                        <p className="text-[11px] font-semibold text-gray-900">{msg.landing.miniMockupService}</p>
+                        <p className="text-[10px] font-bold text-[#FF6B35]">{msg.landing.miniMockupPrice}</p>
                       </div>
                       <div className="shrink-0 h-6 px-2 rounded-lg bg-[#25D366] text-white text-[9px] font-semibold inline-flex items-center gap-1">
                         <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                         </svg>
-                        Demander
+                        {msg.landing.mockupRequest}
                       </div>
                     </div>
                     <div className="rounded-xl border border-gray-100 bg-[#DCF8C6]/30 p-3">
                       <p className="text-[10px] text-gray-600 leading-4">
-                        &quot;Bonjour, je suis intéressé par <strong>Shooting portrait</strong> à <strong>75 000 FCFA</strong>.&quot;
+                        &quot;{msg.landing.miniMockupMessage} <strong>{msg.landing.miniMockupService}</strong> {msg.landing.miniMockupAt} <strong>{msg.landing.miniMockupPrice}</strong>.&quot;
                       </p>
                     </div>
                   </div>
@@ -424,16 +424,16 @@ export default async function Home() {
             <SectionReveal delay={150} className="lg:justify-self-end">
               <div className="w-full max-w-[440px] mx-auto lg:mx-0">
                 <ProfileMockup
-                  name="Karim Touré"
+                  name={msg.landing.productMockupName}
                   initials="KT"
                   avatarUrl="/mockup/photo-profile.jpg"
-                  profession="Développeur web"
-                  bio="Je crée des sites web et applications mobiles pour les entreprises africaines. Stack : React, Next.js, Supabase."
-                  location="Dakar, SN"
+                  profession={msg.landing.productMockupProfession}
+                  bio={msg.landing.productMockupBio}
+                  location={msg.landing.productMockupLocation}
                   services={[
-                    { title: "Site vitrine", price: "150 000 FCFA" },
-                    { title: "Application mobile", price: "500 000 FCFA" },
-                    { title: "Audit technique", price: "50 000 FCFA" },
+                    { title: msg.landing.productMockupService1Title, price: msg.landing.productMockupService1Price },
+                    { title: msg.landing.productMockupService2Title, price: msg.landing.productMockupService2Price },
+                    { title: msg.landing.productMockupService3Title, price: msg.landing.productMockupService3Price },
                   ]}
                   variant="detailed"
                 />
@@ -464,10 +464,10 @@ export default async function Home() {
                 <div className="rounded-xl bg-gray-50 border border-gray-100 p-4 flex items-center justify-between gap-4 mb-6">
                   <div>
                     <p className="text-sm font-semibold text-gray-900">
-                      Shooting photo pro
+                      {msg.landing.whatsappMockupService}
                     </p>
                     <p className="text-sm font-bold text-[#FF6B35] mt-1">
-                      75 000 FCFA
+                      {msg.landing.whatsappMockupPrice}
                     </p>
                   </div>
                   <div className="shrink-0 h-9 px-4 rounded-xl bg-[#25D366] text-white text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm shadow-[#25D366]/20">
@@ -498,9 +498,10 @@ export default async function Home() {
                     </span>
                   </div>
                   <p className="text-sm text-gray-700 leading-6">
-                    &quot;Bonjour, je suis intéressé par ton service de
-                    <strong> création de site web</strong> à{" "}
-                    <strong>75 000 FCFA</strong>.&quot;
+                    &quot;{msg.landing.whatsappMockupMessage}{" "}
+                    <strong>{msg.landing.whatsappMockupServiceStrong}</strong>{" "}
+                    {msg.landing.whatsappMockupAt}{" "}
+                    <strong>{msg.landing.whatsappMockupPrice}</strong>.&quot;
                   </p>
                 </div>
               </div>
@@ -690,36 +691,36 @@ export default async function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {[
               {
-                name: "Aminata",
-                fullname: "Aminata Diallo",
-                profession: "Photographe",
-                bio: "Portrait, mariage, événement. Réponse en 2h.",
-                location: "Abidjan, CI",
+                name: msg.landing.example1Name,
+                fullname: msg.landing.example1Fullname,
+                profession: msg.landing.example1Profession,
+                bio: msg.landing.example1Bio,
+                location: msg.landing.example1Location,
                 services: [
-                  { title: "Shooting portrait", price: "75 000 FCFA" },
-                  { title: "Mariage", price: "250 000 FCFA" },
+                  { title: msg.landing.example1Service1Title, price: msg.landing.example1Service1Price },
+                  { title: msg.landing.example1Service2Title, price: msg.landing.example1Service2Price },
                 ],
               },
               {
-                name: "karim",
-                fullname: "Karim Touré",
-                profession: "Développeur web",
-                bio: "Sites web et apps mobiles pour entreprises africaines.",
-                location: "Dakar, SN",
+                name: msg.landing.example2Name,
+                fullname: msg.landing.example2Fullname,
+                profession: msg.landing.example2Profession,
+                bio: msg.landing.example2Bio,
+                location: msg.landing.example2Location,
                 services: [
-                  { title: "Site vitrine", price: "150 000 FCFA" },
-                  { title: "Application mobile", price: "500 000 FCFA" },
+                  { title: msg.landing.example2Service1Title, price: msg.landing.example2Service1Price },
+                  { title: msg.landing.example2Service2Title, price: msg.landing.example2Service2Price },
                 ],
               },
               {
-                name: "moussa",
-                fullname: "Moussa Koné",
-                profession: "Consultant digital",
-                bio: "Stratégie digitale et transformation pour PME.",
-                location: "Bamako, ML",
+                name: msg.landing.example3Name,
+                fullname: msg.landing.example3Fullname,
+                profession: msg.landing.example3Profession,
+                bio: msg.landing.example3Bio,
+                location: msg.landing.example3Location,
                 services: [
-                  { title: "Audit digital", price: "100 000 FCFA" },
-                  { title: "Stratégie réseaux sociaux", price: "200 000 FCFA" },
+                  { title: msg.landing.example3Service1Title, price: msg.landing.example3Service1Price },
+                  { title: msg.landing.example3Service2Title, price: msg.landing.example3Service2Price },
                 ],
               },
             ].map((profile) => (

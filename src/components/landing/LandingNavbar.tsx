@@ -57,24 +57,16 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               "bg-white/60 max-w-4xl rounded-2xl border border-gray-200/60 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] lg:px-5"
           )}
         >
-          <div className="relative flex flex-wrap items-center justify-between gap-4 lg:gap-0 py-2">
+          <div className="relative items-center gap-4 lg:gap-0 py-2 hidden lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
             {/* Logo */}
-            <div className="flex items-center shrink-0">
+            <div className="flex items-center shrink-0 justify-start">
               <Link href="/" aria-label="Bizko" className="flex items-center">
                 <img src="/logo.png" alt="Bizko" className="h-7" />
               </Link>
-              <button
-                onClick={() => setMenuState(!menuState)}
-                aria-label={menuState ? "Fermer le menu" : "Ouvrir le menu"}
-                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden ml-auto"
-              >
-                <Equal className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 text-gray-600 duration-200" />
-                <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 text-gray-600 duration-200" />
-              </button>
             </div>
 
             {/* Desktop nav links - centered */}
-            <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-5">
+            <div className="flex items-center justify-center gap-5">
               {menuItems.map((item, index) => (
                 <a
                   key={index}
@@ -86,66 +78,60 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               ))}
             </div>
 
-            {/* Mobile dropdown + Desktop auth */}
+            {/* Auth buttons */}
+            <div className="flex items-center justify-end gap-2">
+              <LocaleSwitch />
+              <div className="w-px h-5 bg-gray-200" />
+              <Button asChild variant="outline" size="sm" className={cn(isScrolled && "lg:hidden")}>
+                <Link href="/login"><span>{msg.landing.login}</span></Link>
+              </Button>
+              <Button asChild size="sm" className={cn("bg-[#FF6B35] hover:bg-[#EA580C] text-white", isScrolled && "lg:hidden")}>
+                <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
+              </Button>
+              <Button asChild size="sm" className={cn("bg-gray-900 text-white hover:bg-gray-800", isScrolled ? "lg:inline-flex" : "hidden")}>
+                <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile layout */}
+          <div className="relative flex flex-wrap items-center justify-between gap-4 py-2 lg:hidden">
+            <div className="flex w-full justify-between">
+              <Link href="/" aria-label="Bizko" className="flex items-center">
+                <img src="/logo.png" alt="Bizko" className="h-7" />
+              </Link>
+              <button
+                onClick={() => setMenuState(!menuState)}
+                aria-label={menuState ? "Fermer le menu" : "Ouvrir le menu"}
+                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5"
+              >
+                <Equal className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 text-gray-600 duration-200" />
+                <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 text-gray-600 duration-200" />
+              </button>
+            </div>
+
+            {/* Mobile dropdown */}
             <div
               className={cn(
-                "bg-white in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border border-gray-100 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-2 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none"
+                "bg-white in-data-[state=active]:block mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border border-gray-100 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap"
               )}
             >
-              {/* Mobile nav links */}
-              <div className="lg:hidden">
-                <ul className="space-y-6 text-base">
-                  {menuItems.map((item, index) => (
-                    <li key={index}>
-                      <a
-                        href={item.href}
-                        onClick={() => setMenuState(false)}
-                        className="text-gray-500 hover:text-gray-900 block duration-150"
-                      >
-                        <span>{item.name}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Auth buttons */}
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0 md:w-fit md:items-center">
+              <ul className="space-y-6 text-base">
+                {menuItems.map((item, index) => (
+                  <li key={index}>
+                    <a href={item.href} onClick={() => setMenuState(false)} className="text-gray-500 hover:text-gray-900 block duration-150">
+                      <span>{item.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0">
                 <LocaleSwitch />
-                <div className="hidden sm:block w-px h-5 bg-gray-200" />
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
-                >
-                  <Link href="/login">
-                    <span>{msg.landing.login}</span>
-                  </Link>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/login"><span>{msg.landing.login}</span></Link>
                 </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className={cn(
-                    "bg-[#FF6B35] hover:bg-[#EA580C] text-white",
-                    isScrolled && "lg:hidden"
-                  )}
-                >
-                  <Link href="/signup">
-                    <span>{msg.landing.heroCta}</span>
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className={cn(
-                    "bg-gray-900 text-white hover:bg-gray-800",
-                    isScrolled ? "lg:inline-flex" : "hidden"
-                  )}
-                >
-                  <Link href="/signup">
-                    <span>{msg.landing.heroCta}</span>
-                  </Link>
+                <Button asChild size="sm" className="bg-[#FF6B35] hover:bg-[#EA580C] text-white">
+                  <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
                 </Button>
               </div>
             </div>

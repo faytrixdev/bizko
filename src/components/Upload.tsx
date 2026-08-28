@@ -1,6 +1,7 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
 
@@ -8,6 +9,7 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
   const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -20,7 +22,7 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
       await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", profileId);
-      location.reload();
+      router.refresh();
     } catch (err) {
       alert(String(err));
     } finally {
@@ -43,6 +45,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
   const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -57,7 +60,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
       const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
       await supabase.from("portfolio_items").insert({ profile_id: profileId, image_url: data.publicUrl, position: nextPos });
-      location.reload();
+      router.refresh();
     } catch (err) {
       alert(String(err));
     } finally {

@@ -57,9 +57,9 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               "bg-white/60 max-w-4xl rounded-2xl border border-gray-200/60 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] lg:px-5"
           )}
         >
-          <div className="relative flex flex-wrap items-center justify-between gap-4 lg:gap-0 py-2">
+          <div className="relative flex flex-wrap items-center gap-4 lg:gap-0 py-2">
             {/* Logo + Hamburger */}
-            <div className="flex w-full justify-between lg:w-auto">
+            <div className="flex w-full justify-between lg:w-auto lg:mr-8">
               <Link href="/" aria-label="Bizko" className="flex items-center">
                 <img src="/logo.png" alt="Bizko" className="h-7" />
               </Link>
@@ -74,26 +74,26 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               </button>
             </div>
 
-            {/* Desktop nav links - centered */}
-            <div className="hidden lg:flex lg:justify-center lg:flex-none">
-              <ul className="flex gap-5 text-sm">
-                {menuItems.map((item, index) => (
-                  <li key={index}>
-                    <a
-                      href={item.href}
-                      className="text-gray-500 hover:text-gray-900 block duration-150 whitespace-nowrap"
-                    >
-                      <span>{item.name}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            {/* Desktop nav links */}
+            <div className="hidden lg:flex lg:items-center lg:gap-5">
+              {menuItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.href}
+                  className="text-gray-500 hover:text-gray-900 duration-150 whitespace-nowrap text-sm"
+                >
+                  {item.name}
+                </a>
+              ))}
             </div>
+
+            {/* Spacer */}
+            <div className="hidden lg:block lg:flex-1" />
 
             {/* Mobile dropdown + Desktop auth */}
             <div
               className={cn(
-                "bg-white in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border border-gray-100 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-4 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none"
+                "bg-white in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border border-gray-100 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-3 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none"
               )}
             >
               {/* Mobile nav links */}

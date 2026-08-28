@@ -21,53 +21,50 @@ export default function VerifyEmail() {
 
   const isSuccess = state != null && "success" in state;
   const isError = state != null && "error" in state;
+  const hasSubmitted = isSuccess || isError;
 
   return (
     <AuthShell title={t("auth.verifyTitle")} subtitle={t("auth.verifySubtitle")}>
       <div className="text-center">
-        <div className="mx-auto h-12 w-12 rounded-xl bg-gray-900 text-white flex items-center justify-center text-lg">
-          e
+        {/* Email illustration */}
+        <div className="mx-auto mb-6 relative h-16 w-16">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#FF6B35]/10 to-[#FF6B35]/5 flex items-center justify-center">
+            <svg className="w-8 h-8 text-[#FF6B35]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+          </div>
         </div>
 
+        {/* Alerts */}
         {isSuccess && (
-          <div className="mt-5">
-            <Alert type="success">{state.success}</Alert>
-          </div>
+          <Alert type="success">{state.success}</Alert>
         )}
         {isError && (
-          <div className="mt-5">
-            <Alert type="error">{state.error}</Alert>
-          </div>
+          <Alert type="error">{state.error}</Alert>
         )}
 
-        {!isSuccess && (
-          <div className="mt-5">
-            <Alert type="success">{t("auth.verifyHint")}</Alert>
-          </div>
+        {/* Hint - only before first submit */}
+        {!hasSubmitted && (
+          <p className="text-sm text-gray-500 mb-5">{t("auth.verifyHint")}</p>
         )}
 
-        <form action={formAction} className="mt-6 flex flex-col gap-4">
+        {/* Resend form */}
+        <form action={formAction} className="flex flex-col gap-4">
           <Field label={t("auth.email")}>
             <Input name="email" type="email" required autoComplete="email" placeholder={t("auth.emailPlaceholder")} />
           </Field>
           <SubmitButton>{t("auth.resendEmail")}</SubmitButton>
         </form>
 
-        <div className="mt-6 flex flex-col gap-3">
+        {/* Footer links */}
+        <div className="mt-6 pt-5 border-t border-gray-100">
           <Link
             href="/login"
-            className="h-11 rounded-lg border border-gray-200 bg-white inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
           >
             {t("auth.backToLogin")}
           </Link>
         </div>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          {t("auth.wrongEmail")}{" "}
-          <Link href="/signup" className="font-medium text-gray-900 underline underline-offset-4 decoration-gray-300 hover:decoration-gray-900">
-            {t("auth.restart")}
-          </Link>
-        </p>
       </div>
     </AuthShell>
   );

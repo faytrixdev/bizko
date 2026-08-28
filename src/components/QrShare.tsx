@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import QRCode from "qrcode";
 import { useI18n } from "@/lib/i18n/provider";
 
 export function QrShare({ url }: { url: string }) {
@@ -10,7 +9,11 @@ export function QrShare({ url }: { url: string }) {
   const [hasShare] = useState(() => typeof navigator !== "undefined" && !!navigator.share);
 
   useEffect(() => {
-    if (open) QRCode.toDataURL(url, { width: 400, margin: 2 }).then(setQr);
+    if (open) {
+      import("qrcode").then(({ default: QRCode }) =>
+        QRCode.toDataURL(url, { width: 400, margin: 2 }).then(setQr),
+      );
+    }
   }, [open, url]);
 
   const copy = async () => {

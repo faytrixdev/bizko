@@ -11,17 +11,16 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
   if (!profile) redirect("/onboarding");
 
-  const [{ data: services }, { data: portfolio }, { data: socials }, viewsRes, clicksRes] = await Promise.all([
+  const [{ data: services }, { data: portfolio }, { data: socials }, statsRes] = await Promise.all([
     supabase.from("services").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("portfolio_items").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("social_links").select("*").eq("profile_id", profile.id).order("position"),
-    supabase.from("events").select("type", { count: "exact", head: true }).eq("profile_id", profile.id).eq("type", "view"),
-    supabase.from("events").select("type", { count: "exact", head: true }).eq("profile_id", profile.id).like("type", "click_%"),
+    supabase.from("profile_stats").select("views, clicks").eq("profile_id", profile.id).maybeSingle(),
   ]);
 
   const publicUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/${profile.username}`;
-  const views = viewsRes.count ?? 0;
-  const waClicks = clicksRes.count ?? 0;
+  const views = statsRes.data?.views ?? 0;
+  const waClicks = statsRes.data?.clicks ?? 0;
 
   return (
     <DashboardClient

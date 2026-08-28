@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
+import Image from "next/image";
 
 interface LightboxImage {
   src: string;
@@ -118,10 +119,12 @@ export function PortfolioGallery({ items }: PortfolioGalleryProps) {
             onClick={() => setLightboxIndex(i)}
             className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
           >
-            <img
+            <Image
               src={p.image_url}
               alt={p.title || ""}
-              className="aspect-square w-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+              fill
+              sizes="(max-width: 768px) 50vw, 320px"
+              className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             {p.title && (

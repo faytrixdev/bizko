@@ -1,7 +1,8 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
-import { messages, defaultLocale, type Locale } from "./messages";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
+import { defaultLocale, type Locale } from "./config";
 
+type Messages = Record<string, unknown>;
 type Ctx = { locale: Locale; setLocale: (l: Locale) => void; t: (path: string) => string };
 const I18nCtx = createContext<Ctx>({ locale: defaultLocale, setLocale: () => {}, t: (p) => p });
 
@@ -15,7 +16,15 @@ function getNested(obj: Record<string, unknown>, path: string): string {
   return typeof cur === "string" ? cur : path;
 }
 
-export function I18nProvider({ children, initialLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
+export function I18nProvider({
+  children,
+  initialLocale,
+  initialMessages,
+}: {
+  children: React.ReactNode;
+  initialLocale?: Locale;
+  initialMessages?: Messages;
+}) {
   const [locale, setLocaleState] = useState<Locale>(() => {
     if (initialLocale) return initialLocale;
     if (typeof window !== "undefined") {
@@ -26,9 +35,6 @@ export function I18nProvider({ children, initialLocale }: { children: React.Reac
   });
 
   useEffect(() => {
-    // Keep the cookie in sync with the effective locale so SSR matches the client
-    // on subsequent requests (only relevant when initialLocale was not provided).
-    document.cookie = `bizko-locale=${locale}; path=/; max-age=31536000`;
     document.documentElement.lang = locale;
   }, [locale]);
 
@@ -39,7 +45,8 @@ export function I18nProvider({ children, initialLocale }: { children: React.Reac
     document.documentElement.lang = l;
   };
 
-  const t = (path: string) => getNested(messages[locale] as unknown as Record<string, unknown>, path);
+  const messages = useMemo(() => initialMessages ?? ({} as Messages), [initialMessages]);
+  const t = useCallback((path: string) => getNested(messages, path), [messages]);
 
   return <I18nCtx.Provider value={{ locale, setLocale, t }}>{children}</I18nCtx.Provider>;
 }
@@ -47,5 +54,3 @@ export function I18nProvider({ children, initialLocale }: { children: React.Reac
 export function useI18n() {
   return useContext(I18nCtx);
 }
-
-

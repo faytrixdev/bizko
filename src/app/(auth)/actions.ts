@@ -1,9 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
@@ -192,6 +193,7 @@ export async function deleteAccount(formData: FormData) {
     return { error: "Erreur lors de la déconnexion." };
   }
 
+  updateTag(PUBLIC_PROFILES_TAG);
   redirect("/");
 }
 

@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 
 const MAX_SERVICES = 8;
 const MAX_SOCIALS = 6;
@@ -29,6 +30,7 @@ export async function updateProfile(formData: FormData) {
   if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
   revalidatePath("/dashboard");
   revalidatePath(`/[username]`, "page");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function addService(formData: FormData) {
@@ -51,6 +53,7 @@ export async function addService(formData: FormData) {
   });
   if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function deleteService(formData: FormData) {
@@ -60,6 +63,7 @@ export async function deleteService(formData: FormData) {
   const id = formData.get("id") as string;
   await supabase.from("services").delete().eq("id", id).eq("profile_id", user.id);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function addSocial(formData: FormData) {
@@ -75,6 +79,7 @@ export async function addSocial(formData: FormData) {
   const { error } = await supabase.from("social_links").insert({ profile_id: user.id, platform, url, position: 0 });
   if (error) redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function deleteSocial(formData: FormData) {
@@ -84,6 +89,7 @@ export async function deleteSocial(formData: FormData) {
   const id = formData.get("id") as string;
   await supabase.from("social_links").delete().eq("id", id).eq("profile_id", user.id);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function deletePortfolio(formData: FormData) {
@@ -93,6 +99,7 @@ export async function deletePortfolio(formData: FormData) {
   const id = formData.get("id") as string;
   await supabase.from("portfolio_items").delete().eq("id", id).eq("profile_id", user.id);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function reorderServices(orderedIds: string[]) {
@@ -106,6 +113,7 @@ export async function reorderServices(orderedIds: string[]) {
 
   await Promise.all(updates);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }
 
 export async function reorderPortfolio(orderedIds: string[]) {
@@ -119,4 +127,5 @@ export async function reorderPortfolio(orderedIds: string[]) {
 
   await Promise.all(updates);
   revalidatePath("/dashboard");
+  updateTag(PUBLIC_PROFILES_TAG);
 }

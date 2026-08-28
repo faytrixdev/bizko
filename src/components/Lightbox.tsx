@@ -103,7 +103,7 @@ export function Lightbox({ images, startIndex = 0, onClose }: LightboxProps) {
 }
 
 interface PortfolioGalleryProps {
-  items: { id: string; image_url: string; title?: string }[];
+  items: { id: string; image_url: string; title?: string | null }[];
 }
 
 export function PortfolioGallery({ items }: PortfolioGalleryProps) {

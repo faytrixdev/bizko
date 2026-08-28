@@ -1,28 +1,24 @@
-import { createClient } from "@/lib/supabase/server";
 import { buildWaLink, buildMainWaMessage, buildServiceWaMessage } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getServerMessagesForLocale } from "@/lib/i18n/messages-server";
+import { getCachedPublicProfileData } from "@/lib/supabase/queries";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import { PortfolioGallery } from "@/components/Lightbox";
+import { ViewTracker } from "@/components/ViewTracker";
 
 type Props = { params: Promise<{ username: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params;
-  const supabase = await createClient();
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, tagline, bio, avatar_url, city, username")
-    .eq("username", username.toLowerCase())
-    .eq("is_public", true)
-    .single();
+  const data = await getCachedPublicProfileData(username);
 
   // NOTE: Metadata is FR-only for MVP. generateMetadata lacks access to locale context.
   // Profile data comes from the database; adding a locale field to profiles would enable full i18n.
-  if (!profile) return { title: "Profil introuvable - Bizko" };
+  if (!data) return { title: "Profil introuvable - Bizko" };
 
+  const { profile } = data;
   const title = `${profile.display_name} - ${profile.tagline} | Bizko`;
   const description = profile.bio?.slice(0, 155) || `${profile.tagline} a ${profile.city}. Contacte sur WhatsApp via Bizko.`;
 
@@ -42,24 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicProfile({ params }: Props) {
   const { username } = await params;
-  const supabase = await createClient();
+  const data = await getCachedPublicProfileData(username);
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("username", username.toLowerCase())
-    .eq("is_public", true)
-    .single();
+  if (!data) notFound();
 
-  if (!profile) notFound();
-
-  const [{ data: services }, { data: portfolio }, { data: socials }] = await Promise.all([
-    supabase.from("services").select("*").eq("profile_id", profile.id).order("position"),
-    supabase.from("portfolio_items").select("*").eq("profile_id", profile.id).order("position"),
-    supabase.from("social_links").select("*").eq("profile_id", profile.id).order("position"),
-  ]);
-
-  supabase.rpc("record_event", { p_profile_id: profile.id, p_type: "view" }).then(() => {});
+  const { profile, services, portfolio, socials } = data;
 
   const msg = await getServerMessagesForLocale(profile.locale);
 
@@ -257,6 +240,9 @@ export default async function PublicProfile({ params }: Props) {
 
       {/* Floating WhatsApp - desktop only */}
       <WhatsAppFloating href={trackClick("click_floating", mainWaRaw)} />
+
+      {/* Records the view client-side so the SSR path stays cache-friendly */}
+      <ViewTracker profileId={profile.id} />
     </div>
   );
 }

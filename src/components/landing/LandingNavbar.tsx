@@ -56,7 +56,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               "bg-white/60 max-w-4xl rounded-2xl border border-gray-200/60 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] lg:px-5"
           )}
         >
-          <div className="relative items-center gap-4 lg:gap-0 py-2 hidden lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+          <div className="relative items-center py-2 hidden lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
             {/* Logo */}
             <div className="flex items-center shrink-0 justify-start">
               <Link href="/" aria-label="Bizko" className="flex items-center">

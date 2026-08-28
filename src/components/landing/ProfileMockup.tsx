@@ -200,7 +200,7 @@ function RealProfile({
       {/* Portfolio section */}
       {portfolio && portfolio.length > 0 && (
         <div className="mt-5">
-          <h2 className="text-xs font-bold font-display text-gray-900 px-1 mb-3">
+          <h2 className="text-[11px] font-bold font-display tracking-widest uppercase text-gray-400 px-1 mb-3">
             Mes réalisations
           </h2>
           <div className="grid grid-cols-2 gap-2">

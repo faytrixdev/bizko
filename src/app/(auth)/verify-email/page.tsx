@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AuthShell, Alert, SubmitButton } from "@/components/auth";
 import { resendConfirmationEmail } from "../actions";
 import { useI18n } from "@/lib/i18n/provider";
+
+const COOLDOWN_SECONDS = 60;
 
 type ResendState = { error: string } | { success: string };
 
@@ -14,15 +16,37 @@ export default function VerifyEmail() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
 
+  const [cooldown, setCooldown] = useState(COOLDOWN_SECONDS);
+  const [hasResent, setHasResent] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Start cooldown on mount (email already auto-filled)
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setCooldown((c) => (c <= 1 ? 0 : c - 1));
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasResent) return;
+    setCooldown(COOLDOWN_SECONDS);
+  }, [hasResent]);
+
   const [state, formAction] = useActionState(
     async (_prev: ResendState | null, formData: FormData): Promise<ResendState> => {
-      return resendConfirmationEmail(email);
+      const result = await resendConfirmationEmail(email);
+      setHasResent(true);
+      return result;
     },
     null
   );
 
   const isSuccess = state != null && "success" in state;
   const isError = state != null && "error" in state;
+  const isLocked = cooldown > 0;
 
   return (
     <AuthShell title={t("auth.verifyTitle")} subtitle={t("auth.verifySubtitle")}>
@@ -58,7 +82,17 @@ export default function VerifyEmail() {
 
             {/* Resend form - uses the email from URL */}
             <form action={formAction} className="flex flex-col gap-4">
-              <SubmitButton>{t("auth.resendEmail")}</SubmitButton>
+              {isLocked ? (
+                <button
+                  type="button"
+                  disabled
+                  className="h-11 w-full rounded-lg bg-[#FF6B35] text-white inline-flex items-center justify-center gap-2 text-sm font-semibold opacity-60 cursor-not-allowed"
+                >
+                  {t("auth.resendCooldown").replace("{secs}", String(cooldown))}
+                </button>
+              ) : (
+                <SubmitButton>{t("auth.resendEmail")}</SubmitButton>
+              )}
             </form>
           </>
         )}
@@ -73,3 +107,4 @@ export default function VerifyEmail() {
     </AuthShell>
   );
 }
+

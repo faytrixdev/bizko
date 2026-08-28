@@ -207,6 +207,7 @@
     "restart": "Try again",
     "verifyHint": "If you don't receive anything in 2 minutes, try again with the same address.",
     "resendEmail": "Resend email",
+    "resendCooldown": "Resend available in {secs}s",
     "resetNewPassword": "New password",
     "resetConfirm": "Confirm",
     "protected": "Protected by Supabase."

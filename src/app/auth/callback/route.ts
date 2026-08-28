@@ -23,6 +23,11 @@ export async function GET(request: Request) {
         const redirectUrl = profile ? `${origin}/dashboard` : `${origin}/onboarding`;
         return NextResponse.redirect(redirectUrl);
       }
+    } else {
+      console.error('exchangeCodeForSession error:', error);
+      return NextResponse.redirect(
+        `${origin}/login?error=${encodeURIComponent('exchange_error: ' + error.message)}`
+      );
     }
   }
 

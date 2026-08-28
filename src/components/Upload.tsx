@@ -16,7 +16,8 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
     if (!file) return;
     setUploading(true);
     try {
-      const compressed = await imageCompression(file, { maxSizeMB: 0.3, maxWidthOrHeight: 800, useWebWorker: true });
+      const squared = await cropToSquare(file);
+      const compressed = await imageCompression(squared, { maxSizeMB: 0.3, maxWidthOrHeight: 800, useWebWorker: true });
       const path = `${profileId}/avatar-${Date.now()}.webp`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, compressed, { upsert: true, contentType: "image/webp" });
       if (upErr) throw upErr;
@@ -75,3 +76,42 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     </label>
   );
 }
+
+async function cropToSquare(file: File): Promise<File> {
+  // Charge l'image pour connaître ses dimensions
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  await new Promise<void>((resolve, reject) => {
+    img.onload = () => resolve();
+    img.onerror = () => reject(new Error("Image invalide"));
+    img.src = url;
+  });
+  URL.revokeObjectURL(url);
+
+  const size = Math.min(img.naturalWidth, img.naturalHeight);
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas non supporté");
+
+  // Crop carré centré : le sujet occupe tout le rond
+  ctx.drawImage(
+    img,
+    (img.naturalWidth - size) / 2,
+    (img.naturalHeight - size) / 2,
+    size,
+    size,
+    0,
+    0,
+    size,
+    size
+  );
+
+  const type = file.type === "image/png" ? "image/png" : "image/jpeg";
+  const blob = await new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Conversion impossible"))), type, 0.95)
+  );
+  return new File([blob], file.name.replace(/\.[^.]+$/, `.${type === "image/png" ? "png" : "jpg"}`), { type });
+}
+

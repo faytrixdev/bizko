@@ -93,6 +93,7 @@ export async function updateSession(request: NextRequest) {
     if (
       !isPublicRoute &&
       !pathname.startsWith("/api/") &&
+      !pathname.startsWith("/legal") &&
       pathname !== "/" &&
       !pathname.startsWith("/[username]") &&
       pathname !== "/demo"

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { QrShare } from "@/components/QrShare";
 import { useI18n } from "@/lib/i18n/provider";
@@ -14,17 +13,6 @@ interface TabOverviewProps {
 
 export function TabOverview({ publicUrl, username, views, waClicks }: TabOverviewProps) {
   const { t } = useI18n();
-  const [copied, setCopied] = useState(false);
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(publicUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // clipboard unavailable
-    }
-  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -34,12 +22,6 @@ export function TabOverview({ publicUrl, username, views, waClicks }: TabOvervie
           <p className="flex-1 min-w-0 text-xs text-gray-500 break-all font-mono bg-gray-50/50 border border-gray-100 rounded-xl px-3 py-2">
             {publicUrl}
           </p>
-          <button
-            onClick={handleCopy}
-            className="shrink-0 h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
-          >
-            {copied ? t("qr.copied") : t("qr.copyLink")}
-          </button>
         </div>
         <div className="mt-3">
           <QrShare url={publicUrl} />

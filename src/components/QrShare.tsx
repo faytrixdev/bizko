@@ -16,8 +16,14 @@ export function QrShare({ url }: { url: string }) {
     }
   }, [open, url]);
 
+  const copy = async () => {
+    await navigator.clipboard.writeText(url);
+    alert(t("qr.copied"));
+  };
+
   return (
     <div className="flex gap-2 flex-wrap">
+      <button onClick={copy} className="h-9 px-4 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover">{t("qr.copyLink")}</button>
       <button onClick={() => setOpen(!open)} className="h-9 px-4 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">{open ? t("qr.close") : t("qr.generate")}</button>
       {hasShare && <button onClick={() => navigator.share({ title: t("qr.myBizko"), url })} className="h-9 px-4 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50">{t("qr.share")}</button>}
       {open && qr && (

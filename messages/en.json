@@ -301,7 +301,13 @@
     "bucketService": "Services",
     "bucketTel": "Phone",
     "bucketOther": "Other",
-    "noActivity7d": "No activity in the last 7 days. Share your link to generate visits."
+    "noActivity7d": "No activity in the last 7 days. Share your link to generate visits.",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "confirmDeleteTitle": "Confirm deletion",
+    "confirmDeleteServiceMsg": "Are you sure you want to delete this service?",
+    "confirmDeleteImageMsg": "Are you sure you want to delete this image?",
+    "confirmDeleteSocialMsg": "Are you sure you want to delete this link?"
   },
   "demo": {
     "createMine": "Create mine",

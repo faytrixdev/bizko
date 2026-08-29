@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { addSocial, deleteSocial } from "@/app/dashboard/actions";
 import { useI18n } from "@/lib/i18n/provider";
 import { CustomSelect } from "@/components/CustomSelect";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 interface SocialLink {
   id: string;
@@ -25,17 +27,9 @@ function AddButton({ label }: { label: string }) {
   );
 }
 
-function DeleteButton({ label, ariaLabel }: { label: string; ariaLabel: string }) {
-  const { pending } = useFormStatus();
-  return (
-    <button aria-label={ariaLabel} disabled={pending} className="text-xs text-red-600 hover:underline shrink-0 ml-3 disabled:opacity-50">
-      {label}
-    </button>
-  );
-}
-
 export function TabSocials({ socials }: TabSocialsProps) {
   const { t } = useI18n();
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   return (
     <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -70,14 +64,26 @@ export function TabSocials({ socials }: TabSocialsProps) {
             <span className="text-sm truncate text-gray-900">
               {s.platform}: <span className="text-gray-500 font-normal">{s.url}</span>
             </span>
-            <form action={deleteSocial} onSubmit={(e) => {
-              if (!confirm("Supprimer ce lien ?")) e.preventDefault();
-            }}>
-              <input type="hidden" name="id" value={s.id} />
-              <DeleteButton label="x" ariaLabel={t("dashboard.deleteSocial")} />
-            </form>
+            <button
+              type="button"
+              onClick={() => setPendingDelete(s.id)}
+              aria-label={t("dashboard.deleteSocial")}
+              className="text-xs text-red-600 hover:underline shrink-0 ml-3"
+            >
+              x
+            </button>
           </div>
         ))}
+        <ConfirmDialog
+          open={pendingDelete !== null}
+          onClose={() => setPendingDelete(null)}
+          title={t("dashboard.confirmDeleteTitle")}
+          message={t("dashboard.confirmDeleteSocialMsg")}
+          confirmLabel={t("dashboard.confirm")}
+          cancelLabel={t("dashboard.cancel")}
+          action={deleteSocial}
+          hiddenFields={pendingDelete ? [{ name: "id", value: pendingDelete }] : []}
+        />
       </div>
     </div>
   );

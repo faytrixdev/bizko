@@ -301,7 +301,13 @@
     "bucketService": "Services",
     "bucketTel": "T\u00e9l\u00e9phone",
     "bucketOther": "Autres",
-    "noActivity7d": "Aucune activit\u00e9 ces 7 derniers jours. Partage ton lien pour g\u00e9n\u00e9rer des visites."
+    "noActivity7d": "Aucune activit\u00e9 ces 7 derniers jours. Partage ton lien pour g\u00e9n\u00e9rer des visites.",
+    "confirm": "Supprimer",
+    "cancel": "Annuler",
+    "confirmDeleteTitle": "Confirmer la suppression",
+    "confirmDeleteServiceMsg": "Voulez-vous vraiment supprimer ce service ?",
+    "confirmDeleteImageMsg": "Voulez-vous vraiment supprimer cette image ?",
+    "confirmDeleteSocialMsg": "Voulez-vous vraiment supprimer ce lien ?"
   },
   "demo": {
     "createMine": "Creer le mien",

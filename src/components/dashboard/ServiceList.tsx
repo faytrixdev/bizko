@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
 import { reorderServices, deleteService } from "@/app/dashboard/actions";
 import { useI18n } from "@/lib/i18n/provider";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 interface Service {
   id: string;
@@ -18,19 +18,11 @@ interface ServiceListProps {
   services: Service[];
 }
 
-function DeleteButton({ label }: { label: string }) {
-  const { pending } = useFormStatus();
-  return (
-    <button disabled={pending} className="text-xs text-red-600 hover:underline shrink-0 ml-3 disabled:opacity-50">
-      {label}
-    </button>
-  );
-}
-
 export function ServiceList({ services }: ServiceListProps) {
   const { t } = useI18n();
   const [list, setList] = useState(services);
   const [isPending, startTransition] = useTransition();
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   // Re-sync the optimistic local list whenever the server-refreshed props
   // change (e.g. after add/delete via a revalidated server action). Uses the
@@ -86,14 +78,25 @@ export function ServiceList({ services }: ServiceListProps) {
               )}
             </div>
           </div>
-          <form action={deleteService} onSubmit={(e) => {
-            if (!confirm("Supprimer ce service ?")) e.preventDefault();
-          }}>
-            <input type="hidden" name="id" value={s.id} />
-            <DeleteButton label={t("dashboard.delete")} />
-          </form>
+          <button
+            type="button"
+            onClick={() => setPendingDelete(s.id)}
+            className="shrink-0 text-xs text-red-600 hover:underline ml-3"
+          >
+            {t("dashboard.delete")}
+          </button>
         </div>
       ))}
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        title={t("dashboard.confirmDeleteTitle")}
+        message={t("dashboard.confirmDeleteServiceMsg")}
+        confirmLabel={t("dashboard.confirm")}
+        cancelLabel={t("dashboard.cancel")}
+        action={deleteService}
+        hiddenFields={pendingDelete ? [{ name: "id", value: pendingDelete }] : []}
+      />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useFormStatus } from "react-dom";
 import { reorderPortfolio, deletePortfolio } from "@/app/dashboard/actions";
 import { useI18n } from "@/lib/i18n/provider";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 interface PortfolioItem {
   id: string;
@@ -16,19 +16,11 @@ interface PortfolioGridProps {
   portfolio: PortfolioItem[];
 }
 
-function DeleteIconButton({ label }: { label: string }) {
-  const { pending } = useFormStatus();
-  return (
-    <button aria-label={label} disabled={pending} className="bg-white/90 backdrop-blur text-xs w-6 h-6 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-50">
-      x
-    </button>
-  );
-}
-
 export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
   const { t } = useI18n();
   const [list, setList] = useState(portfolio);
   const [isPending, startTransition] = useTransition();
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   // Re-sync when the server-refreshed props change (add/delete) using the
   // "adjust state during render" pattern.
@@ -75,14 +67,26 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
               ▼
             </button>
           </div>
-          <form action={deletePortfolio} onSubmit={(e) => {
-            if (!confirm("Supprimer cette image ?")) e.preventDefault();
-          }} className="absolute top-1 right-1">
-            <input type="hidden" name="id" value={p.id} />
-            <DeleteIconButton label={t("dashboard.deleteImage")} />
-          </form>
+          <button
+            type="button"
+            onClick={() => setPendingDelete(p.id)}
+            aria-label={t("dashboard.deleteImage")}
+            className="absolute top-1 right-1 bg-white/90 backdrop-blur text-xs w-6 h-6 rounded-lg border border-gray-200 hover:bg-white flex items-center justify-center"
+          >
+            x
+          </button>
         </div>
       ))}
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        title={t("dashboard.confirmDeleteTitle")}
+        message={t("dashboard.confirmDeleteImageMsg")}
+        confirmLabel={t("dashboard.confirm")}
+        cancelLabel={t("dashboard.cancel")}
+        action={deletePortfolio}
+        hiddenFields={pendingDelete ? [{ name: "id", value: pendingDelete }] : []}
+      />
     </div>
   );
 }

@@ -37,7 +37,7 @@ begin
     from public.events
     where profile_id = p_profile_id
       and type <> 'view'
-      and created_at >= now() - (p_days || ' days')::interval
+      and created_at >= (current_date - (p_days - 1))::timestamptz
   ) t
   group by t.bucket
   order by count desc;

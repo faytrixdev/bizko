@@ -29,6 +29,7 @@ export function TabOverview({ publicUrl, username, views, waClicks, daily, break
   const { t } = useI18n();
 
   const conversion = views7d > 0 ? Math.round((clicks7d / views7d) * 100) : 0;
+  const hasActivity = views7d > 0 || clicks7d > 0;
   const maxViews = Math.max(...daily.map((d) => d.views), 1);
   const maxClicks = Math.max(...daily.map((d) => d.clicks), 1);
   const totalClicks7d = breakdown.reduce((sum, b) => sum + b.count, 0);
@@ -88,11 +89,13 @@ export function TabOverview({ publicUrl, username, views, waClicks, daily, break
 
         {/* Last 7 days */}
         <div className="mt-6 pt-6 border-t border-gray-100">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t("dashboard.trendTitle")}</p>
-            <span className="text-[11px] font-medium text-gray-400">{t("dashboard.last7Days")}</span>
-          </div>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t("dashboard.trendTitle")}</p>
+          <span className="text-[11px] font-medium text-gray-400">{t("dashboard.last7Days")}</span>
+        </div>
 
+        {hasActivity ? (
+          <>
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
               <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t("dashboard.views")}</p>
@@ -156,6 +159,12 @@ export function TabOverview({ publicUrl, username, views, waClicks, daily, break
               </div>
             </div>
           )}
+          </>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 p-8 text-center">
+            <p className="text-sm text-gray-500">{t("dashboard.noActivity7d")}</p>
+          </div>
+        )}
         </div>
       </div>
     </div>

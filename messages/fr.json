@@ -300,7 +300,8 @@
     "bucketFloating": "Bouton flottant",
     "bucketService": "Services",
     "bucketTel": "T\u00e9l\u00e9phone",
-    "bucketOther": "Autres"
+    "bucketOther": "Autres",
+    "noActivity7d": "Aucune activit\u00e9 ces 7 derniers jours. Partage ton lien pour g\u00e9n\u00e9rer des visites."
   },
   "demo": {
     "createMine": "Creer le mien",

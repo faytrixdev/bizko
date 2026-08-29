@@ -227,7 +227,13 @@
     "phonePlaceholder": "WhatsApp +2250700000000",
     "servicePlaceholder": "e.g. Pro photo shoot",
     "pricePlaceholder": "Price (XOF, optional)",
-    "publishBtn": "Publish my Bizko"
+    "publishBtn": "Publish my Bizko",
+    "publishing": "Publishing...",
+    "errorUsernameInvalid": "Invalid username (3-30 characters, letters, numbers, _).",
+    "errorUsernameReserved": "This username is reserved. Choose another one.",
+    "errorUsernameTaken": "This username is already taken. Choose another one.",
+    "errorRequired": "All required fields must be filled.",
+    "errorGeneric": "An error occurred. Please try again."
   },
   "dashboard": {
     "viewProfile": "View my profile",
@@ -265,7 +271,16 @@
     "templateMinimal": "Minimal",
     "templatePortfolio": "Portfolio",
     "titlePlaceholder": "Title",
-    "pricePlaceholder": "Price"
+    "pricePlaceholder": "Price",
+    "errorMissing": "All required fields must be filled.",
+    "errorGeneric": "An error occurred. Please try again.",
+    "errorDuplicate": "This item already exists.",
+    "errorInvalidEmail": "Invalid email.",
+    "errorInvalidUrl": "Invalid URL.",
+    "successProfile": "Profile updated.",
+    "successAdded": "Added.",
+    "successDeleted": "Deleted.",
+    "successSaved": "Saved."
   },
   "demo": {
     "createMine": "Create mine",
@@ -377,7 +392,11 @@
     "errorInvalidCredentials": "Incorrect email or password.",
     "errorSignupFailed": "Sign up failed. Check your details or try again.",
     "errorForgotFailed": "Unable to send the link. Check your email or try again.",
-    "errorFetchFailed": "An error occurred. Please try again in a moment."
+    "errorFetchFailed": "An error occurred. Please try again in a moment.",
+    "errorResetMismatch": "Passwords do not match.",
+    "errorResetTooShort": "Password must be at least 6 characters.",
+    "errorResetExpired": "This reset link is invalid or expired. Request a new link.",
+    "successPasswordUpdated": "Password updated - log in."
   },
   "username": {
     "available": "Username available",

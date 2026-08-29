@@ -128,7 +128,8 @@ export async function changePassword(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("changePassword updateUser error:", error);
+    return { error: "Une erreur est survenue. Reessaie." };
   }
 
   return { success: "Mot de passe modifié avec succès." };
@@ -206,7 +207,8 @@ export async function resendConfirmationEmail(email: string) {
   });
 
   if (error) {
-    return { error: error.message };
+    console.error("resendConfirmationEmail error:", error);
+    return { error: "Une erreur est survenue. Reessaie dans un instant." };
   }
 
   return { success: "Email de confirmation renvoyé." };
@@ -240,12 +242,21 @@ export async function forgotPassword(formData: FormData) {
   redirect(`/forgot-password?success=${encodeURIComponent("Lien envoyé - vérifie ta boîte mail.")}`);
 }
 
+export async function exchangeResetCode(code: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error) {
+    console.error("exchangeResetCode error:", error);
+  }
+  return { error: error ? true : false };
+}
+
 export async function resetPassword(formData: FormData) {
   const supabase = await createClient();
   const password = formData.get("password") as string;
   const confirm = formData.get("confirm") as string;
-  if (password !== confirm) redirect(`/reset-password?error=${encodeURIComponent("Les mots de passe ne correspondent pas.")}`);
-  if (password.length < 6) redirect(`/reset-password?error=${encodeURIComponent("6 caractères minimum.")}`);
+  if (password !== confirm) redirect(`/reset-password?error=${encodeURIComponent("reset_mismatch")}`);
+  if (password.length < 6) redirect(`/reset-password?error=${encodeURIComponent("reset_too_short")}`);
   try {
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
@@ -258,5 +269,5 @@ export async function resetPassword(formData: FormData) {
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
     redirect(`/reset-password?error=${encodeURIComponent("fetch_failed")}`);
   }
-  redirect("/login?success=Mot de passe mis à jour - connecte-toi.");
+  redirect("/login?success=password_updated");
 }

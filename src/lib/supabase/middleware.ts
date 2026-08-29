@@ -8,8 +8,14 @@ export async function updateSession(request: NextRequest) {
   const pathname = url.pathname;
   const code = url.searchParams.get("code");
 
-  // Forward any auth code (e.g. email confirmation) landing outside /auth/callback
-  if (code && pathname !== "/auth/callback") {
+  // Forward any auth code (e.g. email confirmation) landing outside /auth/callback.
+  // /reset-password handles its own recovery code (exchanged on the page itself),
+  // so it must NOT be intercepted here, otherwise the reset flow breaks.
+  if (
+    code &&
+    pathname !== "/auth/callback" &&
+    pathname !== "/reset-password"
+  ) {
     return NextResponse.redirect(
       new URL(`/auth/callback?code=${encodeURIComponent(code)}`, request.url)
     );

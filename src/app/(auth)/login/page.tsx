@@ -13,9 +13,12 @@ export default function Login() {
   const success = searchParams.get("success") || undefined;
   const { t } = useI18n();
 
+  const successMessage =
+    success === "password_updated" ? t("auth2.successPasswordUpdated") : undefined;
+
   return (
     <AuthShell title={t("auth.loginTitle")} subtitle={t("auth.loginSubtitle")}>
-      {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
+      {successMessage && <div className="mb-5"><Alert type="success">{successMessage}</Alert></div>}
       {authErrorText(t, error) && <div className="mb-5"><Alert type="error">{authErrorText(t, error)}</Alert></div>}
 
       <GoogleOAuthButton mode="login" />

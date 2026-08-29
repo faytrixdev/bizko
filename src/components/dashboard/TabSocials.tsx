@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormStatus } from "react-dom";
 import { addSocial, deleteSocial } from "@/app/dashboard/actions";
 import { useI18n } from "@/lib/i18n/provider";
 import { CustomSelect } from "@/components/CustomSelect";
@@ -13,6 +14,24 @@ interface SocialLink {
 
 interface TabSocialsProps {
   socials: SocialLink[];
+}
+
+function AddButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm disabled:opacity-60">
+      {pending ? "..." : label}
+    </button>
+  );
+}
+
+function DeleteButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="text-xs text-red-600 hover:underline shrink-0 ml-3 disabled:opacity-50">
+      {label}
+    </button>
+  );
 }
 
 export function TabSocials({ socials }: TabSocialsProps) {
@@ -42,9 +61,7 @@ export function TabSocials({ socials }: TabSocialsProps) {
             className="h-10"
           />
           <input name="url" required placeholder="https://..." className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-          <button className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm">
-            {t("dashboard.add")}
-          </button>
+          <AddButton label={t("dashboard.add")} />
         </form>
       )}
       <div className="mt-3 flex flex-col gap-2">
@@ -53,11 +70,11 @@ export function TabSocials({ socials }: TabSocialsProps) {
             <span className="text-sm truncate text-gray-900">
               {s.platform}: <span className="text-gray-500 font-normal">{s.url}</span>
             </span>
-            <form action={deleteSocial}>
+            <form action={deleteSocial} onSubmit={(e) => {
+              if (!confirm("Supprimer ce lien ?")) e.preventDefault();
+            }}>
               <input type="hidden" name="id" value={s.id} />
-              <button className="text-xs text-red-600 hover:underline shrink-0 ml-3">
-                x
-              </button>
+              <DeleteButton label="x" />
             </form>
           </div>
         ))}

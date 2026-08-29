@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 import { reorderServices, deleteService } from "@/app/dashboard/actions";
 import { useI18n } from "@/lib/i18n/provider";
 
@@ -17,10 +18,28 @@ interface ServiceListProps {
   services: Service[];
 }
 
+function DeleteButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="text-xs text-red-600 hover:underline shrink-0 ml-3 disabled:opacity-50">
+      {label}
+    </button>
+  );
+}
+
 export function ServiceList({ services }: ServiceListProps) {
   const { t } = useI18n();
   const [list, setList] = useState(services);
   const [isPending, startTransition] = useTransition();
+
+  // Re-sync the optimistic local list whenever the server-refreshed props
+  // change (e.g. after add/delete via a revalidated server action). Uses the
+  // "adjust state during render" pattern (React docs) to avoid stale data.
+  const [prevServices, setPrevServices] = useState(services);
+  if (prevServices !== services) {
+    setPrevServices(services);
+    setList(services);
+  }
 
   const handleMove = (index: number, direction: "up" | "down") => {
     const targetIndex = direction === "up" ? index - 1 : index + 1;
@@ -67,11 +86,11 @@ export function ServiceList({ services }: ServiceListProps) {
               )}
             </div>
           </div>
-          <form action={deleteService}>
+          <form action={deleteService} onSubmit={(e) => {
+            if (!confirm("Supprimer ce service ?")) e.preventDefault();
+          }}>
             <input type="hidden" name="id" value={s.id} />
-            <button className="text-xs text-red-600 hover:underline shrink-0 ml-3">
-              {t("dashboard.delete")}
-            </button>
+            <DeleteButton label={t("dashboard.delete")} />
           </form>
         </div>
       ))}

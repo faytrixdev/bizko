@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
@@ -18,8 +19,23 @@ interface DashboardClientProps {
   views: number;
   waClicks: number;
   publicUrl: string;
-  error?: string;
 }
+
+const ERROR_KEYS: Record<string, string> = {
+  missing: "dashboard.errorMissing",
+  generic: "dashboard.errorGeneric",
+  duplicate: "dashboard.errorDuplicate",
+  invalid_email: "dashboard.errorInvalidEmail",
+  invalid_url: "dashboard.errorInvalidUrl",
+  services_limit: "dashboard.servicesFull",
+  socials_limit: "dashboard.socialsFull",
+};
+
+const SUCCESS_KEYS: Record<string, string> = {
+  profile: "dashboard.successProfile",
+  added: "dashboard.successAdded",
+  deleted: "dashboard.successDeleted",
+};
 
 export function DashboardClient({
   profile,
@@ -29,10 +45,14 @@ export function DashboardClient({
   views,
   waClicks,
   publicUrl,
-  error,
 }: DashboardClientProps) {
   const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("apercu");
+  const searchParams = useSearchParams();
+  const errorCode = searchParams.get("error");
+  const successCode = searchParams.get("success");
+  const errorMsg = errorCode ? t(ERROR_KEYS[errorCode] ?? "dashboard.errorGeneric") : null;
+  const successMsg = successCode ? t(SUCCESS_KEYS[successCode] ?? "dashboard.successSaved") : null;
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "apercu", label: t("dashboard.tabs.apercu"), icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
@@ -72,9 +92,14 @@ export function DashboardClient({
       </header>
 
       <div className="max-w-[640px] mx-auto px-4 py-6">
-        {error && (
+        {errorMsg && (
           <p className="mb-4 bg-red-50 border border-red-200 text-red-700 p-3 rounded-xl text-sm">
-            {decodeURIComponent(error)}
+            {errorMsg}
+          </p>
+        )}
+        {successMsg && (
+          <p className="mb-4 bg-green-50 border border-green-200 text-green-700 p-3 rounded-xl text-sm">
+            {successMsg}
           </p>
         )}
 

@@ -2,8 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardClient } from "./DashboardClient";
 
-export default async function Dashboard({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const { error } = await searchParams;
+export default async function Dashboard() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -31,7 +30,6 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       views={views}
       waClicks={waClicks}
       publicUrl={publicUrl}
-      error={error}
     />
   );
 }

@@ -4,6 +4,8 @@ const ERROR_KEYS: Record<string, string> = {
   forgot_failed: "auth2.errorForgotFailed",
   fetch_failed: "auth2.errorFetchFailed",
   account_exists: "auth2.errorSignupFailed",
+  reset_mismatch: "auth2.errorResetMismatch",
+  reset_too_short: "auth2.errorResetTooShort",
 };
 
 /**

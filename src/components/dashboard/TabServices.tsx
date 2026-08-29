@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormStatus } from "react-dom";
 import { addService } from "@/app/dashboard/actions";
 import { ServiceList } from "./ServiceList";
 import { useI18n } from "@/lib/i18n/provider";
@@ -16,6 +17,15 @@ interface Service {
 
 interface TabServicesProps {
   services: Service[];
+}
+
+function AddButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm disabled:opacity-60">
+      {pending ? "..." : label}
+    </button>
+  );
 }
 
 export function TabServices({ services }: TabServicesProps) {
@@ -53,9 +63,7 @@ export function TabServices({ services }: TabServicesProps) {
               className="w-28 h-10"
             />
           </div>
-          <button className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm">
-            {t("dashboard.add")}
-          </button>
+          <AddButton label={t("dashboard.add")} />
         </form>
       )}
       <ServiceList services={services} />

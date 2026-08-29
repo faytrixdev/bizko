@@ -1,0 +1,28 @@
+const RESERVED = [
+  "login",
+  "signup",
+  "forgot-password",
+  "reset-password",
+  "verify-email",
+  "auth",
+  "api",
+  "legal",
+  "dashboard",
+  "account",
+  "onboarding",
+  "demo",
+  "admin",
+  "privacy",
+  "terms",
+  "about",
+  "favorites",
+  "settings",
+  "home",
+  "index",
+  "www",
+  "mail",
+  "support",
+  "help",
+];
+
+export const RESERVED_USERNAMES: ReadonlySet<string> = new Set(RESERVED);

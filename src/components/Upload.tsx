@@ -16,14 +16,25 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
     if (!file) return;
     setUploading(true);
     try {
+      const oldUrl = currentUrl;
       const squared = await cropToSquare(file);
       const compressed = await imageCompression(squared, { maxSizeMB: 0.3, maxWidthOrHeight: 800, useWebWorker: true });
       const path = `${profileId}/avatar-${Date.now()}.jpg`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", profileId);
+      const { error: dbErr } = await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", profileId);
+      if (dbErr) throw dbErr;
       router.refresh();
+      // Best-effort: remove the previous avatar from storage to avoid orphans.
+      if (oldUrl) {
+        try {
+          const base = supabase.storage.from("avatars").getPublicUrl("").data.publicUrl.replace(/\/$/, "");
+          if (oldUrl.startsWith(base)) {
+            await supabase.storage.from("avatars").remove([oldUrl.slice(base.length + 1)]);
+          }
+        } catch { /* ignore cleanup failure */ }
+      }
     } catch (err) {
       alert(String(err));
     } finally {
@@ -61,7 +72,12 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       const { data } = supabase.storage.from("portfolio").getPublicUrl(path);
       const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
       const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
-      await supabase.from("portfolio_items").insert({ profile_id: profileId, image_url: data.publicUrl, position: nextPos });
+      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, image_url: data.publicUrl, position: nextPos });
+      if (insertErr) {
+        // Avoid orphaned storage object on DB failure.
+        await supabase.storage.from("portfolio").remove([path]);
+        throw insertErr;
+      }
       router.refresh();
     } catch (err) {
       alert(String(err));

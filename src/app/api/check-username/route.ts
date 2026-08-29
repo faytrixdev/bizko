@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rateLimit";
+import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
 
 export async function GET(request: NextRequest) {
   const { allowed, retryAfterSeconds } = rateLimit(request, {
@@ -22,6 +23,10 @@ export async function GET(request: NextRequest) {
 
   if (!username || !/^[a-z0-9_]{3,30}$/.test(username)) {
     return NextResponse.json({ available: false, reason: "invalid" });
+  }
+
+  if (RESERVED_USERNAMES.has(username)) {
+    return NextResponse.json({ available: false, reason: "reserved" });
   }
 
   const supabase = await createClient();

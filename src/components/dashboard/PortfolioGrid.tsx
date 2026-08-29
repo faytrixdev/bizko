@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useFormStatus } from "react-dom";
 import { reorderPortfolio, deletePortfolio } from "@/app/dashboard/actions";
 
 interface PortfolioItem {
@@ -14,9 +15,26 @@ interface PortfolioGridProps {
   portfolio: PortfolioItem[];
 }
 
+function DeleteIconButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="bg-white/90 backdrop-blur text-xs w-6 h-6 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-50">
+      x
+    </button>
+  );
+}
+
 export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
   const [list, setList] = useState(portfolio);
   const [isPending, startTransition] = useTransition();
+
+  // Re-sync when the server-refreshed props change (add/delete) using the
+  // "adjust state during render" pattern.
+  const [prevPortfolio, setPrevPortfolio] = useState(portfolio);
+  if (prevPortfolio !== portfolio) {
+    setPrevPortfolio(portfolio);
+    setList(portfolio);
+  }
 
   const handleMove = (index: number, direction: "up" | "down") => {
     const targetIndex = direction === "up" ? index - 1 : index + 1;
@@ -55,11 +73,11 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
               ▼
             </button>
           </div>
-          <form action={deletePortfolio} className="absolute top-1 right-1">
+          <form action={deletePortfolio} onSubmit={(e) => {
+            if (!confirm("Supprimer cette image ?")) e.preventDefault();
+          }} className="absolute top-1 right-1">
             <input type="hidden" name="id" value={p.id} />
-            <button className="bg-white/90 backdrop-blur text-xs w-6 h-6 rounded-lg border border-gray-200 hover:bg-white">
-              x
-            </button>
+            <DeleteIconButton />
           </form>
         </div>
       ))}

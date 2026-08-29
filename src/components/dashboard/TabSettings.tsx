@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useFormStatus } from "react-dom";
 import { updateProfile } from "@/app/dashboard/actions";
 import { AvatarUpload } from "@/components/Upload";
 import { CountrySelect } from "@/components/CountrySelect";
@@ -10,6 +11,15 @@ import type { Profile } from "@/types/database";
 
 interface TabSettingsProps {
   profile: Profile;
+}
+
+function SaveButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button disabled={pending} className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-semibold hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm active:scale-[0.98] disabled:opacity-60">
+      {pending ? "..." : label}
+    </button>
+  );
 }
 
 export function TabSettings({ profile }: TabSettingsProps) {
@@ -49,9 +59,7 @@ export function TabSettings({ profile }: TabSettingsProps) {
           ]}
           className="h-10"
         />
-        <button className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-semibold hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm active:scale-[0.98]">
-          {t("dashboard.save")}
-        </button>
+        <SaveButton label={t("dashboard.save")} />
       </form>
 
       <div className="mt-6 pt-4 border-t border-gray-100">

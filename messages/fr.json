@@ -227,7 +227,13 @@
     "phonePlaceholder": "WhatsApp +2250700000000",
     "servicePlaceholder": "Ex: Shooting photo pro",
     "pricePlaceholder": "Prix (XOF, optionnel)",
-    "publishBtn": "Publier mon Bizko"
+    "publishBtn": "Publier mon Bizko",
+    "publishing": "Publication...",
+    "errorUsernameInvalid": "Username invalide (3-30 caracteres, lettres, chiffres, _).",
+    "errorUsernameReserved": "Ce username est reserve. Choisis-en un autre.",
+    "errorUsernameTaken": "Ce username est deja pris. Choisis-en un autre.",
+    "errorRequired": "Tous les champs requis doivent etre remplis.",
+    "errorGeneric": "Une erreur est survenue. Reessaie."
   },
   "dashboard": {
     "viewProfile": "Voir mon profil",
@@ -265,7 +271,16 @@
     "templateMinimal": "Minimal",
     "templatePortfolio": "Portfolio",
     "titlePlaceholder": "Titre",
-    "pricePlaceholder": "Prix"
+    "pricePlaceholder": "Prix",
+    "errorMissing": "Tous les champs requis doivent etre remplis.",
+    "errorGeneric": "Une erreur est survenue. Reessaie.",
+    "errorDuplicate": "Cet element existe deja.",
+    "errorInvalidEmail": "Email invalide.",
+    "errorInvalidUrl": "URL invalide.",
+    "successProfile": "Profil mis a jour.",
+    "successAdded": "Ajoute.",
+    "successDeleted": "Supprime.",
+    "successSaved": "Enregistre."
   },
   "demo": {
     "createMine": "Creer le mien",
@@ -377,7 +392,11 @@
     "errorInvalidCredentials": "Email ou mot de passe incorrect.",
     "errorSignupFailed": "Inscription impossible. Verifie tes informations ou reessaie.",
     "errorForgotFailed": "Impossible d'envoyer le lien. Verifie ton email ou reessaie.",
-    "errorFetchFailed": "Une erreur est survenue. Reessaie dans un instant."
+    "errorFetchFailed": "Une erreur est survenue. Reessaie dans un instant.",
+    "errorResetMismatch": "Les mots de passe ne correspondent pas.",
+    "errorResetTooShort": "Le mot de passe doit contenir au moins 6 caracteres.",
+    "errorResetExpired": "Ce lien de reinitialisation est invalide ou expire. Redemande un nouveau lien.",
+    "successPasswordUpdated": "Mot de passe mis a jour - connecte-toi."
   },
   "username": {
     "available": "Username disponible",

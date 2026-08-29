@@ -19,12 +19,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from("profiles").select("count").limit(1);
+    const { count, error } = await supabase
+      .from("profiles")
+      .select("*", { count: "exact", head: true });
     if (error) {
       console.error("supabase-health: query failed", error.message);
       return NextResponse.json({ ok: false }, { status: 500 });
     }
-    return NextResponse.json({ ok: true, profiles: data });
+    return NextResponse.json({ ok: true, profiles: count ?? 0 });
   } catch (e) {
     console.error("supabase-health: exception", e);
     return NextResponse.json({ ok: false }, { status: 500 });

@@ -2,17 +2,42 @@
 
 import { useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
+import { useFormStatus } from "react-dom";
 import { useI18n } from "@/lib/i18n/provider";
 import { completeOnboarding } from "./actions";
 import { UsernameField } from "@/components/UsernameField";
 import { CountrySelect } from "@/components/CountrySelect";
 import { CustomSelect } from "@/components/CustomSelect";
 
+const ERROR_KEYS: Record<string, string> = {
+  username_invalide: "onboarding.errorUsernameInvalid",
+  username_reserve: "onboarding.errorUsernameReserved",
+  username_pris: "onboarding.errorUsernameTaken",
+  champs_requis: "onboarding.errorRequired",
+  echec: "onboarding.errorGeneric",
+};
+
+function Submit() {
+  const { t } = useI18n();
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="h-11 rounded-lg bg-[#FF6B35] text-white font-semibold hover:bg-[#EA580C] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      {pending ? t("onboarding.publishing") : t("onboarding.publishBtn")}
+    </button>
+  );
+}
+
 export default function Onboarding() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;
   const { t } = useI18n();
   const [usernameStatus, setUsernameStatus] = useState("idle");
+
+  const errorMsg = error ? t(ERROR_KEYS[error] ?? "onboarding.errorGeneric") : undefined;
 
   const handleStatusChange = useCallback((status: string) => {
     setUsernameStatus(status);
@@ -38,7 +63,7 @@ export default function Onboarding() {
         </div>
         <h1 className="text-2xl font-bold tracking-tight font-display text-gray-900">{t("onboarding.title")}</h1>
         <p className="text-sm text-gray-500 mt-1">{t("onboarding.subtitle")}</p>
-        {error && <p className="mt-4 text-sm text-red-700 bg-red-50 border border-red-200 p-3 rounded-lg">{decodeURIComponent(error)}</p>}
+        {errorMsg && <p className="mt-4 text-sm text-red-700 bg-red-50 border border-red-200 p-3 rounded-lg">{errorMsg}</p>}
         <form action={completeOnboarding} className="mt-6 flex flex-col gap-6">
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-sm font-semibold flex items-center gap-2 text-gray-900"><span className="h-6 w-6 rounded-full bg-[#FF6B35] text-white flex items-center justify-center text-xs">1</span> {t("onboarding.step1")}</p>
@@ -91,7 +116,7 @@ export default function Onboarding() {
             </div>
           </div>
 
-          <button type="submit" className="h-11 rounded-lg bg-[#FF6B35] text-white font-semibold hover:bg-[#EA580C] transition-colors">{t("onboarding.publishBtn")}</button>
+          <Submit />
         </form>
       </div>
     </div>

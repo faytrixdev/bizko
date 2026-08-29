@@ -5,6 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
+import { isValidUsername } from "@/lib/validators";
 
 export async function completeOnboarding(formData: FormData) {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export async function completeOnboarding(formData: FormData) {
   const service_currency = (formData.get("service_currency") as string) || "XOF";
 
   // Validate username
-  if (!/^[a-z0-9_]{3,30}$/.test(username)) {
+  if (!isValidUsername(username)) {
     redirect("/onboarding?error=username_invalide");
   }
   if (RESERVED_USERNAMES.has(username)) {

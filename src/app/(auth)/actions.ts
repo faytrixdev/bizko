@@ -135,6 +135,8 @@ export async function changePassword(formData: FormData) {
   return { success: "Mot de passe modifié avec succès." };
 }
 
+const DELETE_CONFIRMATION = "DELETE";
+
 export async function deleteAccount(formData: FormData) {
   const supabase = await createClient();
 
@@ -142,6 +144,11 @@ export async function deleteAccount(formData: FormData) {
 
   if (!user) {
     return { error: "Utilisateur non trouvé." };
+  }
+
+  const confirmation = (formData.get("confirmation") as string) ?? "";
+  if (confirmation !== DELETE_CONFIRMATION) {
+    return { error: "Veuillez taper DELETE pour confirmer la suppression." };
   }
 
   const currentPassword = formData.get("currentPassword") as string;
@@ -214,9 +221,13 @@ export async function resendConfirmationEmail(email: string) {
   return { success: "Email de confirmation renvoyé." };
 }
 
-export async function logout() {
+export async function logout(): Promise<{ error?: string }> {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error("logout error:", error);
+    return { error: "Erreur lors de la deconnexion." };
+  }
   revalidatePath("/", "layout");
   redirect("/");
 }

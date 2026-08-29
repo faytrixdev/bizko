@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rateLimit";
 import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
+import { isValidUsername } from "@/lib/validators";
 
 export async function GET(request: NextRequest) {
   const { allowed, retryAfterSeconds } = rateLimit(request, {
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const username = searchParams.get("username");
 
-  if (!username || !/^[a-z0-9_]{3,30}$/.test(username)) {
+  if (!username || !isValidUsername(username)) {
     return NextResponse.json({ available: false, reason: "invalid" });
   }
 

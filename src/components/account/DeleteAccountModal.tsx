@@ -78,6 +78,7 @@ export function DeleteAccountModal({ open, onClose, user }: DeleteAccountModalPr
         </div>
 
         <form action={formAction} className="flex flex-col gap-3 mt-2">
+          <input type="hidden" name="confirmation" value={confirmation} />
           <Input
             type="password"
             name="currentPassword"

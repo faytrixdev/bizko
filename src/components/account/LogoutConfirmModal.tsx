@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { logout } from "@/app/(auth)/actions";
+import { Alert } from "@/components/auth/Alert";
 import { useI18n } from "@/lib/i18n/provider";
 
 interface LogoutConfirmModalProps {
@@ -13,6 +14,7 @@ export function LogoutConfirmModal({ open, onClose }: LogoutConfirmModalProps) {
   const { t } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -25,14 +27,19 @@ export function LogoutConfirmModal({ open, onClose }: LogoutConfirmModalProps) {
   }, [open]);
 
   function handleClose() {
+    setError(null);
     onClose();
   }
 
   async function handleLogout() {
     setIsPending(true);
+    setError(null);
     try {
-      await logout();
+      const result = await logout();
+      if (result?.error) setError(result.error);
     } catch {
+      setError(t("auth2.logoutError"));
+    } finally {
       setIsPending(false);
     }
   }
@@ -48,6 +55,7 @@ export function LogoutConfirmModal({ open, onClose }: LogoutConfirmModalProps) {
         <p className="text-sm text-gray-600 leading-relaxed">
           {t("accountPage.logoutConfirm")}
         </p>
+        {error && <Alert type="error">{error}</Alert>}
         <div className="flex gap-3 mt-2">
           <button
             type="button"

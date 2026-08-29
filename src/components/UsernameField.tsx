@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isValidUsername, USERNAME_PATTERN } from "@/lib/validators";
 
 type Status = "idle" | "checking" | "available" | "unavailable" | "invalid";
 
@@ -15,7 +16,7 @@ export function UsernameField({ onStatusChange }: { onStatusChange?: (status: st
       return;
     }
 
-    if (!/^[a-z0-9_]{3,30}$/.test(username)) {
+    if (!isValidUsername(username)) {
       setStatus("invalid");
       return;
     }
@@ -61,7 +62,7 @@ export function UsernameField({ onStatusChange }: { onStatusChange?: (status: st
     <input
       name="username"
       required
-      pattern="[a-z0-9_]{3,30}"
+      pattern={USERNAME_PATTERN}
       placeholder="tonnom"
       value={value}
       onChange={(e) => setValue(e.target.value.toLowerCase())}

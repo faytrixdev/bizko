@@ -289,7 +289,18 @@
     "successProfile": "Profile updated.",
     "successAdded": "Added.",
     "successDeleted": "Deleted.",
-    "successSaved": "Saved."
+    "successSaved": "Saved.",
+    "conversion": "Conversion rate",
+    "conversionSub": "Visitors who clicked",
+    "last7Days": "Last 7 days",
+    "trendTitle": "Activity",
+    "clicksBreakdown": "Clicks by source",
+    "bucketMain": "Main button",
+    "bucketSticky": "Mobile button",
+    "bucketFloating": "Floating button",
+    "bucketService": "Services",
+    "bucketTel": "Phone",
+    "bucketOther": "Other"
   },
   "demo": {
     "createMine": "Create mine",

@@ -289,7 +289,18 @@
     "successProfile": "Profil mis a jour.",
     "successAdded": "Ajoute.",
     "successDeleted": "Supprime.",
-    "successSaved": "Enregistre."
+    "successSaved": "Enregistre.",
+    "conversion": "Taux de conversion",
+    "conversionSub": "Visiteurs qui ont cliqu\u00e9",
+    "last7Days": "7 derniers jours",
+    "trendTitle": "Activit\u00e9",
+    "clicksBreakdown": "Clics par source",
+    "bucketMain": "Bouton principal",
+    "bucketSticky": "Bouton mobile",
+    "bucketFloating": "Bouton flottant",
+    "bucketService": "Services",
+    "bucketTel": "T\u00e9l\u00e9phone",
+    "bucketOther": "Autres"
   },
   "demo": {
     "createMine": "Creer le mien",

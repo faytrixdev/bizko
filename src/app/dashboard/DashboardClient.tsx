@@ -8,6 +8,7 @@ import { Logo } from "@/components/Logo";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
 import type { Profile, Service, PortfolioItem, SocialLink } from "@/types/database";
+import type { DailyEvent, ClickBucket } from "@/types/analytics";
 
 type Tab = "apercu" | "services" | "portfolio" | "reseaux" | "reglages";
 
@@ -18,6 +19,10 @@ interface DashboardClientProps {
   socials: SocialLink[];
   views: number;
   waClicks: number;
+  daily: DailyEvent[];
+  breakdown: ClickBucket[];
+  views7d: number;
+  clicks7d: number;
   publicUrl: string;
 }
 
@@ -44,6 +49,10 @@ export function DashboardClient({
   socials,
   views,
   waClicks,
+  daily,
+  breakdown,
+  views7d,
+  clicks7d,
   publicUrl,
 }: DashboardClientProps) {
   const { t } = useI18n();
@@ -125,7 +134,7 @@ export function DashboardClient({
         </nav>
 
         {/* Tab content */}
-        {tab === "apercu" && <TabOverview publicUrl={publicUrl} username={profile.username} views={views} waClicks={waClicks} />}
+        {tab === "apercu" && <TabOverview publicUrl={publicUrl} username={profile.username} views={views} waClicks={waClicks} daily={daily} breakdown={breakdown} views7d={views7d} clicks7d={clicks7d} />}
         {tab === "services" && <TabServices services={services} />}
         {tab === "portfolio" && <TabPortfolio portfolio={portfolio} profileId={profile.id} />}
         {tab === "reseaux" && <TabSocials socials={socials} />}

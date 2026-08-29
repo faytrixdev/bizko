@@ -61,16 +61,20 @@ begin
   end if;
 
   return query
-  select d.day,
+  select g.dt::date as day,
     count(e.id) filter (where e.type = 'view')::bigint as views,
     count(e.id) filter (where e.type <> 'view')::bigint as clicks
-  from generate_series((current_date - (p_days - 1))::date, current_date, '1 day'::interval) as d(day)
+  from generate_series(
+    (current_date - (p_days - 1))::date,
+    current_date,
+    '1 day'::interval
+  ) as g(dt)
   left join public.events e
     on e.profile_id = p_profile_id
-    and e.created_at >= d.day
-    and e.created_at < d.day + interval '1 day'
-  group by d.day
-  order by d.day;
+    and e.created_at >= g.dt
+    and e.created_at < g.dt + interval '1 day'
+  group by g.dt
+  order by g.dt;
 end;
 $$;
 

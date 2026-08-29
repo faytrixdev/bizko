@@ -85,10 +85,10 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               <Button asChild variant="outline" size="sm" className={cn(isScrolled && "lg:hidden")}>
                 <Link href="/login"><span>{msg.landing.login}</span></Link>
               </Button>
-              <Button asChild size="sm" className={cn("bg-[#FF6B35] hover:bg-[#EA580C] text-white", isScrolled && "lg:hidden")}>
+              <Button asChild size="sm" className={cn("bg-accent hover:bg-accent-hover text-white", isScrolled && "lg:hidden")}>
                 <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
               </Button>
-              <Button asChild size="sm" className={cn("bg-[#FF6B35] hover:bg-[#EA580C] text-white", isScrolled ? "lg:inline-flex" : "hidden")}>
+              <Button asChild size="sm" className={cn("bg-accent hover:bg-accent-hover text-white", isScrolled ? "lg:inline-flex" : "hidden")}>
                 <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
               </Button>
             </div>
@@ -132,7 +132,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
                 <Button asChild variant="outline" size="sm">
                   <Link href="/login"><span>{msg.landing.login}</span></Link>
                 </Button>
-                <Button asChild size="sm" className="bg-[#FF6B35] hover:bg-[#EA580C] text-white">
+                <Button asChild size="sm" className="bg-accent hover:bg-accent-hover text-white">
                   <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
                 </Button>
               </div>

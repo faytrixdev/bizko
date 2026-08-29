@@ -19,16 +19,16 @@ interface TabSocialsProps {
 function AddButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button disabled={pending} className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm disabled:opacity-60">
+    <button disabled={pending} className="h-10 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-all duration-200 hover:shadow-sm disabled:opacity-60">
       {pending ? "..." : label}
     </button>
   );
 }
 
-function DeleteButton({ label }: { label: string }) {
+function DeleteButton({ label, ariaLabel }: { label: string; ariaLabel: string }) {
   const { pending } = useFormStatus();
   return (
-    <button disabled={pending} className="text-xs text-red-600 hover:underline shrink-0 ml-3 disabled:opacity-50">
+    <button aria-label={ariaLabel} disabled={pending} className="text-xs text-red-600 hover:underline shrink-0 ml-3 disabled:opacity-50">
       {label}
     </button>
   );
@@ -74,7 +74,7 @@ export function TabSocials({ socials }: TabSocialsProps) {
               if (!confirm("Supprimer ce lien ?")) e.preventDefault();
             }}>
               <input type="hidden" name="id" value={s.id} />
-              <DeleteButton label="x" />
+              <DeleteButton label="x" ariaLabel={t("dashboard.deleteSocial")} />
             </form>
           </div>
         ))}

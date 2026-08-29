@@ -71,7 +71,7 @@ export default async function PublicProfile({ params }: Props) {
               </div>
             )}
             <h1 className="text-3xl font-bold tracking-tight font-display mt-4 text-gray-900">{profile.display_name}</h1>
-            <p className="text-base font-medium text-[#FF6B35] mt-2">{profile.tagline}</p>
+            <p className="text-base font-medium text-accent mt-2">{profile.tagline}</p>
             <div className="mt-3 inline-flex items-center gap-1.5 bg-gray-100 rounded-full px-3 py-1">
               <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -81,7 +81,7 @@ export default async function PublicProfile({ params }: Props) {
             </div>
             {profile.bio && <p className="text-sm text-gray-600 mt-4 leading-7 text-left bg-gray-50/50 border border-gray-100 rounded-2xl p-5 shadow-sm">{profile.bio}</p>}
             <div className="mt-5 flex gap-3">
-              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="flex-1 h-12 rounded-xl bg-[#25D366] text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-[#128C7E] transition-all duration-200 shadow-md shadow-[#25D366]/20">
+              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="flex-1 h-12 rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-whatsapp-hover transition-all duration-200 shadow-md shadow-[#25D366]/20">
                 <SocialIcon platform="whatsapp" />
                 {msg.profile.whatsapp}
               </a>
@@ -102,7 +102,7 @@ export default async function PublicProfile({ params }: Props) {
               </div>
             )}
             <h1 className="mt-5 text-3xl font-bold tracking-tight font-display leading-none text-gray-900">{profile.display_name}</h1>
-            <p className="mt-2 text-base font-medium text-[#FF6B35]">{profile.tagline}</p>
+            <p className="mt-2 text-base font-medium text-accent">{profile.tagline}</p>
             <div className="mt-3 inline-flex items-center gap-1.5 bg-gray-100 rounded-full px-3 py-1">
               <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -116,7 +116,7 @@ export default async function PublicProfile({ params }: Props) {
               </p>
             )}
             <div className="mt-6 w-full max-w-[400px] flex flex-col gap-3">
-              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-12 w-full rounded-xl bg-[#25D366] text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-[#128C7E] transition-all duration-200 shadow-md shadow-[#25D366]/20">
+              <a href={trackClick("click_main", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-12 w-full rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-whatsapp-hover transition-all duration-200 shadow-md shadow-[#25D366]/20">
                 <SocialIcon platform="whatsapp" />
                 {msg.profile.whatsapp} - {profile.display_name.split(" ")[0]}
               </a>
@@ -145,9 +145,9 @@ export default async function PublicProfile({ params }: Props) {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-sm text-gray-900">{s.title}</p>
                         {s.description && <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{s.description}</p>}
-                        {s.price != null && <p className="text-sm font-bold text-[#FF6B35] mt-2">{s.price.toLocaleString()} {s.currency}</p>}
+                        {s.price != null && <p className="text-sm font-bold text-accent mt-2">{s.price.toLocaleString()} {s.currency}</p>}
                       </div>
-                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="self-center shrink-0 h-9 px-4 rounded-xl bg-[#FF6B35] text-white text-xs font-semibold inline-flex items-center justify-center hover:bg-[#EA580C] transition-all duration-200 shadow-sm shadow-[#FF6B35]/20">{msg.profile.demandBtn}</a>
+                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="self-center shrink-0 h-9 px-4 rounded-xl bg-accent text-white text-xs font-semibold inline-flex items-center justify-center hover:bg-accent-hover transition-all duration-200 shadow-sm shadow-[#FF6B35]/20">{msg.profile.demandBtn}</a>
                     </div>
                   );
                 })}
@@ -161,9 +161,9 @@ export default async function PublicProfile({ params }: Props) {
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-gray-900">{s.title}</p>
                         {s.description && <p className="text-sm text-gray-500 mt-1">{s.description}</p>}
-                        {s.price != null && <p className="text-sm font-bold text-[#FF6B35] mt-2">{s.price.toLocaleString()} {s.currency}</p>}
+                        {s.price != null && <p className="text-sm font-bold text-accent mt-2">{s.price.toLocaleString()} {s.currency}</p>}
                       </div>
-                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-[#25D366] text-white text-xs font-semibold hover:bg-[#128C7E] transition-all duration-200 shadow-sm shadow-[#25D366]/20">
+                      <a href={trackClick(`click_service_${s.id}`, waRaw)} target="_blank" rel="noopener noreferrer" className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-whatsapp text-white text-xs font-semibold hover:bg-whatsapp-hover transition-all duration-200 shadow-sm shadow-[#25D366]/20">
                         <SocialIcon platform="whatsapp" className="w-3.5 h-3.5" />
                         {msg.profile.demandBtn}
                       </a>
@@ -220,13 +220,13 @@ const socialStyles: Record<string, { bg: string; hover: string }> = {
 
         {/* Footer */}
         <p className="text-center text-xs text-gray-400 mt-12">
-          {msg.profile.madeWith} <Link href="/" className="font-medium text-[#FF6B35]">Bizko</Link> - bizko.me/{profile.username}
+          {msg.profile.madeWith} <Link href="/" className="font-medium text-accent">Bizko</Link> - bizko.me/{profile.username}
         </p>
       </div>
 
       {/* Sticky WhatsApp CTA - mobile only */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-gray-100/60 bg-white/95 backdrop-blur-xl p-4 flex justify-center sm:hidden z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-        <a href={trackClick("click_sticky", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-12 w-full max-w-[640px] rounded-2xl bg-[#25D366] text-white font-semibold inline-flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25">
+        <a href={trackClick("click_sticky", mainWaRaw)} target="_blank" rel="noopener noreferrer" className="h-12 w-full max-w-[640px] rounded-2xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25">
           <SocialIcon platform="whatsapp" />
           {msg.profile.stickyWa}
         </a>

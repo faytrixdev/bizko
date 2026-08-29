@@ -97,7 +97,7 @@ export function AccountForm({ profile }: AccountFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="h-11 w-full rounded-lg bg-[#FF6B35] text-white inline-flex items-center justify-center gap-2 text-sm font-semibold transition hover:bg-[#EA580C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+        className="h-11 w-full rounded-lg bg-accent text-white inline-flex items-center justify-center gap-2 text-sm font-semibold transition hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {isPending && <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />}
         {t("account.save")}

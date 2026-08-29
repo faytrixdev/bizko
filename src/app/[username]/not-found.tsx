@@ -10,7 +10,7 @@ export default async function NotFound() {
         {t.notFound.subtitle} <span className="font-mono bg-gray-50 border border-gray-200 px-2 py-0.5 rounded">bizko.me/...</span>
       </p>
       <div className="mt-6 flex gap-3">
-        <Link href="/signup" className="h-11 inline-flex items-center rounded-lg bg-[#FF6B35] px-6 text-white font-semibold hover:bg-[#EA580C]">{t.notFound.cta}</Link>
+        <Link href="/signup" className="h-11 inline-flex items-center rounded-lg bg-accent px-6 text-white font-semibold hover:bg-accent-hover">{t.notFound.cta}</Link>
         <Link href="/" className="h-11 inline-flex items-center rounded-lg bg-white border border-gray-200 px-6 font-medium text-gray-700 hover:bg-gray-50">{t.notFound.home}</Link>
       </div>
     </div>

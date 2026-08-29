@@ -22,7 +22,7 @@ interface TabServicesProps {
 function AddButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button disabled={pending} className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-medium hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm disabled:opacity-60">
+    <button disabled={pending} className="h-10 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-all duration-200 hover:shadow-sm disabled:opacity-60">
       {pending ? "..." : label}
     </button>
   );

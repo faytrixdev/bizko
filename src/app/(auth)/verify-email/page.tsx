@@ -47,8 +47,8 @@ export default function VerifyEmail() {
       <div className="text-center">
         {/* Email illustration */}
         <div className="mx-auto mb-6 relative h-16 w-16">
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#FF6B35]/10 to-[#FF6B35]/5 flex items-center justify-center">
-            <svg className="w-8 h-8 text-[#FF6B35]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center">
+            <svg className="w-8 h-8 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
           </div>
@@ -80,7 +80,7 @@ export default function VerifyEmail() {
                 <button
                   type="button"
                   disabled
-                  className="h-11 w-full rounded-lg bg-[#FF6B35] text-white inline-flex items-center justify-center gap-2 text-sm font-semibold opacity-60 cursor-not-allowed"
+                  className="h-11 w-full rounded-lg bg-accent text-white inline-flex items-center justify-center gap-2 text-sm font-semibold opacity-60 cursor-not-allowed"
                 >
                   {t("auth.resendCooldown").replace("{secs}", String(cooldown))}
                 </button>

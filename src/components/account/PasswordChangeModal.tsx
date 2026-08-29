@@ -86,7 +86,7 @@ export function PasswordChangeModal({ open, onClose }: PasswordChangeModalProps)
           <button
             type="submit"
             disabled={isPending}
-            className="flex-1 h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-semibold hover:bg-[#EA580C] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+            className="flex-1 h-10 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
           >
             {isPending && <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />}
             {t("accountPage.passwordChangeBtn")}

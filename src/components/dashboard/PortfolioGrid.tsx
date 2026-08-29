@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 import { reorderPortfolio, deletePortfolio } from "@/app/dashboard/actions";
+import { useI18n } from "@/lib/i18n/provider";
 
 interface PortfolioItem {
   id: string;
@@ -15,16 +16,17 @@ interface PortfolioGridProps {
   portfolio: PortfolioItem[];
 }
 
-function DeleteIconButton() {
+function DeleteIconButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button disabled={pending} className="bg-white/90 backdrop-blur text-xs w-6 h-6 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-50">
+    <button aria-label={label} disabled={pending} className="bg-white/90 backdrop-blur text-xs w-6 h-6 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-50">
       x
     </button>
   );
 }
 
 export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
+  const { t } = useI18n();
   const [list, setList] = useState(portfolio);
   const [isPending, startTransition] = useTransition();
 
@@ -60,7 +62,7 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
               onClick={() => handleMove(i, "up")}
               disabled={i === 0 || isPending}
               className="w-5 h-5 flex items-center justify-center bg-white/90 backdrop-blur text-gray-500 hover:text-gray-900 text-[10px] rounded border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Move up"
+              aria-label={t("dashboard.moveUp")}
             >
               ▲
             </button>
@@ -68,7 +70,7 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
               onClick={() => handleMove(i, "down")}
               disabled={i === list.length - 1 || isPending}
               className="w-5 h-5 flex items-center justify-center bg-white/90 backdrop-blur text-gray-500 hover:text-gray-900 text-[10px] rounded border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Move down"
+              aria-label={t("dashboard.moveDown")}
             >
               ▼
             </button>
@@ -77,7 +79,7 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
             if (!confirm("Supprimer cette image ?")) e.preventDefault();
           }} className="absolute top-1 right-1">
             <input type="hidden" name="id" value={p.id} />
-            <DeleteIconButton />
+            <DeleteIconButton label={t("dashboard.deleteImage")} />
           </form>
         </div>
       ))}

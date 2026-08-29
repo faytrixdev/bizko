@@ -64,7 +64,7 @@ export function ServiceList({ services }: ServiceListProps) {
                 onClick={() => handleMove(i, "up")}
                 disabled={i === 0 || isPending}
                 className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
-                aria-label="Move up"
+                aria-label={t("dashboard.moveUp")}
               >
                 ▲
               </button>
@@ -72,7 +72,7 @@ export function ServiceList({ services }: ServiceListProps) {
                 onClick={() => handleMove(i, "down")}
                 disabled={i === list.length - 1 || isPending}
                 className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
-                aria-label="Move down"
+                aria-label={t("dashboard.moveDown")}
               >
                 ▼
               </button>

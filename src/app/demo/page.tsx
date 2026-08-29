@@ -41,7 +41,7 @@ export default async function Demo() {
         </h1>
 
         {/* Tagline */}
-        <p className="mt-2 text-base font-medium text-[#FF6B35] text-center">
+        <p className="mt-2 text-base font-medium text-accent text-center">
           {msg.demo.profile.tagline}
         </p>
 
@@ -83,7 +83,7 @@ export default async function Demo() {
             href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20tes%20services%20vu%20sur%20ton%20profil%20Bizko."
             target="_blank"
             rel="noopener noreferrer"
-            className="h-12 w-full rounded-xl bg-[#25D366] text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-[#128C7E] transition-all duration-200 shadow-md shadow-[#25D366]/20"
+            className="h-12 w-full rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-whatsapp-hover transition-all duration-200 shadow-md shadow-[#25D366]/20"
           >
             <svg
               className="w-5 h-5"
@@ -134,7 +134,7 @@ export default async function Demo() {
                   <p className="text-sm font-semibold text-gray-900">
                     {s.t}
                   </p>
-                  <p className="text-sm font-bold text-[#FF6B35] mt-1">
+                  <p className="text-sm font-bold text-accent mt-1">
                     {s.p}
                   </p>
                 </div>
@@ -142,7 +142,7 @@ export default async function Demo() {
                   href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20ton%20service"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#25D366] text-white text-xs font-semibold shadow-sm shadow-[#25D366]/20"
+                  className="shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-whatsapp text-white text-xs font-semibold shadow-sm shadow-[#25D366]/20"
                 >
                   <svg
                     className="w-3.5 h-3.5"
@@ -217,7 +217,7 @@ export default async function Demo() {
         {/* Footer */}
         <p className="text-center text-[11px] text-gray-300 mt-8 font-medium">
           Fait avec{" "}
-          <span className="font-medium text-[#FF6B35]">Bizko</span>{" "}
+          <span className="font-medium text-accent">Bizko</span>{" "}
           - bizko.me/amadoudiallo
         </p>
       </div>
@@ -228,7 +228,7 @@ export default async function Demo() {
           href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20tes%20services%20vu%20sur%20ton%20profil%20Bizko."
           target="_blank"
           rel="noopener noreferrer"
-          className="h-12 w-full rounded-xl bg-[#25D366] text-white font-semibold inline-flex items-center justify-center gap-2 shadow-md shadow-[#25D366]/20"
+          className="h-12 w-full rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 shadow-md shadow-[#25D366]/20"
         >
           <SocialIcon platform="whatsapp" />
           {msg.profile.stickyWa}

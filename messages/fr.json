@@ -1,4 +1,7 @@
 {
+  "common": {
+    "choose": "Choisir..."
+  },
   "landing": {
     "title": "Ton business",
     "titleAccent": "en un lien.",
@@ -254,6 +257,10 @@
     "servicesFull": "Limite 8 services atteinte.",
     "add": "Ajouter",
     "delete": "Supprimer",
+  "moveUp": "Deplacer vers le haut",
+  "moveDown": "Deplacer vers le bas",
+  "deleteImage": "Supprimer cette image",
+  "deleteSocial": "Supprimer ce lien",
     "portfolioTitle": "Portfolio",
     "portfolioFull": "Limite atteinte",
     "noImages": "Aucune image - ajoute tes realisations.",
@@ -266,8 +273,10 @@
     "bioPlaceholder": "Bio (280c)",
     "cityPlaceholder": "Ville",
     "countryPlaceholder": "CI",
-    "phonePlaceholder": "+2250700000000",
-    "emailPlaceholder": "Email public (optionnel)",
+  "phonePlaceholder": "+2250700000000",
+  "phoneHint": "Format international, ex : +225 07 00 00 00 00",
+  "emailPlaceholder": "Email public (optionnel)",
+  "emailHint": "Laisser vide pour masquer",
     "templateMinimal": "Minimal",
     "templatePortfolio": "Portfolio",
     "titlePlaceholder": "Titre",

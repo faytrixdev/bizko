@@ -1,4 +1,7 @@
 {
+  "common": {
+    "choose": "Choose..."
+  },
   "landing": {
     "title": "Your business",
     "titleAccent": "in one link.",
@@ -254,6 +257,10 @@
     "servicesFull": "8 service limit reached.",
     "add": "Add",
     "delete": "Delete",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "deleteImage": "Delete this image",
+    "deleteSocial": "Delete this link",
     "portfolioTitle": "Portfolio",
     "portfolioFull": "Limit reached",
     "noImages": "No images - add your work to stand out.",
@@ -267,7 +274,9 @@
     "cityPlaceholder": "City",
     "countryPlaceholder": "CI",
     "phonePlaceholder": "+2250700000000",
+    "phoneHint": "International format, e.g. +225 07 00 00 00 00",
     "emailPlaceholder": "Public email (optional)",
+    "emailHint": "Leave empty to hide",
     "templateMinimal": "Minimal",
     "templatePortfolio": "Portfolio",
     "titlePlaceholder": "Title",

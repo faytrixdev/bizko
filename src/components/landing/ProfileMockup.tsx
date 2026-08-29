@@ -49,7 +49,7 @@ const MAP_PIN = (
 const socialStyles: Record<string, { bg: string; hover: string }> = {
   instagram: { bg: "bg-[#E4405F]", hover: "hover:bg-[#D63384]" },
   tiktok: { bg: "bg-[#000000]", hover: "hover:bg-[#1a1a1a]" },
-  whatsapp: { bg: "bg-[#25D366]", hover: "hover:bg-[#128C7E]" },
+  whatsapp: { bg: "bg-whatsapp", hover: "hover:bg-whatsapp-hover" },
   linkedin: { bg: "bg-[#0A66C2]", hover: "hover:bg-[#004182]" },
   facebook: { bg: "bg-[#1877F2]", hover: "hover:bg-[#0D65D9]" },
   x: { bg: "bg-[#000000]", hover: "hover:bg-[#1a1a1a]" },
@@ -93,7 +93,7 @@ function RealProfile({
       </h1>
 
       {/* Tagline */}
-      <p className="mt-1 text-sm font-medium text-[#FF6B35] text-center">
+      <p className="mt-1 text-sm font-medium text-accent text-center">
         {profession}
       </p>
 
@@ -112,7 +112,7 @@ function RealProfile({
 
       {/* WhatsApp + Call buttons */}
       <div className="mt-4 flex flex-col gap-2">
-        <div className="h-10 w-full rounded-xl bg-[#25D366] text-white text-xs font-semibold inline-flex items-center justify-center gap-2 shadow-sm shadow-[#25D366]/20">
+        <div className="h-10 w-full rounded-xl bg-whatsapp text-white text-xs font-semibold inline-flex items-center justify-center gap-2 shadow-sm shadow-[#25D366]/20">
           {WHATSAPP_ICON}
           WhatsApp - {name.split(" ")[0]}
         </div>
@@ -138,9 +138,9 @@ function RealProfile({
               >
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-gray-900">{s.title}</p>
-                  <p className="text-xs font-bold text-[#FF6B35] mt-1">{s.price}</p>
+                  <p className="text-xs font-bold text-accent mt-1">{s.price}</p>
                 </div>
-                <div className="shrink-0 inline-flex items-center gap-1 h-7 px-3 rounded-xl bg-[#25D366] text-white text-[10px] font-semibold shadow-sm shadow-[#25D366]/20">
+                <div className="shrink-0 inline-flex items-center gap-1 h-7 px-3 rounded-xl bg-whatsapp text-white text-[10px] font-semibold shadow-sm shadow-[#25D366]/20">
                   {WHATSAPP_ICON}
                   {t("landing.mockupRequest")}
                 </div>
@@ -201,7 +201,7 @@ function RealProfile({
       {/* Footer */}
       <p className="text-center text-[10px] text-gray-300 mt-5">
         {t("landing.mockupFooter")}{" "}
-        <span className="font-medium text-[#FF6B35]">Bizko</span>{" "}
+        <span className="font-medium text-accent">Bizko</span>{" "}
         - bizko.me/{name.toLowerCase().replace(/\s/g, "")}
       </p>
     </div>
@@ -244,7 +244,7 @@ function CompactProfile({
       </h1>
 
       {/* Tagline */}
-      <p className="mt-1 text-xs font-medium text-[#FF6B35] text-center">
+      <p className="mt-1 text-xs font-medium text-accent text-center">
         {profession}
       </p>
 
@@ -277,9 +277,9 @@ function CompactProfile({
               >
                 <div className="min-w-0">
                   <p className="text-[11px] font-semibold text-gray-900">{s.title}</p>
-                  <p className="text-[11px] font-bold text-[#FF6B35] mt-0.5">{s.price}</p>
+                  <p className="text-[11px] font-bold text-accent mt-0.5">{s.price}</p>
                 </div>
-                <div className="shrink-0 inline-flex items-center gap-1 h-6 px-2.5 rounded-lg bg-[#25D366] text-white text-[9px] font-semibold shadow-sm shadow-[#25D366]/20">
+                <div className="shrink-0 inline-flex items-center gap-1 h-6 px-2.5 rounded-lg bg-whatsapp text-white text-[9px] font-semibold shadow-sm shadow-[#25D366]/20">
                   {WHATSAPP_ICON}
                   {t("landing.mockupRequest")}
                 </div>
@@ -292,7 +292,7 @@ function CompactProfile({
       {/* Footer */}
       <p className="text-[9px] text-center text-gray-300 mt-4 font-medium">
         {t("landing.mockupFooter")}{" "}
-        <span className="font-medium text-[#FF6B35]">Bizko</span>{" "}
+        <span className="font-medium text-accent">Bizko</span>{" "}
         - bizko.me/{name.toLowerCase().replace(/\s/g, "")}
       </p>
     </div>
@@ -316,7 +316,7 @@ export function ProfileMockup({
     return (
       <div className="relative mx-auto">
         {/* Ambient glow */}
-        <div className="absolute -inset-6 bg-gradient-to-b from-[#FF6B35]/[0.07] via-transparent to-transparent rounded-[3rem] blur-3xl pointer-events-none" />
+        <div className="absolute -inset-6 bg-gradient-to-b from-accent/[0.07] via-transparent to-transparent rounded-[3rem] blur-3xl pointer-events-none" />
 
         {/* Phone body */}
         <div className="relative bg-gray-900 rounded-[2.5rem] p-[10px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3),0_0_40px_rgba(255,107,53,0.06)]">

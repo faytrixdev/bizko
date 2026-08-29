@@ -17,7 +17,7 @@ export function FaqItem({ question, answer }: FaqItemProps) {
         className="w-full flex items-center justify-between py-5 text-left gap-4 group"
         aria-expanded={isOpen}
       >
-        <span className="text-sm font-medium text-gray-900 group-hover:text-[#FF6B35] transition-colors">
+        <span className="text-sm font-medium text-gray-900 group-hover:text-accent transition-colors">
           {question}
         </span>
         <svg

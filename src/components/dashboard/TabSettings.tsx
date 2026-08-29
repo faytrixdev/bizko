@@ -16,7 +16,7 @@ interface TabSettingsProps {
 function SaveButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button disabled={pending} className="h-10 rounded-lg bg-[#FF6B35] text-white text-sm font-semibold hover:bg-[#EA580C] transition-all duration-200 hover:shadow-sm active:scale-[0.98] disabled:opacity-60">
+    <button disabled={pending} className="h-10 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-all duration-200 hover:shadow-sm active:scale-[0.98] disabled:opacity-60">
       {pending ? "..." : label}
     </button>
   );
@@ -39,8 +39,9 @@ export function TabSettings({ profile }: TabSettingsProps) {
           <input name="city" defaultValue={profile.city} required placeholder={t("dashboard.cityPlaceholder")} className="flex-1 min-w-0 h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
           <CountrySelect name="country" defaultValue={profile.country} required className="flex-1 min-w-0 h-10" />
         </div>
-        <input name="phone_e164" defaultValue={profile.phone_e164} required placeholder={t("dashboard.phonePlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-        <input name="email_public" defaultValue={profile.email_public || ""} placeholder={t("dashboard.emailPlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
+        <input name="phone_e164" defaultValue={profile.phone_e164} required type="tel" inputMode="tel" autoComplete="tel" title={t("dashboard.phoneHint")} pattern="^\+[0-9]{6,15}$" placeholder={t("dashboard.phonePlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
+        <p className="text-xs text-gray-400 -mt-1">{t("dashboard.phoneHint")}</p>
+        <input name="email_public" defaultValue={profile.email_public || ""} type="email" autoComplete="email" title={t("dashboard.emailHint")} pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" placeholder={t("dashboard.emailPlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
         <CustomSelect
           name="template"
           defaultValue={profile.template}

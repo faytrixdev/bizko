@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { QrShare } from "@/components/QrShare";
 import { useI18n } from "@/lib/i18n/provider";
@@ -13,18 +14,37 @@ interface TabOverviewProps {
 
 export function TabOverview({ publicUrl, username, views, waClicks }: TabOverviewProps) {
   const { t } = useI18n();
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard unavailable
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
         <h2 className="font-semibold font-display text-sm text-gray-900 uppercase tracking-wider text-xs">{t("dashboard.share")}</h2>
-        <p className="text-xs text-gray-500 mt-2 break-all font-mono bg-gray-50/50 border border-gray-100 rounded-xl px-3 py-2">
-          {publicUrl}
-        </p>
+        <div className="mt-2 flex items-center gap-2">
+          <p className="flex-1 min-w-0 text-xs text-gray-500 break-all font-mono bg-gray-50/50 border border-gray-100 rounded-xl px-3 py-2">
+            {publicUrl}
+          </p>
+          <button
+            onClick={handleCopy}
+            className="shrink-0 h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+          >
+            {copied ? t("qr.copied") : t("qr.copyLink")}
+          </button>
+        </div>
         <div className="mt-3">
           <QrShare url={publicUrl} />
         </div>
-        <Link href={`/${username}`} target="_blank" className="inline-flex mt-3 text-xs font-medium text-[#FF6B35] hover:underline">
+        <Link href={`/${username}`} target="_blank" className="inline-flex mt-3 text-xs font-medium text-accent hover:underline">
           {t("dashboard.preview")}
         </Link>
       </div>
@@ -47,7 +67,7 @@ export function TabOverview({ publicUrl, username, views, waClicks }: TabOvervie
           </div>
 
           {/* WhatsApp clicks card */}
-          <div className="rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#EA580C] p-5 shadow-md shadow-[#FF6B35]/20">
+          <div className="rounded-2xl bg-gradient-to-br from-accent to-accent-hover p-5 shadow-md shadow-[#FF6B35]/20">
             <div className="flex items-center gap-2 mb-3">
               <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
                 <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">

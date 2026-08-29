@@ -117,7 +117,7 @@ export function PortfolioGallery({ items }: PortfolioGalleryProps) {
           <button
             key={p.id}
             onClick={() => setLightboxIndex(i)}
-            className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+            className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
           >
             <Image
               src={p.image_url}

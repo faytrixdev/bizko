@@ -60,9 +60,20 @@ export async function updateSession(request: NextRequest) {
     !pathname.includes("/", 1) &&
     !reservedRootPrefixes.some((route) => pathname === route || pathname.startsWith(route + "/"));
 
-  // Public profile pages and public API routes don't need the session:
-  // skip getUser() entirely (avoids an auth round-trip per request).
-  if (isPublicApi || isRootPublicProfile) {
+  // Public API routes don't need the session: skip getUser() entirely.
+  if (isPublicApi) {
+    return supabaseResponse;
+  }
+
+  // Public profile pages are served at the root. Skip the auth round-trip for
+  // anonymous visitors (no session cookie), but still refresh the session when
+  // a logged-in user browses a public profile, so the refresh token keeps
+  // getting renewed during active use.
+  const hasSessionCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
+
+  if (isRootPublicProfile && !hasSessionCookie) {
     return supabaseResponse;
   }
 

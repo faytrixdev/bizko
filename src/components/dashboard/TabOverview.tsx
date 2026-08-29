@@ -96,7 +96,7 @@ export function TabOverview({ publicUrl, username, views, waClicks, daily, break
 
         {hasActivity ? (
           <>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
               <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{t("dashboard.views")}</p>
               <p className="text-2xl font-bold font-display text-gray-900 mt-2">{views7d}</p>
@@ -108,7 +108,7 @@ export function TabOverview({ publicUrl, username, views, waClicks, daily, break
             <div className="rounded-2xl bg-gradient-to-br from-accent to-accent-hover p-4 shadow-md shadow-[#FF6B35]/20">
               <p className="text-xs font-medium text-white/70 uppercase tracking-wider">{t("dashboard.conversion")}</p>
               <p className="text-2xl font-bold font-display text-white mt-2">{conversion}%</p>
-              <p className="text-[10px] text-white/60 mt-1">{t("dashboard.conversionSub")}</p>
+              <p className="text-[10px] text-white/60 mt-1 leading-snug">{t("dashboard.conversionSub")}</p>
             </div>
           </div>
 

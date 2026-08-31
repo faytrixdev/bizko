@@ -3,27 +3,28 @@
 import { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 
-interface LightboxImage {
+interface LightboxMedia {
   src: string;
+  type?: "image" | "video";
   alt: string;
 }
 
 interface LightboxProps {
-  images: LightboxImage[];
+  items: LightboxMedia[];
   startIndex?: number;
   onClose: () => void;
 }
 
-export function Lightbox({ images, startIndex = 0, onClose }: LightboxProps) {
+export function Lightbox({ items, startIndex = 0, onClose }: LightboxProps) {
   const [current, setCurrent] = useState(startIndex);
 
   const goNext = useCallback(() => {
-    setCurrent((i) => (i + 1) % images.length);
-  }, [images.length]);
+    setCurrent((i) => (i + 1) % items.length);
+  }, [items.length]);
 
   const goPrev = useCallback(() => {
-    setCurrent((i) => (i - 1 + images.length) % images.length);
-  }, [images.length]);
+    setCurrent((i) => (i - 1 + items.length) % items.length);
+  }, [items.length]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -56,7 +57,7 @@ export function Lightbox({ images, startIndex = 0, onClose }: LightboxProps) {
       </button>
 
       {/* Prev */}
-      {images.length > 1 && (
+      {items.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); goPrev(); }}
           aria-label="Image précédente"
@@ -69,7 +70,7 @@ export function Lightbox({ images, startIndex = 0, onClose }: LightboxProps) {
       )}
 
       {/* Next */}
-      {images.length > 1 && (
+      {items.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); goNext(); }}
           aria-label="Image suivante"
@@ -81,22 +82,33 @@ export function Lightbox({ images, startIndex = 0, onClose }: LightboxProps) {
         </button>
       )}
 
-      {/* Image */}
+      {/* Media */}
       <div className="relative max-w-[90vw] max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
-        <img
-          src={images[current].src}
-          alt={images[current].alt}
-          className="max-h-[85vh] w-auto object-contain rounded-lg"
-        />
-        {images[current].alt && (
-          <p className="text-center text-white/70 text-sm mt-3">{images[current].alt}</p>
+        {items[current].type === "video" ? (
+          <video
+            key={items[current].src}
+            src={items[current].src}
+            controls
+            autoPlay
+            playsInline
+            className="max-h-[85vh] w-auto max-w-[90vw] rounded-lg"
+          />
+        ) : (
+          <img
+            src={items[current].src}
+            alt={items[current].alt}
+            className="max-h-[85vh] w-auto object-contain rounded-lg"
+          />
+        )}
+        {items[current].alt && (
+          <p className="text-center text-white/70 text-sm mt-3">{items[current].alt}</p>
         )}
       </div>
 
       {/* Counter */}
-      {images.length > 1 && (
+      {items.length > 1 && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-sm font-medium">
-          {current + 1} / {images.length}
+          {current + 1} / {items.length}
         </div>
       )}
     </div>
@@ -104,7 +116,7 @@ export function Lightbox({ images, startIndex = 0, onClose }: LightboxProps) {
 }
 
 interface PortfolioGalleryProps {
-  items: { id: string; image_url: string; title?: string | null }[];
+  items: { id: string; media_url: string; media_type?: "image" | "video"; thumbnail_url?: string | null; title?: string | null }[];
 }
 
 export function PortfolioGallery({ items }: PortfolioGalleryProps) {
@@ -120,13 +132,22 @@ export function PortfolioGallery({ items }: PortfolioGalleryProps) {
             className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
           >
             <Image
-              src={p.image_url}
+              src={p.thumbnail_url || p.media_url}
               alt={p.title || ""}
               fill
               sizes="(max-width: 768px) 50vw, 320px"
               className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            {p.media_type === "video" && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="h-12 w-12 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+            )}
             {p.title && (
               <div className="absolute inset-x-0 bottom-0 p-3 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <p className="text-xs font-medium text-white truncate">{p.title}</p>
@@ -144,7 +165,7 @@ export function PortfolioGallery({ items }: PortfolioGalleryProps) {
 
       {lightboxIndex !== null && (
         <Lightbox
-          images={items.map((p) => ({ src: p.image_url, alt: p.title || "" }))}
+          items={items.map((p) => ({ src: p.media_url, type: p.media_type, alt: p.title || "" }))}
           startIndex={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
         />

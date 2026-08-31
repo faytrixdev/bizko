@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
-import { validateVideoFile } from "@/lib/portfolioVideo";
+import { validateVideoFile, validateVideoDuration } from "@/lib/portfolioVideo";
 
 export function AvatarUpload({ profileId, currentUrl }: { profileId: string; currentUrl?: string | null }) {
   const { t } = useI18n();
@@ -96,6 +96,14 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     if (!file) return;
     const err = validateVideoFile(file);
     if (err) { alert(t("upload." + err)); return; }
+    try {
+      const duration = await getVideoDuration(file);
+      const durationErr = validateVideoDuration(duration);
+      if (durationErr) { alert(t("upload." + durationErr)); return; }
+    } catch {
+      alert(t("upload.videoTooLong"));
+      return;
+    }
     pendingVideoRef.current = file;
     thumbRef.current?.click();
   };
@@ -197,5 +205,22 @@ async function cropToSquare(file: File): Promise<File> {
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Conversion impossible"))), "image/jpeg", 0.92)
   );
   return new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
+}
+
+function getVideoDuration(file: File): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(video.duration);
+    };
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Impossible de lire la video"));
+    };
+    video.src = url;
+  });
 }
 

@@ -35,13 +35,13 @@ export function CookieConsentBanner() {
         <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => setConsent("accepted")}
-            className="flex-1 h-10 rounded-xl bg-gray-900 text-white text-xs font-medium hover:bg-gray-800 transition-colors duration-200"
+            className="flex-1 min-h-[44px] py-2.5 rounded-xl bg-gray-900 text-white text-xs font-medium hover:bg-gray-800 active:bg-gray-950 transition-colors duration-200"
           >
             {t("cookieConsent.accept")}
           </button>
           <button
             onClick={() => setConsent("refused")}
-            className="flex-1 h-10 rounded-xl border border-gray-200 bg-white text-gray-700 text-xs font-medium hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+            className="flex-1 min-h-[44px] py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 text-xs font-medium hover:bg-gray-50 hover:border-gray-300 active:bg-gray-100 transition-all duration-200"
           >
             {t("cookieConsent.refuse")}
           </button>

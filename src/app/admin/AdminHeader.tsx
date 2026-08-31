@@ -12,13 +12,23 @@ const PRESETS: { value: PeriodPreset; label: string }[] = [
   { value: "90d", label: "90 derniers jours" },
 ];
 
-export function AdminHeader() {
+export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const { state, setPreset, toggleCompare } = usePeriod();
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 border-b border-gray-200/60 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-      <div className="flex items-center justify-between px-6 h-14">
+      <div className="flex items-center justify-between px-4 sm:px-6 h-14">
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onMenuToggle}
+            aria-label="Ouvrir le menu"
+            className="lg:hidden p-1.5 -ml-1.5 text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
           <Link href="/" className="lg:hidden">
             <span className="font-display font-bold text-lg text-gray-900">bizko</span>
           </Link>

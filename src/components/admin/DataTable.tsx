@@ -34,12 +34,12 @@ export function DataTable<T extends Record<string, unknown>>({ columns, data, de
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200">
+          <tr className="border-b border-gray-100 bg-gray-50/50">
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={cn(
-                  "px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors",
+                  "first:pl-6 last:pr-6 px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors",
                   col.align === "right" ? "text-right" : "text-left"
                 )}
                 onClick={() => {
@@ -55,9 +55,9 @@ export function DataTable<T extends Record<string, unknown>>({ columns, data, de
         </thead>
         <tbody>
           {sorted.map((row, i) => (
-            <tr key={i} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+            <tr key={i} className="border-b border-gray-100 hover:bg-gray-50/80 transition-colors">
               {columns.map((col) => (
-                <td key={col.key} className={cn("px-4 py-3", col.align === "right" ? "text-right" : "text-left")}>
+                <td key={col.key} className={cn("first:pl-6 last:pr-6 px-4 py-3", col.align === "right" ? "text-right" : "text-left")}>
                   {col.render ? col.render(row) : String(row[col.key] ?? "")}
                 </td>
               ))}
@@ -65,7 +65,7 @@ export function DataTable<T extends Record<string, unknown>>({ columns, data, de
           ))}
           {sorted.length === 0 && (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-400 text-sm">
+              <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-400 text-sm">
                 Aucune donnée
               </td>
             </tr>

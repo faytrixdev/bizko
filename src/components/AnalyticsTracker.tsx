@@ -63,30 +63,33 @@ export function AnalyticsTracker() {
     const browser = detectBrowser();
     const os = detectOS();
 
+    const track = (eventName: string, extra: Record<string, string | null> = {}) => {
+      supabase
+        .rpc("track_analytics_event", {
+          p_event_name: eventName,
+          p_page_path: pathname,
+          p_referrer: document.referrer || null,
+          p_device_type: device,
+          p_browser: browser,
+          p_os: os,
+          ...utm,
+          ...extra,
+        })
+        .then(({ error }) => {
+          if (error) {
+            console.error(`[AnalyticsTracker] ${eventName} failed:`, error.message);
+          }
+        });
+    };
+
     // Session start (once per page load)
     if (!initRef.current) {
       initRef.current = true;
-      void supabase.rpc("track_analytics_event", {
-        p_event_name: "session_start",
-        p_page_path: pathname,
-        p_referrer: document.referrer || null,
-        p_device_type: device,
-        p_browser: browser,
-        p_os: os,
-        ...utm,
-      });
+      track("session_start");
     }
 
     // Page view on every navigation
-    void supabase.rpc("track_analytics_event", {
-      p_event_name: "page_view",
-      p_page_path: pathname,
-      p_referrer: document.referrer || null,
-      p_device_type: device,
-      p_browser: browser,
-      p_os: os,
-      ...utm,
-    });
+    track("page_view");
   }, [pathname, searchParams]);
 
   return null;

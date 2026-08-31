@@ -401,7 +401,16 @@
   },
   "upload": {
     "changeAvatar": "Change avatar",
-    "addImage": "+ Add image"
+    "addImage": "+ Add image",
+    "addMedia": "+ Add",
+    "addVideo": "+ Add video",
+    "videoType": "Video",
+    "imageType": "Image",
+    "addVideoThumb": "Video thumbnail",
+    "videoUnsupported": "Unsupported video format (mp4 or webm)",
+    "videoTooLarge": "Video too large (max 50 MB)",
+    "videoTooLong": "Video too long (max 60 s)",
+    "videoThumbRequired": "A thumbnail is required for the video"
   },
   "settings": {
     "myAccount": "My account"

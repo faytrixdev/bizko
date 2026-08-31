@@ -401,7 +401,16 @@
   },
   "upload": {
     "changeAvatar": "Changer avatar",
-    "addImage": "+ Ajouter image"
+    "addImage": "+ Ajouter image",
+    "addMedia": "+ Ajouter",
+    "addVideo": "+ Ajouter une video",
+    "videoType": "Video",
+    "imageType": "Image",
+    "addVideoThumb": "Miniature de la video",
+    "videoUnsupported": "Format video non supporte (mp4 ou webm)",
+    "videoTooLarge": "Video trop lourde (max 50 Mo)",
+    "videoTooLong": "Video trop longue (max 60 s)",
+    "videoThumbRequired": "Une miniature est requise pour la video"
   },
   "settings": {
     "myAccount": "Mon compte"

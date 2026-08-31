@@ -16,7 +16,30 @@ export function TechnologyContent() {
     const supabase = createClient();
     supabase.rpc("get_admin_device_stats", { p_start: start, p_end: end }).then(({ data }) => {
       if (!cancelled) {
-        setStats((data as DeviceStat[]) ?? []);
+        const raw = data as {
+          devices?: { device_type: string; cnt: number }[];
+          browsers?: { browser: string; cnt: number }[];
+          os_list?: { os: string; cnt: number }[];
+        } | null;
+        if (!raw) { setStats([]); setLoading(false); return; }
+
+        const all: DeviceStat[] = [];
+        const totalSessions = [
+          ...(raw.devices ?? []),
+          ...(raw.browsers ?? []),
+          ...(raw.os_list ?? []),
+        ].reduce((sum, item) => sum + (item.cnt ?? 0), 0) || 1;
+
+        for (const d of raw.devices ?? []) {
+          all.push({ dimension: "device_type", value: d.device_type, sessions: d.cnt, percentage: (d.cnt / totalSessions) * 100 });
+        }
+        for (const b of raw.browsers ?? []) {
+          all.push({ dimension: "browser", value: b.browser, sessions: b.cnt, percentage: (b.cnt / totalSessions) * 100 });
+        }
+        for (const o of raw.os_list ?? []) {
+          all.push({ dimension: "os", value: o.os, sessions: o.cnt, percentage: (o.cnt / totalSessions) * 100 });
+        }
+        setStats(all);
         setLoading(false);
       }
     });

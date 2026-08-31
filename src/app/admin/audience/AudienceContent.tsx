@@ -19,7 +19,8 @@ export function AudienceContent() {
     const supabase = createClient();
     supabase.rpc("get_admin_country_stats", { p_start: start, p_end: end }).then(({ data }) => {
       if (!cancelled) {
-        setCountries((data as CountryStat[]) ?? []);
+        const raw = data as { countries?: CountryStat[] } | null;
+        setCountries(raw?.countries ?? []);
         setLoading(false);
       }
     });

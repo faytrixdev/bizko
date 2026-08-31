@@ -41,9 +41,9 @@ export function OverviewCharts() {
   return (
     <div className="space-y-6">
       {/* Users chart */}
-      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-5">Utilisateurs actifs</h3>
-        <ResponsiveContainer width="100%" height={280}>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-4 sm:mb-5">Utilisateurs actifs</h3>
+        <ResponsiveContainer width="100%" height={240}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="gradActive" x1="0" y1="0" x2="0" y2="1">
@@ -67,9 +67,9 @@ export function OverviewCharts() {
       </section>
 
       {/* Sessions chart */}
-      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-5">Sessions</h3>
-        <ResponsiveContainer width="100%" height={240}>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-4 sm:mb-5">Sessions</h3>
+        <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="gradSession" x1="0" y1="0" x2="0" y2="1">
@@ -87,9 +87,9 @@ export function OverviewCharts() {
       </section>
 
       {/* Engagement chart */}
-      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-5">Engagement</h3>
-        <ResponsiveContainer width="100%" height={280}>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-4 sm:mb-5">Engagement</h3>
+        <ResponsiveContainer width="100%" height={240}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="gradProfile" x1="0" y1="0" x2="0" y2="1">
@@ -118,9 +118,9 @@ export function OverviewCharts() {
       </section>
 
       {/* Signups chart */}
-      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-5">Inscriptions</h3>
-        <ResponsiveContainer width="100%" height={200}>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-4 sm:mb-5">Inscriptions</h3>
+        <ResponsiveContainer width="100%" height={180}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="gradSignup" x1="0" y1="0" x2="0" y2="1">

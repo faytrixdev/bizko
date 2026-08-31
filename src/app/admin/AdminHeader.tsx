@@ -35,14 +35,14 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
           <span className="text-sm font-semibold text-gray-900 hidden lg:inline">Bizko Analytics</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           {/* Period selector */}
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
+          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5 overflow-x-auto max-w-[200px] sm:max-w-none scrollbar-none">
             {PRESETS.map((p) => (
               <button
                 key={p.value}
                 onClick={() => setPreset(p.value)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                className={`px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap shrink-0 ${
                   state.preset === p.value
                     ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-900/5"
                     : "text-gray-500 hover:text-gray-700"
@@ -56,7 +56,7 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
           {/* Compare toggle */}
           <button
             onClick={toggleCompare}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+            className={`px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-lg border transition-all whitespace-nowrap shrink-0 ${
               state.compare
                 ? "bg-accent text-white border-accent shadow-sm"
                 : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"

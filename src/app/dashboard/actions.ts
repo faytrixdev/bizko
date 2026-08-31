@@ -132,7 +132,7 @@ export async function deletePortfolio(formData: FormData) {
 
   const { data: item, error: fetchError } = await supabase
     .from("portfolio_items")
-    .select("image_url")
+    .select("media_url, thumbnail_url")
     .eq("id", id)
     .eq("profile_id", user.id)
     .single();
@@ -141,13 +141,14 @@ export async function deletePortfolio(formData: FormData) {
   const { error } = await supabase.from("portfolio_items").delete().eq("id", id).eq("profile_id", user.id);
   if (error) redirect(`/dashboard?error=${dashboardError(error)}`);
 
-  if (item.image_url) {
+  const publicUrl = supabase.storage.from("portfolio").getPublicUrl("").data.publicUrl;
+  const cleanUrl = publicUrl.endsWith("/") ? publicUrl.slice(0, -1) : publicUrl;
+  for (const url of [item.media_url, item.thumbnail_url]) {
+    if (!url) continue;
     // Best-effort: remove the orphaned storage object. Never block the delete.
     try {
-      const publicUrl = supabase.storage.from("portfolio").getPublicUrl("").data.publicUrl;
-      const cleanUrl = publicUrl.endsWith("/") ? publicUrl.slice(0, -1) : publicUrl;
-      if (item.image_url.startsWith(cleanUrl)) {
-        const path = item.image_url.slice(cleanUrl.length + 1);
+      if (url.startsWith(cleanUrl)) {
+        const path = url.slice(cleanUrl.length + 1);
         await supabase.storage.from("portfolio").remove([path]);
       }
     } catch {

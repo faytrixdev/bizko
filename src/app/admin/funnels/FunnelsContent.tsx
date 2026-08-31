@@ -41,12 +41,12 @@ export function FunnelsContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Funnels</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Funnels</h1>
         <p className="text-sm text-gray-500 mt-1">Conversion de l&apos;audience au long du parcours</p>
       </div>
 
-      <section className="bg-white border border-gray-200 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-gray-900 mb-4">Parcours de conversion</h2>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-base font-semibold text-gray-900 mb-4">Parcours de conversion</h2>
         <div className="space-y-1">
           {sortedSteps.map((stepName, i) => {
             const funnel = funnels.find((f) => f.step_name === stepName);

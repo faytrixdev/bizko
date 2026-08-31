@@ -36,12 +36,12 @@ export function PagesContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Pages & contenu</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Pages & contenu</h1>
         <p className="text-sm text-gray-500 mt-1">Les pages les plus consultées</p>
       </div>
 
-      <section className="bg-white border border-gray-200 rounded-xl">
-        <div className="px-5 py-4 border-b border-gray-200">
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100">
+        <div className="px-5 py-4 border-b border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900">Toutes les pages</h2>
         </div>
         <DataTable columns={columns} data={pages as unknown as Record<string, unknown>[]} defaultSort="views" />

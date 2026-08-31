@@ -35,17 +35,17 @@ export function RealtimeContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Temps réel</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Temps réel</h1>
         <p className="text-sm text-gray-500 mt-1">Mise à jour toutes les 30 secondes</p>
       </div>
 
       {/* Active users */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <p className="text-xs font-medium text-gray-500 mb-1">Sessions actives</p>
           <p className="text-4xl font-bold text-gray-900">{stats.active_sessions}</p>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-5">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <p className="text-xs font-medium text-gray-500 mb-1">Utilisateurs actifs</p>
           <p className="text-4xl font-bold text-gray-900">{stats.active_users}</p>
         </div>
@@ -53,8 +53,8 @@ export function RealtimeContent() {
 
       {/* Pages being viewed */}
       {stats.pages && stats.pages.length > 0 && (
-        <section className="bg-white border border-gray-200 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Pages consultées</h2>
+        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Pages consultées</h2>
           <div className="space-y-2">
             {stats.pages.map((p) => (
               <div key={p.page_path} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
@@ -68,8 +68,8 @@ export function RealtimeContent() {
 
       {/* Recent events */}
       {stats.recent_events && stats.recent_events.length > 0 && (
-        <section className="bg-white border border-gray-200 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Événements récents</h2>
+        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Événements récents</h2>
           <div className="space-y-1.5 max-h-80 overflow-y-auto">
             {stats.recent_events.map((e, i) => (
               <div key={i} className="flex items-center gap-3 py-1.5 text-xs">
@@ -85,8 +85,8 @@ export function RealtimeContent() {
       {/* Devices & Countries */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {stats.devices && stats.devices.length > 0 && (
-          <section className="bg-white border border-gray-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Appareils</h2>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Appareils</h2>
             {stats.devices.map((d) => (
               <div key={d.device_type} className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-700 capitalize">{d.device_type}</span>
@@ -96,8 +96,8 @@ export function RealtimeContent() {
           </section>
         )}
         {stats.countries && stats.countries.length > 0 && (
-          <section className="bg-white border border-gray-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Pays</h2>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Pays</h2>
             {stats.countries.map((c) => (
               <div key={c.country} className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-700">{c.country}</span>

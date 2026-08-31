@@ -43,12 +43,12 @@ export function EventsContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Événements</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Événements</h1>
         <p className="text-sm text-gray-500 mt-1">Tous les événements trackés sur Bizko</p>
       </div>
 
-      <section className="bg-white border border-gray-200 rounded-xl">
-        <div className="px-5 py-4 border-b border-gray-200">
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100">
+        <div className="px-5 py-4 border-b border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900">Résumé des événements</h2>
         </div>
         <div className="divide-y divide-gray-100">

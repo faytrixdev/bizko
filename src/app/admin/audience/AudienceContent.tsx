@@ -34,13 +34,13 @@ export function AudienceContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Audience</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Audience</h1>
         <p className="text-sm text-gray-500 mt-1">Localisation de ton audience</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <section className="bg-white border border-gray-200 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-gray-900 mb-4">Pays</h2>
+        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Pays</h2>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}>
@@ -51,8 +51,8 @@ export function AudienceContent() {
           </ResponsiveContainer>
         </section>
 
-        <section className="bg-white border border-gray-200 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Détail par pays</h2>
+        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-base font-semibold text-gray-900 mb-4">Détail par pays</h2>
           <div className="space-y-2">
             {countries.map((c) => (
               <div key={c.country} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">

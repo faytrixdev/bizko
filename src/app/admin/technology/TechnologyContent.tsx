@@ -33,14 +33,14 @@ export function TechnologyContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Technologie</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Technologie</h1>
         <p className="text-sm text-gray-500 mt-1">Appareils, navigateurs et systèmes d&apos;exploitation</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {byDevice.length > 0 && (
-          <section className="bg-white border border-gray-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Appareils</h2>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Appareils</h2>
             {byDevice.map((d) => (
               <div key={d.value} className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-700 capitalize">{d.value}</span>
@@ -54,8 +54,8 @@ export function TechnologyContent() {
         )}
 
         {byBrowser.length > 0 && (
-          <section className="bg-white border border-gray-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">Navigateurs</h2>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Navigateurs</h2>
             {byBrowser.map((d) => (
               <div key={d.value} className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-700">{d.value}</span>
@@ -69,8 +69,8 @@ export function TechnologyContent() {
         )}
 
         {byOS.length > 0 && (
-          <section className="bg-white border border-gray-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-gray-900 mb-3">OS</h2>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">OS</h2>
             {byOS.map((d) => (
               <div key={d.value} className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-700">{d.value}</span>

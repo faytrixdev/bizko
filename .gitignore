@@ -45,3 +45,6 @@ supabase/.temp
 .turbo
 
 tsconfig.tsbuildinfo
+
+# git worktrees
+/.worktrees/

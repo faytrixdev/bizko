@@ -6,6 +6,7 @@ import { PasswordChangeModal } from "@/components/account/PasswordChangeModal";
 import { LogoutConfirmModal } from "@/components/account/LogoutConfirmModal";
 import { DeleteAccountModal } from "@/components/account/DeleteAccountModal";
 import { useI18n } from "@/lib/i18n/provider";
+import { useConsent } from "@/lib/cookies/consent-context";
 import { Logo } from "@/components/Logo";
 import type { Profile } from "@/types/database";
 
@@ -16,6 +17,7 @@ interface AccountClientProps {
 
 export function AccountClient({ user, profile }: AccountClientProps) {
   const { t } = useI18n();
+  const { status, openBanner } = useConsent();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -96,6 +98,36 @@ export function AccountClient({ user, profile }: AccountClientProps) {
                 className="h-9 px-4 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
               >
                 {t("accountPage.logout")}
+              </button>
+            </div>
+          </div>
+
+          {/* Cookie Preferences Section */}
+          <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">{t("cookieConsent.title")}</h2>
+                <p className="text-xs text-gray-500">{t("cookieConsent.description")}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between py-3 border-t border-gray-100">
+              <div>
+                <p className="text-sm font-medium text-gray-900">{t("cookieConsent.managePreferences")}</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {status === "accepted" ? t("cookieConsent.statusAccepted") : status === "refused" ? t("cookieConsent.statusRefused") : "—"}
+                </p>
+              </div>
+              <button
+                onClick={openBanner}
+                className="h-9 px-4 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+              >
+                {t("cookieConsent.managePreferences")}
               </button>
             </div>
           </div>

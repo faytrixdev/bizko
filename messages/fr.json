@@ -431,6 +431,16 @@
     "invalid": "3-30 caractères, lettres minuscules, chiffres, _",
     "idle": "3-30 caractères, lettres minuscules, chiffres, _"
   },
+  "cookieConsent": {
+    "title": "Cookies & confidentialite",
+    "description": "Bizko utilise uniquement des cookies essentiels au fonctionnement du service (authentification, preferences de langue). Aucun cookie de tracking ou d'analytics n'est utilise actuellement.",
+    "accept": "Accepter",
+    "refuse": "Refuser les non-essentiels",
+    "learnMore": "Vous pouvez modifier votre choix a tout moment depuis vos parametres ou notre politique de confidentialite.",
+    "managePreferences": "Gerer mes preferences cookies",
+    "statusAccepted": "Accepte",
+    "statusRefused": "Refuse"
+  },
   "accountPage": {
     "title": "Parametres du compte",
     "security": "Securite",
@@ -504,7 +514,7 @@
     "privacy4Title": "4. Stockage et securite",
     "privacy4": "Vos donnees sont stockees sur des serveurs securises (Supabase/Amazon Web Services). Nous utilisons le chiffrement HTTPS, l'authentification securisee et des politiques d'acces strictes pour proteger vos informations.",
     "privacy5Title": "5. Cookies",
-    "privacy5": "Bizko utilise des cookies essentiels pour le fonctionnement du service (authentification, preferences de langue). Nous n'utilisons pas de cookies publicitaires ou de suivi tiers.",
+    "privacy5": "Bizko utilise uniquement des cookies strictement necessaires au fonctionnement du service : cookies d'authentification (Supabase) pour maintenir votre session, et cookie de preferences de langue (bizko-locale). Aucun cookie de tracking, d'analytics ou publicitaire n'est utilise. Vous pouvez gerer vos preferences de cookies depuis la page Parametres de votre compte.",
     "privacy6Title": "6. Vos droits",
     "privacy6": "Conformement au RGPD et aux lois applicables, vous disposez des droits suivants : droit d'acces a vos donnees, droit de rectification, droit a l'effacement (suppression de compte), droit a la portabilite des donnees et droit d'opposition au traitement.",
     "privacy7Title": "7. Conservation des donnees",

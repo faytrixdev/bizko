@@ -4,6 +4,8 @@ import "./globals.css";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { getMessages } from "@/lib/i18n/messages";
 import { SessionHeartbeat } from "@/components/SessionHeartbeat";
+import { CookieConsentProvider } from "@/lib/cookies/consent-context";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 
 export const metadata: Metadata = {
   title: "Bizko - Ton business en un lien",
@@ -19,7 +21,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang={lang} className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-white text-gray-900">
-        <I18nProvider initialLocale={lang as "fr" | "en"} initialMessages={getMessages(lang as "fr" | "en")}>{children}</I18nProvider>
+        <I18nProvider initialLocale={lang as "fr" | "en"} initialMessages={getMessages(lang as "fr" | "en")}>
+          <CookieConsentProvider>
+            {children}
+            <CookieConsentBanner />
+          </CookieConsentProvider>
+        </I18nProvider>
         <SessionHeartbeat />
       </body>
     </html>

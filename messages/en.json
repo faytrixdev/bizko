@@ -431,6 +431,16 @@
     "invalid": "3-30 characters, lowercase letters, numbers, _",
     "idle": "3-30 characters, lowercase letters, numbers, _"
   },
+  "cookieConsent": {
+    "title": "Cookies & privacy",
+    "description": "Bizko only uses cookies essential to the service operation (authentication, language preferences). No tracking or analytics cookies are currently used.",
+    "accept": "Accept all",
+    "refuse": "Refuse non-essential",
+    "learnMore": "You can change your preferences at any time from your settings or our privacy policy.",
+    "managePreferences": "Manage cookie preferences",
+    "statusAccepted": "Accepted",
+    "statusRefused": "Refused"
+  },
   "accountPage": {
     "title": "Account Settings",
     "security": "Security",
@@ -504,7 +514,7 @@
     "privacy4Title": "4. Storage and security",
     "privacy4": "Your data is stored on secure servers (Supabase/Amazon Web Services). We use HTTPS encryption, secure authentication, and strict access policies to protect your information.",
     "privacy5Title": "5. Cookies",
-    "privacy5": "Bizko uses essential cookies for service operation (authentication, language preferences). We do not use advertising or third-party tracking cookies.",
+    "privacy5": "Bizko only uses strictly necessary cookies for the service to function: authentication cookies (Supabase) to maintain your session, and language preference cookie (bizko-locale). No tracking, analytics, or advertising cookies are used. You can manage your cookie preferences from your Account Settings page.",
     "privacy6Title": "6. Your rights",
     "privacy6": "In accordance with GDPR and applicable laws, you have the following rights: right to access your data, right to rectification, right to erasure (account deletion), right to data portability, and right to object to processing.",
     "privacy7Title": "7. Data retention",

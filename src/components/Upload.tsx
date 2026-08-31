@@ -1,9 +1,10 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
+import { validateVideoFile } from "@/lib/portfolioVideo";
 
 export function AvatarUpload({ profileId, currentUrl }: { profileId: string; currentUrl?: string | null }) {
   const { t } = useI18n();
@@ -56,12 +57,14 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
 export function PortfolioUpload({ profileId }: { profileId: string }) {
   const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const imageRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
+  const thumbRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
   const router = useRouter();
 
-  const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const uploadImage = async (file: File) => {
     setUploading(true);
     try {
       const compressed = await imageCompression(file, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
@@ -72,9 +75,8 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       const { data } = supabase.storage.from("portfolio").getPublicUrl(path);
       const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
       const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
-      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, image_url: data.publicUrl, position: nextPos });
+      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: data.publicUrl, media_type: "image", thumbnail_url: null, position: nextPos });
       if (insertErr) {
-        // Avoid orphaned storage object on DB failure.
         await supabase.storage.from("portfolio").remove([path]);
         throw insertErr;
       }
@@ -86,11 +88,72 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     }
   };
 
+  const pendingVideoRef = useRef<File | null>(null);
+
+  const onVideoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const err = validateVideoFile(file);
+    if (err) { alert(t("upload." + err)); return; }
+    pendingVideoRef.current = file;
+    thumbRef.current?.click();
+  };
+
+  const onThumbSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const thumbFile = e.target.files?.[0];
+    e.target.value = "";
+    const videoFile = pendingVideoRef.current;
+    pendingVideoRef.current = null;
+    if (!videoFile || !thumbFile) return;
+    setUploading(true);
+    const pathsToRemove: string[] = [];
+    try {
+      const safeName = videoFile.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9-_]/g, "-");
+      const ts = Date.now();
+      const videoPath = `${profileId}/${ts}-${safeName}${videoFile.name.slice(videoFile.name.lastIndexOf("."))}`;
+      const { error: vErr } = await supabase.storage.from("portfolio").upload(videoPath, videoFile, { contentType: videoFile.type });
+      if (vErr) throw vErr;
+      pathsToRemove.push(videoPath);
+      const { data: vData } = supabase.storage.from("portfolio").getPublicUrl(videoPath);
+
+      const compressedThumb = await imageCompression(thumbFile, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
+      const thumbPath = `${profileId}/${ts}-thumb.webp`;
+      const { error: tErr } = await supabase.storage.from("portfolio").upload(thumbPath, compressedThumb, { contentType: "image/webp" });
+      if (tErr) throw tErr;
+      pathsToRemove.push(thumbPath);
+      const { data: tData } = supabase.storage.from("portfolio").getPublicUrl(thumbPath);
+
+      const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
+      const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
+      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: vData.publicUrl, media_type: "video", thumbnail_url: tData.publicUrl, position: nextPos });
+      if (insertErr) {
+        await supabase.storage.from("portfolio").remove(pathsToRemove);
+        throw insertErr;
+      }
+      router.refresh();
+    } catch (err) {
+      alert(String(err));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
-    <label className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700">
-      {uploading ? "Upload..." : t("upload.addImage")}
-      <input type="file" accept="image/*" className="hidden" onChange={onChange} disabled={uploading} />
-    </label>
+    <div className="relative inline-block">
+      <button type="button" onClick={() => !uploading && setMenuOpen(!menuOpen)} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
+        {uploading ? "Upload..." : t("upload.addMedia")}
+      </button>
+      {menuOpen && (
+        <div className="absolute left-0 z-10 mt-1 w-40 rounded-lg border border-gray-200 bg-white shadow-sm">
+          <button type="button" className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 text-gray-700" onClick={() => { setMenuOpen(false); imageRef.current?.click(); }}>{t("upload.imageType")}</button>
+          <button type="button" className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 text-gray-700" onClick={() => { setMenuOpen(false); videoRef.current?.click(); }}>{t("upload.videoType")}</button>
+        </div>
+      )}
+      <input ref={imageRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) uploadImage(f); }} />
+      <input ref={videoRef} type="file" accept="video/mp4,video/webm" className="hidden" onChange={onVideoSelect} />
+      <input ref={thumbRef} type="file" accept="image/*" className="hidden" onChange={onThumbSelect} />
+    </div>
   );
 }
 

@@ -28,8 +28,11 @@ export function EventsContent() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_events_list", { p_start: start, p_end: end }).then(({ data }) => {
+    supabase.rpc("get_admin_events_list", { p_start: start, p_end: end }).then(({ data, error }) => {
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_events_list error:", error.message);
+        }
         setEvents((data as EventStat[]) ?? []);
         setLoading(false);
       }

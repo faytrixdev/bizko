@@ -2,26 +2,49 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useAdminPeriod } from "@/components/admin/PeriodSetter";
 import { EmptyState } from "@/components/admin/EmptyState";
 import type { RetentionCohortRow } from "@/types/analytics";
 
 export function RetentionContent() {
-  const { start, end } = useAdminPeriod();
   const [cohorts, setCohorts] = useState<RetentionCohortRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_retention_cohorts", { p_start: start, p_end: end }).then(({ data }) => {
-      if (!cancelled) {
-        setCohorts((data as RetentionCohortRow[]) ?? []);
+    supabase.rpc("get_admin_retention_cohorts").then(({ data, error }) => {
+      if (cancelled) return;
+      if (error) {
+        console.error("get_admin_retention_cohorts error:", error.message);
+        setCohorts([]);
         setLoading(false);
+        return;
       }
+      const raw = data as {
+        cohorts?: {
+          cohort_week: string;
+          size: number;
+          retention?: { week_offset: number; retained: number; rate: number }[];
+        }[];
+      } | null;
+      const rows: RetentionCohortRow[] = (raw?.cohorts ?? []).map((c) => {
+        const retentionByWeek = new Map(
+          (c.retention ?? []).map((r) => [r.week_offset, r.retained])
+        );
+        return {
+          cohort_week: c.cohort_week,
+          cohort_size: c.size,
+          week1_retention: retentionByWeek.get(1) ?? null,
+          week2_retention: retentionByWeek.get(2) ?? null,
+          week3_retention: retentionByWeek.get(3) ?? null,
+          week4_retention: retentionByWeek.get(4) ?? null,
+        };
+      });
+      setCohorts(rows);
+      setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [start, end]);
+  }, []);
 
   if (loading) return <div className="flex items-center justify-center py-20"><div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" /></div>;
   if (cohorts.length === 0) return <EmptyState description="Les données de rétention apparaîtront ici une fois le tracking activé." />;

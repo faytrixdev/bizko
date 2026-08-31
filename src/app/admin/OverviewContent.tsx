@@ -14,16 +14,22 @@ export function OverviewContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
     supabase.rpc("get_admin_overview_kpis", {
       p_start: start,
       p_end: end,
       p_prev_start: prevStart,
       p_prev_end: prevEnd,
-    }).then(({ data }) => {
+    }).then(({ data, error }) => {
+      if (cancelled) return;
+      if (error) {
+        console.error("get_admin_overview_kpis error:", error.message);
+      }
       setKpis(data as OverviewKPIs);
       setLoading(false);
     });
+    return () => { cancelled = true; };
   }, [start, end, prevStart, prevEnd]);
 
   if (loading) {

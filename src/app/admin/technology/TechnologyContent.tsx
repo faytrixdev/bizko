@@ -14,8 +14,11 @@ export function TechnologyContent() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_device_stats", { p_start: start, p_end: end }).then(({ data }) => {
+    supabase.rpc("get_admin_device_stats", { p_start: start, p_end: end }).then(({ data, error }) => {
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_device_stats error:", error.message);
+        }
         const raw = data as {
           devices?: { device_type: string; cnt: number }[];
           browsers?: { browser: string; cnt: number }[];

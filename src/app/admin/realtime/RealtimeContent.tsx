@@ -13,8 +13,11 @@ export function RealtimeContent() {
     let cancelled = false;
     async function fetchStats() {
       const supabase = createClient();
-      const { data } = await supabase.rpc("get_admin_realtime_stats");
+      const { data, error } = await supabase.rpc("get_admin_realtime_stats");
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_realtime_stats error:", error.message);
+        }
         setStats(data as RealtimeStats);
         setLoading(false);
       }

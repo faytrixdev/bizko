@@ -17,11 +17,17 @@ export function OverviewCharts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_daily_stats", { p_start: start, p_end: end }).then(({ data: rows }) => {
+    supabase.rpc("get_admin_daily_stats", { p_start: start, p_end: end }).then(({ data: rows, error }) => {
+      if (cancelled) return;
+      if (error) {
+        console.error("get_admin_daily_stats error:", error.message);
+      }
       setData((rows as DailyStats[]) ?? []);
       setLoading(false);
     });
+    return () => { cancelled = true; };
   }, [start, end]);
 
   if (loading) return <div className="h-64 flex items-center justify-center"><div className="w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" /></div>;

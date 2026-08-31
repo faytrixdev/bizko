@@ -17,8 +17,11 @@ export function AudienceContent() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_country_stats", { p_start: start, p_end: end }).then(({ data }) => {
+    supabase.rpc("get_admin_country_stats", { p_start: start, p_end: end }).then(({ data, error }) => {
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_country_stats error:", error.message);
+        }
         const raw = data as { countries?: CountryStat[] } | null;
         setCountries(raw?.countries ?? []);
         setLoading(false);

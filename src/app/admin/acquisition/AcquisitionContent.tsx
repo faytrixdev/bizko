@@ -17,8 +17,11 @@ export function AcquisitionContent() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_acquisition_stats", { p_start: start, p_end: end }).then(({ data }) => {
+    supabase.rpc("get_admin_acquisition_stats", { p_start: start, p_end: end }).then(({ data, error }) => {
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_acquisition_stats error:", error.message);
+        }
         setStats(data as AcquisitionStats);
         setLoading(false);
       }

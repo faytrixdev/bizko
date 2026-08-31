@@ -14,8 +14,11 @@ export function FunnelsContent() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_funnel_stats", { p_start: start, p_end: end }).then(({ data }) => {
+    supabase.rpc("get_admin_funnel_stats", { p_start: start, p_end: end }).then(({ data, error }) => {
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_funnel_stats error:", error.message);
+        }
         const raw = data as { steps?: FunnelStep[] } | null;
         setSteps(raw?.steps ?? []);
         setLoading(false);

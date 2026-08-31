@@ -15,8 +15,11 @@ export function PagesContent() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_top_pages", { p_start: start, p_end: end, p_limit: 50 }).then(({ data }) => {
+    supabase.rpc("get_admin_top_pages", { p_start: start, p_end: end, p_limit: 50 }).then(({ data, error }) => {
       if (!cancelled) {
+        if (error) {
+          console.error("get_admin_top_pages error:", error.message);
+        }
         setPages((data as TopPage[]) ?? []);
         setLoading(false);
       }

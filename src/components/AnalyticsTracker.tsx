@@ -56,6 +56,9 @@ export function AnalyticsTracker() {
   const initRef = useRef(false);
 
   useEffect(() => {
+    // Don't pollute analytics with the admin dashboard's own traffic
+    if (pathname.startsWith("/admin")) return;
+
     const supabase = createClient();
     void getSessionId();
     const utm = parseUTM(searchParams.toString());

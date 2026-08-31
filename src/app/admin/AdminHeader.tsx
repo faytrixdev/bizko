@@ -16,7 +16,7 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const { state, setPreset, toggleCompare } = usePeriod();
 
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 border-b border-gray-200/60 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_12px_rgba(0,0,0,0.03)]">
       <div className="flex items-center justify-between px-4 sm:px-6 h-14">
         <div className="flex items-center gap-3">
           <button
@@ -44,7 +44,7 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
                 onClick={() => setPreset(p.value)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                   state.preset === p.value
-                    ? "bg-white text-gray-900 shadow-sm"
+                    ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-900/5"
                     : "text-gray-500 hover:text-gray-700"
                 }`}
               >
@@ -58,7 +58,7 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
             onClick={toggleCompare}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
               state.compare
-                ? "bg-accent text-white border-accent"
+                ? "bg-accent text-white border-accent shadow-sm"
                 : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
             }`}
           >

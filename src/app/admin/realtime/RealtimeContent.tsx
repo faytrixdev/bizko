@@ -11,20 +11,50 @@ export function RealtimeContent() {
 
   useEffect(() => {
     let cancelled = false;
+    let interval: ReturnType<typeof setInterval> | null = null;
+
     async function fetchStats() {
       const supabase = createClient();
       const { data, error } = await supabase.rpc("get_admin_realtime_stats");
-      if (!cancelled) {
-        if (error) {
-          console.error("get_admin_realtime_stats error:", error.message);
-        }
-        setStats(data as RealtimeStats);
-        setLoading(false);
+      if (cancelled) return;
+      if (error) {
+        console.error("get_admin_realtime_stats error:", error.message);
+      }
+      setStats(data as RealtimeStats);
+      setLoading(false);
+    }
+
+    function start() {
+      if (interval) return;
+      interval = setInterval(fetchStats, 30000);
+    }
+    function stop() {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
       }
     }
+
     fetchStats();
-    const interval = setInterval(fetchStats, 30000);
-    return () => { cancelled = true; clearInterval(interval); };
+    start();
+
+    // Pause the 30s polling while the tab is hidden to avoid useless
+    // Supabase/DB work, and resume (with an immediate refresh) on visibility.
+    function onVisibility() {
+      if (document.hidden) {
+        stop();
+      } else if (!cancelled) {
+        fetchStats();
+        start();
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      cancelled = true;
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   if (loading) {

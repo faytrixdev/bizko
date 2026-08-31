@@ -53,6 +53,7 @@ export async function updateSession(request: NextRequest) {
     "/account",
     "/onboarding",
     "/demo",
+    "/admin",
   ];
   // Un profil public est servi à la racine sur un seul segment : /<username>
   const isRootPublicProfile =
@@ -135,6 +136,19 @@ export async function updateSession(request: NextRequest) {
 
       if (!profile) {
         return NextResponse.redirect(new URL("/onboarding", request.url));
+      }
+    }
+
+    // Admin protection
+    if (pathname.startsWith("/admin")) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile || !profile.is_admin) {
+        return new NextResponse("Forbidden", { status: 403 });
       }
     }
   } else {

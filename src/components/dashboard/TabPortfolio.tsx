@@ -6,7 +6,9 @@ import { useI18n } from "@/lib/i18n/provider";
 
 interface PortfolioItem {
   id: string;
-  image_url: string;
+  media_url: string;
+  media_type?: 'image' | 'video';
+  thumbnail_url?: string | null;
   title: string | null;
   position: number;
 }

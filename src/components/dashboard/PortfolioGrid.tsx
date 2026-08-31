@@ -7,7 +7,9 @@ import { ConfirmDialog } from "./ConfirmDialog";
 
 interface PortfolioItem {
   id: string;
-  image_url: string;
+  media_url: string;
+  media_type?: 'image' | 'video';
+  thumbnail_url?: string | null;
   title: string | null;
   position: number;
 }
@@ -48,7 +50,10 @@ export function PortfolioGrid({ portfolio }: PortfolioGridProps) {
       {list.map((p, i) => (
         <div key={p.id} className="relative group">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.image_url} alt="" className="aspect-square object-cover rounded-xl border border-gray-100 hover:ring-2 hover:ring-gray-200 transition-all duration-300" />
+          <img src={p.thumbnail_url || p.media_url} alt="" className="aspect-square object-cover rounded-xl border border-gray-100 hover:ring-2 hover:ring-gray-200 transition-all duration-300" />
+          {p.media_type === 'video' && (
+            <span className="absolute bottom-1 right-1 w-5 h-5 flex items-center justify-center bg-black/60 text-white text-[10px] rounded-full pointer-events-none">▶</span>
+          )}
           <div className="absolute top-1 left-1 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => handleMove(i, "up")}

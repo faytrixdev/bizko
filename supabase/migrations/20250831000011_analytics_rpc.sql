@@ -686,3 +686,7 @@ END;
 $$;
 
 GRANT EXECUTE ON FUNCTION public.get_admin_search_stats(timestamptz, timestamptz) TO authenticated;
+
+-- Refresh PostgREST's schema cache so the new/changed admin functions are immediately
+-- callable via the REST/RPC endpoint.
+NOTIFY pgrst, 'reload schema';

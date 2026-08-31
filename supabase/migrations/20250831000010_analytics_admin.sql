@@ -161,3 +161,7 @@ $$;
 GRANT EXECUTE ON FUNCTION public.upsert_analytics_session(
   text, text, text, text, text, text, text
 ) TO anon, authenticated;
+
+-- Refresh PostgREST's schema cache so the new functions are immediately callable
+-- via the REST/RPC endpoint (avoids transient "not found in the schema cache" 404).
+NOTIFY pgrst, 'reload schema';

@@ -35,62 +35,98 @@ export function OverviewCharts() {
   return (
     <div className="space-y-6">
       {/* Users chart */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Utilisateurs actifs</h3>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-5">Utilisateurs actifs</h3>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <defs>
+              <linearGradient id="gradActive" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#111827" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="#111827" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="gradNew" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ff6b35" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="#ff6b35" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
             <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }} />
+            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Area type="monotone" dataKey="active_users" name="Actifs" stroke="#111827" fill="#111827" fillOpacity={0.1} strokeWidth={2} />
-            <Area type="monotone" dataKey="new_users" name="Nouveaux" stroke="#ff6b35" fill="#ff6b35" fillOpacity={0.1} strokeWidth={2} />
+            <Area type="monotone" dataKey="active_users" name="Actifs" stroke="#111827" fill="url(#gradActive)" strokeWidth={2} />
+            <Area type="monotone" dataKey="new_users" name="Nouveaux" stroke="#ff6b35" fill="url(#gradNew)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </section>
 
       {/* Sessions chart */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Sessions</h3>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-5">Sessions</h3>
         <ResponsiveContainer width="100%" height={240}>
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <defs>
+              <linearGradient id="gradSession" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#6366f1" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
             <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }} />
-            <Area type="monotone" dataKey="sessions" name="Sessions" stroke="#6366f1" fill="#6366f1" fillOpacity={0.1} strokeWidth={2} />
+            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
+            <Area type="monotone" dataKey="sessions" name="Sessions" stroke="#6366f1" fill="url(#gradSession)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </section>
 
       {/* Engagement chart */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Engagement</h3>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-5">Engagement</h3>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <defs>
+              <linearGradient id="gradProfile" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#111827" stopOpacity={0.1} />
+                <stop offset="100%" stopColor="#111827" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="gradService" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ff6b35" stopOpacity={0.1} />
+                <stop offset="100%" stopColor="#ff6b35" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="gradWhatsApp" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#25d366" stopOpacity={0.1} />
+                <stop offset="100%" stopColor="#25d366" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
             <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }} />
+            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Area type="monotone" dataKey="profile_views" name="Profils" stroke="#111827" fill="#111827" fillOpacity={0.05} strokeWidth={2} />
-            <Area type="monotone" dataKey="service_views" name="Services" stroke="#ff6b35" fill="#ff6b35" fillOpacity={0.05} strokeWidth={2} />
-            <Area type="monotone" dataKey="whatsapp_clicks" name="WhatsApp" stroke="#25d366" fill="#25d366" fillOpacity={0.05} strokeWidth={2} />
+            <Area type="monotone" dataKey="profile_views" name="Profils" stroke="#111827" fill="url(#gradProfile)" strokeWidth={2} />
+            <Area type="monotone" dataKey="service_views" name="Services" stroke="#ff6b35" fill="url(#gradService)" strokeWidth={2} />
+            <Area type="monotone" dataKey="whatsapp_clicks" name="WhatsApp" stroke="#25d366" fill="url(#gradWhatsApp)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </section>
 
       {/* Signups chart */}
-      <section className="bg-white border border-gray-200 rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Inscriptions</h3>
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-base font-semibold text-gray-900 mb-5">Inscriptions</h3>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <defs>
+              <linearGradient id="gradSignup" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
             <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e5e7eb" }} />
-            <Area type="monotone" dataKey="signups" name="Inscriptions" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.1} strokeWidth={2} />
+            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
+            <Area type="monotone" dataKey="signups" name="Inscriptions" stroke="#8b5cf6" fill="url(#gradSignup)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </section>

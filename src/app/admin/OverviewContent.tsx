@@ -39,14 +39,17 @@ export function OverviewContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-900">Overview</h1>
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Overview</h1>
         <p className="text-sm text-gray-500 mt-1">Vue d&apos;ensemble de l&apos;activité Bizko</p>
       </div>
 
       {/* Users section */}
       <section>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Utilisateurs</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+          Utilisateurs
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <KPICard label="Utilisateurs actifs" value={kpis.active_users.current} previous={kpis.active_users.previous} />
           <KPICard label="Nouveaux utilisateurs" value={kpis.new_users.current} previous={kpis.new_users.previous} />
           <KPICard label="Utilisateurs récurrents" value={kpis.returning_users.current} previous={kpis.returning_users.previous} />
@@ -55,8 +58,11 @@ export function OverviewContent() {
 
       {/* Traffic section */}
       <section>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Trafic</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+          Trafic
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <KPICard label="Sessions" value={kpis.sessions.current} previous={kpis.sessions.previous} />
           <KPICard label="Vues de pages" value={kpis.page_views.current} previous={kpis.page_views.previous} />
         </div>
@@ -64,8 +70,11 @@ export function OverviewContent() {
 
       {/* Engagement section */}
       <section>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Engagement Bizko</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+          Engagement Bizko
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KPICard label="Profils consultés" value={kpis.profile_views.current} previous={kpis.profile_views.previous} />
           <KPICard label="Services consultés" value={kpis.service_views.current} previous={kpis.service_views.previous} />
           <KPICard label="Clics WhatsApp" value={kpis.whatsapp_clicks.current} previous={kpis.whatsapp_clicks.previous} />
@@ -75,8 +84,11 @@ export function OverviewContent() {
 
       {/* Conversion section */}
       <section>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Conversion</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+          Conversion
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <KPICard label="Inscriptions" value={kpis.signups.current} previous={kpis.signups.previous} />
           <KPICard label="Profils complétés" value={kpis.profile_completed.current} previous={kpis.profile_completed.previous} />
           <KPICard label="Services créés" value={kpis.services_created.current} previous={kpis.services_created.previous} />

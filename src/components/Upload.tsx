@@ -101,7 +101,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       const durationErr = validateVideoDuration(duration);
       if (durationErr) { alert(t("upload." + durationErr)); return; }
     } catch {
-      alert(t("upload.videoTooLong"));
+      alert(t("upload.videoReadError"));
       return;
     }
     pendingVideoRef.current = file;
@@ -212,12 +212,26 @@ function getVideoDuration(file: File): Promise<number> {
     const url = URL.createObjectURL(file);
     const video = document.createElement("video");
     video.preload = "metadata";
+    video.muted = true;
+    const cleanup = () => URL.revokeObjectURL(url);
     video.onloadedmetadata = () => {
-      URL.revokeObjectURL(url);
-      resolve(video.duration);
+      if (video.duration === Infinity) {
+        // Certains MP4 (fragmentés / optimisés pour le streaming) ne publient pas
+        // leur durée dans les métadonnées : video.duration vaut alors Infinity.
+        // On cherche vers une position très loin pour forcer le navigateur à
+        // calculer la véritable durée.
+        video.currentTime = 1e7;
+        video.onseeked = () => {
+          cleanup();
+          resolve(video.duration);
+        };
+      } else {
+        cleanup();
+        resolve(video.duration);
+      }
     };
     video.onerror = () => {
-      URL.revokeObjectURL(url);
+      cleanup();
       reject(new Error("Impossible de lire la video"));
     };
     video.src = url;

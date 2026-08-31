@@ -16,6 +16,9 @@ export function validateVideoFile(file: { type: string; size: number }): string 
 }
 
 export function validateVideoDuration(durationSec: number): string | null {
+  if (!Number.isFinite(durationSec)) {
+    return null;
+  }
   if (durationSec > VIDEO_CONFIG.maxDurationSec) {
     return "videoTooLong";
   }

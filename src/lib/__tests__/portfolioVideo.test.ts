@@ -43,4 +43,9 @@ describe("validateVideoDuration", () => {
     const err = validateVideoDuration(61);
     expect(err).toBe("videoTooLong");
   });
+
+  it("treats unknown (non-finite) duration as acceptable, not too long", () => {
+    expect(validateVideoDuration(Infinity)).toBeNull();
+    expect(validateVideoDuration(NaN)).toBeNull();
+  });
 });

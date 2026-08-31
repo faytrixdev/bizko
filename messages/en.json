@@ -410,7 +410,8 @@
     "videoUnsupported": "Unsupported video format (mp4 or webm)",
     "videoTooLarge": "Video too large (max 50 MB)",
     "videoTooLong": "Video too long (max 60 s)",
-    "videoThumbRequired": "A thumbnail is required for the video"
+    "videoThumbRequired": "A thumbnail is required for the video",
+    "videoReadError": "Unable to read the video"
   },
   "settings": {
     "myAccount": "My account"

@@ -5,6 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
+import { trackEvent } from "@/lib/analytics";
 import { isValidUsername } from "@/lib/validators";
 
 export async function completeOnboarding(formData: FormData) {
@@ -57,6 +58,8 @@ export async function completeOnboarding(formData: FormData) {
       redirect("/onboarding?error=echec");
     }
 
+    await trackEvent("profile_completed", { pagePath: "/onboarding" });
+
     if (service_title) {
       const { error: serviceError } = await supabase.from("services").insert({
         profile_id: user.id,
@@ -67,6 +70,8 @@ export async function completeOnboarding(formData: FormData) {
       });
       if (serviceError) {
         console.error("onboarding service insert error:", serviceError);
+      } else {
+        await trackEvent("service_created", { pagePath: "/onboarding" });
       }
     }
   }

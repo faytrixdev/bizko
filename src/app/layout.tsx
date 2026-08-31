@@ -4,6 +4,7 @@ import "./globals.css";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { getMessages } from "@/lib/i18n/messages";
 import { SessionHeartbeat } from "@/components/SessionHeartbeat";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { CookieConsentProvider } from "@/lib/cookies/consent-context";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           </CookieConsentProvider>
         </I18nProvider>
         <SessionHeartbeat />
+        <AnalyticsTracker />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rateLimit";
+import { trackEvent } from "@/lib/analytics";
 
 const SAFE_FALLBACK = "https://wa.me";
 
@@ -36,6 +37,11 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase
       .rpc("record_event", { p_profile_id: profileId, p_type: type });
     if (error) console.error("track-click: failed to record event", error.message);
+
+    await trackEvent("whatsapp_clicked", {
+      pagePath: `/api/track-click`,
+      metadata: { profile_id: profileId, type },
+    });
   }
 
   return NextResponse.redirect(isSafeWaLink(to) ? to! : SAFE_FALLBACK, { status: 302 });

@@ -142,7 +142,7 @@ BEGIN
     count(DISTINCT CASE
       WHEN ae.user_id IS NOT NULL AND NOT EXISTS (
         SELECT 1 FROM public.analytics_events ae2
-        WHERE ae2.user_id = ae.user_id AND ae2.created_at < p_start
+        WHERE ae2.user_id = ae.user_id AND ae2.created_at < gs.dt
       ) THEN ae.user_id
     END) AS new_users,
     count(DISTINCT CASE WHEN ae.event_name = 'session_start' THEN ae.session_id END) AS sessions,
@@ -560,10 +560,11 @@ DECLARE
 BEGIN
   PERFORM public._require_admin();
 
-  WITH first_seen AS (
+  WITH   first_seen AS (
     SELECT user_id, date_trunc('week', min(created_at))::date AS cohort_week
     FROM public.analytics_events
     WHERE user_id IS NOT NULL
+      AND created_at >= now() - interval '6 months'
     GROUP BY user_id
   ),
   cohort_sizes AS (
@@ -578,6 +579,7 @@ BEGIN
       count(DISTINCT ae.user_id)::bigint AS retained
     FROM first_seen fs
     JOIN public.analytics_events ae ON ae.user_id = fs.user_id
+      AND ae.created_at >= now() - interval '6 months'
     GROUP BY fs.cohort_week, date_trunc('week', ae.created_at)
   )
   SELECT jsonb_build_object(
@@ -585,7 +587,7 @@ BEGIN
       'cohort_week', r.cohort_week,
       'size', cs.size,
       'retention', (SELECT jsonb_agg(jsonb_build_object(
-        'week_offset', EXTRACT(WEEK FROM r2.activity_week) - EXTRACT(WEEK FROM r.cohort_week),
+        'week_offset', ((r2.activity_week - r.cohort_week) / 7)::int,
         'retained', r2.retained,
         'rate', ROUND(r2.retained::numeric / cs.size * 100, 1)
       )) FROM retention r2

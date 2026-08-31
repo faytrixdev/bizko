@@ -42,11 +42,11 @@ function detectOS(): string {
 function parseUTM(search: string) {
   const params = new URLSearchParams(search);
   return {
-    utm_source: params.get("utm_source"),
-    utm_medium: params.get("utm_medium"),
-    utm_campaign: params.get("utm_campaign"),
-    utm_content: params.get("utm_content"),
-    utm_term: params.get("utm_term"),
+    p_utm_source: params.get("utm_source"),
+    p_utm_medium: params.get("utm_medium"),
+    p_utm_campaign: params.get("utm_campaign"),
+    p_utm_content: params.get("utm_content"),
+    p_utm_term: params.get("utm_term"),
   };
 }
 

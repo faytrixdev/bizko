@@ -133,12 +133,36 @@ export interface FunnelStep {
   count: number;
 }
 
+export interface FunnelData {
+  step_name: string;
+  unique_users: number;
+  total_events: number;
+}
+
 // ─── Retention ─────────────────────────────────────────────────
 
 export interface RetentionCohort {
   cohort_week: string;
   size: number;
   retention: { week_offset: number; retained: number; rate: number }[];
+}
+
+export interface RetentionCohortRow {
+  cohort_week: string;
+  cohort_size: number;
+  week1_retention: number | null;
+  week2_retention: number | null;
+  week3_retention: number | null;
+  week4_retention: number | null;
+}
+
+// ─── Device Stats (Technology page) ────────────────────────────
+
+export interface DeviceStat {
+  dimension: string;
+  value: string;
+  sessions: number;
+  percentage: number;
 }
 
 // ─── Search ────────────────────────────────────────────────────

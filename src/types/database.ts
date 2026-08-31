@@ -26,7 +26,9 @@ export interface Service {
 export interface PortfolioItem {
   id: string;
   profile_id: string;
-  image_url: string;
+  media_url: string;
+  media_type: 'image' | 'video';
+  thumbnail_url: string | null;
   title: string | null;
   position: number;
 }

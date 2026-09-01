@@ -7,6 +7,7 @@ import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
 import { trackEvent } from "@/lib/analytics";
 import { isValidUsername } from "@/lib/validators";
+import { normalizePhoneE164 } from "@/lib/utils";
 
 export async function completeOnboarding(formData: FormData) {
   const supabase = await createClient();
@@ -18,7 +19,8 @@ export async function completeOnboarding(formData: FormData) {
   const tagline = (formData.get("tagline") as string)?.trim();
   const city = (formData.get("city") as string)?.trim();
   const country = (formData.get("country") as string)?.trim();
-  const phone_e164 = (formData.get("phone_e164") as string).replace(/\s/g, "");
+  const phone_raw = (formData.get("phone_e164") as string).trim();
+  const phone_e164 = phone_raw ? normalizePhoneE164(phone_raw) : "";
   const service_title = (formData.get("service_title") as string)?.trim();
   const service_price = formData.get("service_price") as string;
   const service_currency = (formData.get("service_currency") as string) || "XOF";
@@ -55,6 +57,7 @@ export async function completeOnboarding(formData: FormData) {
 
     if (profileError) {
       if (profileError.code === "23505") redirect("/onboarding?error=username_pris");
+      console.error("onboarding profile insert error:", profileError.code, profileError.message, profileError.details);
       redirect("/onboarding?error=echec");
     }
 

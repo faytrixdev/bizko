@@ -228,6 +228,7 @@
     "cityPlaceholder": "Ville",
     "countryPlaceholder": "CI",
     "phonePlaceholder": "WhatsApp +2250700000000",
+    "phoneHint": "Format international, ex : +225 07 00 00 00 00",
     "servicePlaceholder": "Ex: Shooting photo pro",
     "pricePlaceholder": "Prix (XOF, optionnel)",
     "publishBtn": "Publier mon Bizko",

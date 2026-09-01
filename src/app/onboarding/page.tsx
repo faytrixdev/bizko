@@ -83,7 +83,7 @@ export default function Onboarding() {
                 <input name="city" required placeholder={t("onboarding.cityPlaceholder")} className="w-full sm:flex-[2] min-w-0 h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900" />
                 <CountrySelect name="country" defaultValue="CI" required className="flex-1 sm:flex-none sm:w-40" />
               </div>
-              <input name="phone_e164" required placeholder={t("onboarding.phonePlaceholder")} type="tel" className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900 w-full" />
+              <input name="phone_e164" required placeholder={t("onboarding.phonePlaceholder")} type="tel" inputMode="tel" autoComplete="tel" pattern="^\+[0-9]{6,15}$" title={t("onboarding.phoneHint")} className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-gray-900 w-full" />
             </div>
           </div>
 

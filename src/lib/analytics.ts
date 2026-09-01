@@ -21,6 +21,7 @@ export async function trackEvent(
     utmContent?: string;
     utmTerm?: string;
     metadata?: Record<string, unknown>;
+    userId?: string;
   } = {}
 ) {
   try {
@@ -39,6 +40,7 @@ export async function trackEvent(
       p_utm_content: opts.utmContent ?? null,
       p_utm_term: opts.utmTerm ?? null,
       p_metadata: opts.metadata ? JSON.stringify(opts.metadata) : "{}",
+      p_user_id: opts.userId ?? null,
     });
     if (error) console.error("trackEvent error:", error.message);
   } catch (e) {

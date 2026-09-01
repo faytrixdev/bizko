@@ -31,15 +31,17 @@ export async function GET(request: NextRequest) {
   const profileId = searchParams.get("pid");
   const type = searchParams.get("type");
   const to = searchParams.get("to");
+  const sid = searchParams.get("sid") ?? undefined;
 
   if (profileId && type && isSafeWaLink(to)) {
-    const supabase = await createClient();
+    const supabase = await createClient({ sessionId: sid });
     const { error } = await supabase
       .rpc("record_event", { p_profile_id: profileId, p_type: type });
     if (error) console.error("track-click: failed to record event", error.message);
 
     await trackEvent("whatsapp_clicked", {
       pagePath: `/api/track-click`,
+      sessionId: sid,
       metadata: { profile_id: profileId, type },
     });
   }

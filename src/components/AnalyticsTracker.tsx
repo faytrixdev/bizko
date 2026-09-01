@@ -3,15 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-
-function getSessionId(): string {
-  let id = sessionStorage.getItem("bizko_analytics_sid");
-  if (!id) {
-    id = "s-" + crypto.randomUUID().replace(/-/g, "").slice(0, 24);
-    sessionStorage.setItem("bizko_analytics_sid", id);
-  }
-  return id;
-}
+import { getAnalyticsSessionId } from "@/lib/analytics-session";
 
 function detectDevice(): string {
   const ua = navigator.userAgent;
@@ -60,7 +52,7 @@ export function AnalyticsTracker() {
     if (pathname.startsWith("/admin")) return;
 
     const supabase = createClient();
-    void getSessionId();
+    void getAnalyticsSessionId();
     const utm = parseUTM(searchParams.toString());
     const device = detectDevice();
     const browser = detectBrowser();
@@ -97,11 +89,31 @@ export function AnalyticsTracker() {
     // Delegate clicks on elements tagged with data-analytics-event
     const handleClick = (e: MouseEvent) => {
       const el = (e.target as HTMLElement | null)?.closest?.("[data-analytics-event]");
-      if (!el) return;
-      const eventName = el.getAttribute("data-analytics-event");
-      const label = el.getAttribute("data-analytics-label");
-      if (!eventName) return;
-      track(eventName, label ? { p_metadata: JSON.stringify({ label }) } : {});
+      if (el) {
+        const eventName = el.getAttribute("data-analytics-event");
+        const label = el.getAttribute("data-analytics-label");
+        if (eventName) {
+          track(eventName, label ? { p_metadata: JSON.stringify({ label }) } : {});
+        }
+        return;
+      }
+
+      // Server-side /api/track-click links can't carry the session as a header
+      // (they navigate directly), so append it to the URL so the route can
+      // attribute the WhatsApp click to the same client session.
+      const click = (e.target as HTMLElement | null)?.closest?.(
+        "a[href*='/api/track-click']"
+      );
+      if (click) {
+        const href = click.getAttribute("href");
+        if (href && !href.includes("sid=")) {
+          const sid = getAnalyticsSessionId();
+          click.setAttribute(
+            "href",
+            href + (href.includes("?") ? "&" : "?") + "sid=" + encodeURIComponent(sid)
+          );
+        }
+      }
     };
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);

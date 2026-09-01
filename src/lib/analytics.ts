@@ -20,11 +20,14 @@ export async function trackEvent(
     utmCampaign?: string;
     utmContent?: string;
     utmTerm?: string;
+    sessionId?: string;
     metadata?: Record<string, unknown>;
   } = {}
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient({
+      sessionId: opts.sessionId,
+    });
     const { error } = await supabase.rpc("track_analytics_event", {
       p_event_name: eventName,
       p_page_path: opts.pagePath ?? null,

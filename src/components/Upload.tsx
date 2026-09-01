@@ -96,14 +96,9 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     if (!file) return;
     const err = validateVideoFile(file);
     if (err) { alert(t("upload." + err)); return; }
-    try {
-      const duration = await getVideoDuration(file);
-      const durationErr = validateVideoDuration(duration);
-      if (durationErr) { alert(t("upload." + durationErr)); return; }
-    } catch {
-      alert(t("upload.videoReadError"));
-      return;
-    }
+    const duration = await getVideoDuration(file);
+    const durationErr = validateVideoDuration(duration);
+    if (durationErr) { alert(t("upload." + durationErr)); return; }
     pendingVideoRef.current = file;
     thumbRef.current?.click();
   };
@@ -208,12 +203,19 @@ async function cropToSquare(file: File): Promise<File> {
 }
 
 function getVideoDuration(file: File): Promise<number> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const url = URL.createObjectURL(file);
     const video = document.createElement("video");
     video.preload = "metadata";
     video.muted = true;
     const cleanup = () => URL.revokeObjectURL(url);
+    // Le navigateur ne peut pas toujours lire le codec localement (ex. HEVC d'iPhone).
+    // Dans ce cas, on ne peut pas connaître la durée : on renvoie Infinity (= inconnue),
+    // ce qui est accepté par validateVideoDuration, afin de ne pas bloquer l'upload.
+    const unknown = () => {
+      cleanup();
+      resolve(Infinity);
+    };
     video.onloadedmetadata = () => {
       if (video.duration === Infinity) {
         // Certains MP4 (fragmentés / optimisés pour le streaming) ne publient pas
@@ -225,15 +227,13 @@ function getVideoDuration(file: File): Promise<number> {
           cleanup();
           resolve(video.duration);
         };
+        video.onerror = unknown;
       } else {
         cleanup();
         resolve(video.duration);
       }
     };
-    video.onerror = () => {
-      cleanup();
-      reject(new Error("Impossible de lire la video"));
-    };
+    video.onerror = unknown;
     video.src = url;
   });
 }

@@ -93,6 +93,18 @@ export function AnalyticsTracker() {
 
     // Page view on every navigation
     track("page_view");
+
+    // Delegate clicks on elements tagged with data-analytics-event
+    const handleClick = (e: MouseEvent) => {
+      const el = (e.target as HTMLElement | null)?.closest?.("[data-analytics-event]");
+      if (!el) return;
+      const eventName = el.getAttribute("data-analytics-event");
+      const label = el.getAttribute("data-analytics-label");
+      if (!eventName) return;
+      track(eventName, label ? { p_metadata: JSON.stringify({ label }) } : {});
+    };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
   }, [pathname, searchParams]);
 
   return null;

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n/provider";
+import { createClient } from "@/lib/supabase/client";
 
 export function QrShare({ url }: { url: string }) {
   const { t } = useI18n();
@@ -18,6 +19,10 @@ export function QrShare({ url }: { url: string }) {
 
   const copy = async () => {
     await navigator.clipboard.writeText(url);
+    void createClient().rpc("track_analytics_event", {
+      p_event_name: "profile_link_copied",
+      p_page_path: window.location.pathname,
+    });
     alert(t("qr.copied"));
   };
 

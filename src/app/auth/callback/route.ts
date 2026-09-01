@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { trackEvent } from '@/lib/analytics';
 
 function safeNextPath(raw: string | null): string | null {
   if (!raw) return null;
   // Allow only same-origin relative paths (no protocol-relative "//", no "javascript:").
   if (!raw.startsWith('/') || raw.startsWith('//')) return null;
   return raw;
+}
+
+function isRecentCreation(createdAt: string | undefined, withinMs = 3 * 60 * 1000): boolean {
+  if (!createdAt) return false;
+  const created = new Date(createdAt).getTime();
+  return Number.isFinite(created) && Date.now() - created <= withinMs;
 }
 
 export async function GET(request: Request) {
@@ -21,6 +28,13 @@ export async function GET(request: Request) {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (user) {
+        // OAuth (e.g. Google) and email-verification both land here once a
+        // real auth session exists, so auth.uid() is valid. A brand-new
+        // account has created_at ~= now; returning logins have an older one.
+        if (isRecentCreation(user.created_at)) {
+          await trackEvent('user_signed_up', { pagePath: '/auth/callback' });
+        }
+
         const { data: profile } = await supabase
           .from('profiles')
           .select('id')

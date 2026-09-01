@@ -8,6 +8,7 @@ import { getCachedPublicProfileData } from "@/lib/supabase/queries";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import { PortfolioGallery } from "@/components/Lightbox";
 import { ViewTracker } from "@/components/ViewTracker";
+import { ServiceViewTracker } from "@/components/ServiceViewTracker";
 import { SocialIcon } from "@/components/socialIcons";
 
 type Props = { params: Promise<{ username: string }> };
@@ -132,6 +133,7 @@ export default async function PublicProfile({ params }: Props) {
 
         {/* Services */}
         {services && services.length > 0 && (
+          <>
           <div className="mt-8">
             <h2 className={`font-bold font-display px-1 mb-4 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
               {msg.profile.services}
@@ -173,6 +175,8 @@ export default async function PublicProfile({ params }: Props) {
               </div>
             )}
           </div>
+          <ServiceViewTracker serviceIds={services.map((s) => s.id)} />
+          </>
         )}
 
         {/* Portfolio */}
@@ -206,7 +210,7 @@ const socialStyles: Record<string, { bg: string; hover: string }> = {
                 {socials.map((s) => {
                   const style = socialStyles[s.platform] || socialStyles.website;
                   return (
-                    <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer"
+                    <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" data-analytics-event="external_link_clicked" data-analytics-label={s.platform}
                       className={`${style.bg} ${style.hover} h-12 rounded-xl text-white font-semibold inline-flex items-center justify-center gap-2 transition-all duration-200 shadow-sm`}>
                       <SocialIcon platform={s.platform} />
                       <span className="capitalize">{s.platform}</span>

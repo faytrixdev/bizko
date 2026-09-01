@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
-import { trackEvent } from "@/lib/analytics";
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
@@ -14,7 +13,7 @@ export async function signup(formData: FormData) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -25,7 +24,6 @@ export async function signup(formData: FormData) {
       console.error("signup error:", error);
       redirect(`/signup?error=${encodeURIComponent("signup_failed")}`);
     }
-    await trackEvent("user_signed_up", { pagePath: "/signup", userId: data?.user?.id });
   } catch (e: unknown) {
     if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
     const digest = (e as { digest?: string })?.digest;

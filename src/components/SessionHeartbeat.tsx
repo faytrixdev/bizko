@@ -19,7 +19,15 @@ export function SessionHeartbeat() {
       if (!session) return;
       if (cancelled) return;
 
-      await supabase.auth.refreshSession();
+      const { error } = await supabase.auth.refreshSession();
+
+      // The refresh token is invalid/revoked (e.g. the auth user was
+      // recreated). Refresh will never succeed, so clear the broken session
+      // instead of retrying forever and spamming 400 errors. The user can
+      // simply sign back in.
+      if (error && !cancelled) {
+        await supabase.auth.signOut();
+      }
     }
 
     // Refresh soon after mount so the token is re-armed right away, then

@@ -32,7 +32,7 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
 
         <div className="flex items-center gap-3 min-w-0">
           {/* Period selector */}
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5 overflow-x-auto max-w-[200px] sm:max-w-none scrollbar-none">
+          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5 overflow-x-auto sm:max-w-none scrollbar-none">
             {PRESETS.map((p) => (
               <button
                 key={p.value}

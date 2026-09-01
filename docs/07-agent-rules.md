@@ -6,7 +6,7 @@ Manuel permanent pour tout agent de développement (humain ou IA) travaillant su
 - Ne jamais inventer de fonctionnalités. Se référer à `01-product.md` et `02-mvp.md`. Si non listé en MUST/SHOULD HAVE, c’est NOT NOW.
 - Ne pas agrandir le MVP sans validation explicite du owner. Toute proposition hors MVP → noter en DÉCISION NÉCESSAIRE, ne pas builder.
 - Prioriser la valeur conversion (WhatsApp) sur l’esthétique. Un profil qui ne génère pas de clic WhatsApp est un échec.
-- Nom produit : Bizko (pas Kardly). Tagline : "Ton business en un lien." Domaine : bizko.me.
+- Nom produit : Bizko (pas Kardly). Tagline : "Ton business en un lien." Domaine : bizko.pro.
 - Pas de PWA/offline au MVP. Online only.
 
 ## Design

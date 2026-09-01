@@ -48,7 +48,7 @@ Objectif : choix esthétique sans complexité.
 
 ### 8. Username / URL unique
 Objectif : identité partageable.
-- `bizko.me/{username}`, unique, 3-30c, a-z0-9_, lowercased, check dispo en temps réel.
+- `bizko.pro/{username}`, unique, 3-30c, a-z0-9_, lowercased, check dispo en temps réel.
 - Réservation à la création.
 
 ### 9. Partage + QR secondaire

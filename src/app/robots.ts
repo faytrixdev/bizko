@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/dashboard", "/onboarding", "/verify-email"],
       },
     ],
-    sitemap: "https://bizko.me/sitemap.xml",
+    sitemap: "https://bizko.pro/sitemap.xml",
   };
 }

@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       images: profile.avatar_url ? [{ url: profile.avatar_url }] : undefined,
-      url: `https://bizko.me/${profile.username}`,
+      url: `https://bizko.pro/${profile.username}`,
       type: "profile",
     },
     twitter: { card: "summary", title, description, images: profile.avatar_url ? [profile.avatar_url] : undefined },
@@ -224,7 +224,7 @@ const socialStyles: Record<string, { bg: string; hover: string }> = {
 
         {/* Footer */}
         <p className="text-center text-xs text-gray-400 mt-12">
-          {msg.profile.madeWith} <Link href="/" className="font-medium text-accent">Bizko</Link> - bizko.me/{profile.username}
+          {msg.profile.madeWith} <Link href="/" className="font-medium text-accent">Bizko</Link> - bizko.pro/{profile.username}
         </p>
       </div>
 

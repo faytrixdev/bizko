@@ -108,7 +108,7 @@ export default async function Home() {
               {msg.landing.heroSubtext}
             </p>
             <p className="text-center text-sm text-gray-400 font-mono mt-1.5">
-              bizko.me/tonnom
+              bizko.pro/tonnom
             </p>
           </SectionReveal>
 
@@ -671,7 +671,7 @@ export default async function Home() {
 
           <SectionReveal delay={300}>
             <p className="text-center text-sm text-gray-400 font-mono mt-10">
-              bizko.me/tonnom
+              bizko.pro/tonnom
             </p>
           </SectionReveal>
         </div>

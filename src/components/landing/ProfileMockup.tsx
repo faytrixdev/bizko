@@ -202,7 +202,7 @@ function RealProfile({
       <p className="text-center text-[10px] text-gray-300 mt-5">
         {t("landing.mockupFooter")}{" "}
         <span className="font-medium text-accent">Bizko</span>{" "}
-        - bizko.me/{name.toLowerCase().replace(/\s/g, "")}
+        - bizko.pro/{name.toLowerCase().replace(/\s/g, "")}
       </p>
     </div>
   );
@@ -293,7 +293,7 @@ function CompactProfile({
       <p className="text-[9px] text-center text-gray-300 mt-4 font-medium">
         {t("landing.mockupFooter")}{" "}
         <span className="font-medium text-accent">Bizko</span>{" "}
-        - bizko.me/{name.toLowerCase().replace(/\s/g, "")}
+        - bizko.pro/{name.toLowerCase().replace(/\s/g, "")}
       </p>
     </div>
   );

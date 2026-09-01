@@ -68,7 +68,7 @@ export default function Onboarding() {
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-sm font-semibold flex items-center gap-2 text-gray-900"><span className="h-6 w-6 rounded-full bg-accent text-white flex items-center justify-center text-xs">1</span> {t("onboarding.step1")}</p>
             <div className="flex items-center gap-2 mt-3">
-              <span className="shrink-0 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg px-3 h-11 inline-flex items-center">bizko.me/</span>
+              <span className="shrink-0 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-lg px-3 h-11 inline-flex items-center">bizko.pro/</span>
               <UsernameField onStatusChange={handleStatusChange} />
             </div>
             <div className="mt-1.5">{usernameMessage}</div>

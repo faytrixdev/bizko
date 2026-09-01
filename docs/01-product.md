@@ -1,7 +1,7 @@
 # 01 - Produit Bizko
 
 ## Concept principal
-Bizko est un outil utilitaire (pas une plateforme au MVP) qui permet à un indépendant service de créer un profil public unique `bizko.me/username` qui convertit.
+Bizko est un outil utilitaire (pas une plateforme au MVP) qui permet à un indépendant service de créer un profil public unique `bizko.pro/username` qui convertit.
 
 Le profil n’est pas une vitrine passive : c’est une landing de conversion WhatsApp.
 
@@ -17,7 +17,7 @@ Un profil = une URL unique, une identité, des services, un portfolio, des liens
 - Le username est unique, 3-30 caractères, a-z 0-9 _ uniquement, non modifiable après création sans support (pour éviter le squat).
 
 ## Profil public
-URL : `bizko.me/{username}` (ex: `bizko.me/aminata_photo`)
+URL : `bizko.pro/{username}` (ex: `bizko.pro/aminata_photo`)
 - SSR ultra-léger, < 1.5s sur 3G, pas de JS lourd.
 - Hiérarchie stricte (identique sur tous les templates) :
   1. Header identité (avatar, nom, métier/tagline, ville)
@@ -70,7 +70,7 @@ Liste ordonnée, max 6 : Instagram, TikTok, LinkedIn, Facebook, X, YouTube, Beha
 
 ## QR Code
 - **Pas affiché sur le profil public.**
-- Dans le dashboard : bouton "Générer mon QR" → affiche QR de `bizko.me/username` (lib qrcode) → Télécharger PNG 800x800 + Partager.
+- Dans le dashboard : bouton "Générer mon QR" → affiche QR de `bizko.pro/username` (lib qrcode) → Télécharger PNG 800x800 + Partager.
 - Pourquoi : répond à l’attente "carte de visite" sans alourdir la page publique. Usage : impression flyer/carte.
 
 ## Partage
@@ -79,7 +79,7 @@ Liste ordonnée, max 6 : Instagram, TikTok, LinkedIn, Facebook, X, YouTube, Beha
 
 ## Username / URL
 - `username` unique, 3-30c, a-z0-9_, lowercased, réservé à la création. Vérification d’unicité en temps réel.
-- URL publique : `bizko.me/{username}` (pas de sous-domaine au MVP).
+- URL publique : `bizko.pro/{username}` (pas de sous-domaine au MVP).
 - Redirection `www` → apex.
 
 ## Personnalisation / Templates

@@ -148,7 +148,7 @@
     "faq2Q": "Est-ce que j'ai besoin d'un site web ?",
     "faq2A": "Non. Bizko remplace ton site web pour la plupart des indépendants. Tu obtiens une page pro complète en quelques minutes, sans aucune compétence technique.",
     "faq3Q": "Puis-je avoir mon propre lien Bizko ?",
-    "faq3A": "Oui. Ton lien sera de la forme bizko.me/tonnom - facile à partager sur Instagram, TikTok, WhatsApp, LinkedIn et partout ailleurs.",
+    "faq3A": "Oui. Ton lien sera de la forme bizko.pro/tonnom - facile à partager sur Instagram, TikTok, WhatsApp, LinkedIn et partout ailleurs.",
     "faq4Q": "Puis-je afficher mes prix ?",
     "faq4A": "Oui. Tu peux ajouter un prix à chaque service. Tes prospects voient exactement ce que tu proposes et combien ça coûte avant de te contacter.",
     "faq5Q": "Comment fonctionne le bouton WhatsApp ?",
@@ -512,7 +512,7 @@
     "terms9Title": "9. Modifications",
     "terms9": "Nous nous reservons le droit de modifier ces conditions a tout moment. Les modifications entrent en vigueur des leur publication. L'utilisation continue du service apres modification constitue l'acceptation des nouvelles conditions.",
     "terms10Title": "10. Contact",
-    "terms10": "Pour toute question concernant ces conditions, contactez-nous a support@bizko.me.",
+    "terms10": "Pour toute question concernant ces conditions, contactez-nous a support@bizko.pro.",
     "privacyTitle": "Politique de confidentialite",
     "privacyIntro": "Chez Bizko, la protection de vos donnees personnelles est une priorite. Cette politique explique quelles donnees nous collectons, comment nous les utilisons et quels sont vos droits.",
     "privacy1Title": "1. Donnees collectees",
@@ -534,6 +534,6 @@
     "privacy9Title": "9. Modifications",
     "privacy9": "Nous nous reservons le droit de modifier cette politique a tout moment. Les modifications sont notifiees par email ou via le service. L'utilisation continue apres modification constitue l'acceptation de la politique mise a jour.",
     "privacy10Title": "10. Contact",
-    "privacy10": "Pour toute question concernant cette politique ou pour exercer vos droits, contactez-nous a support@bizko.me."
+    "privacy10": "Pour toute question concernant cette politique ou pour exercer vos droits, contactez-nous a support@bizko.pro."
   }
 }

@@ -3,7 +3,7 @@
 ## Flow 1 : Landing → Inscription → Onboarding → Première publication
 
 ```
-Landing bizko.me
+Landing bizko.pro
   ↓ [CTA "Créer mon lien gratuit"]
 Inscription (email, password)
   ↓ [Créer compte]
@@ -18,7 +18,7 @@ Onboarding Étape 3/3 : Premier service
   ↓ [Publier]
 Dashboard / Éditeur
   ↓ [Voir mon profil]
-Profil public bizko.me/{username}
+Profil public bizko.pro/{username}
 ```
 
 Points clés : vérification email obligatoire. Username validé avant suite.
@@ -53,7 +53,7 @@ Profil public → bouton flottant [Partager] discret → même actions.
 ## Flow 4 : Visite du profil (prospect non connecté)
 
 ```
-Lien bizko.me/{username} (reçu sur WhatsApp/Insta/QR)
+Lien bizko.pro/{username} (reçu sur WhatsApp/Insta/QR)
   ↓
 Profil public charge (<1.5s)
   ├─ Voir identité + tagline + ville
@@ -73,7 +73,7 @@ Aucune auth requise. Pas de tracking intrusif.
 ```
 Dashboard → [Générer mon QR]
   ↓
-Modal : QR de bizko.me/{username} (qrcode lib)
+Modal : QR de bizko.pro/{username} (qrcode lib)
   ├─ [Télécharger PNG 800x800]
   └─ [Partager image] (si dispo)
 Usage hors app : impression carte/flyer, scan en event → Flow 4
@@ -82,7 +82,7 @@ Usage hors app : impression carte/flyer, scan en event → Flow 4
 ## Flow 6 : Connexion retour + modification
 
 ```
-bizko.me/login → email+password → Dashboard
+bizko.pro/login → email+password → Dashboard
   → Éditer → Prévisualiser → Sauvegarde auto → Profil public à jour
 ```
 

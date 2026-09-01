@@ -218,7 +218,7 @@ export default async function Demo() {
         <p className="text-center text-[11px] text-gray-300 mt-8 font-medium">
           Fait avec{" "}
           <span className="font-medium text-accent">Bizko</span>{" "}
-          - bizko.me/amadoudiallo
+          - bizko.pro/amadoudiallo
         </p>
       </div>
 

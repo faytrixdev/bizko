@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://bizko.me";
+const BASE_URL = "https://bizko.pro";
 const LAST_MODIFIED = new Date("2026-08-28");
 
 export default function sitemap(): MetadataRoute.Sitemap {

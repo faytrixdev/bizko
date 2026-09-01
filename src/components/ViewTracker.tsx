@@ -10,6 +10,8 @@ export function ViewTracker({ profileId }: { profileId: string }) {
     if (tracked.current[profileId]) return;
     tracked.current[profileId] = true;
 
+    console.log("[ViewTracker] tracking profile_viewed for", profileId);
+
     const supabase = createClient();
 
     // Legacy event tracking
@@ -23,11 +25,17 @@ export function ViewTracker({ profileId }: { profileId: string }) {
       );
 
     // Analytics platform tracking
-    void supabase.rpc("track_analytics_event", {
-      p_event_name: "profile_viewed",
-      p_page_path: window.location.pathname,
-      p_metadata: JSON.stringify({ profile_id: profileId }),
-    });
+    void supabase
+      .rpc("track_analytics_event", {
+        p_event_name: "profile_viewed",
+        p_page_path: window.location.pathname,
+        p_metadata: JSON.stringify({ profile_id: profileId }),
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.error("[ViewTracker] profile_viewed failed:", error.message);
+        }
+      });
   }, [profileId]);
 
   return null;

@@ -26,7 +26,7 @@ export function SessionHeartbeat() {
       // instead of retrying forever and spamming 400 errors. The user can
       // simply sign back in.
       if (error && !cancelled) {
-        await supabase.auth.signOut();
+        await supabase.auth.signOut({ scope: "local" });
       }
     }
 

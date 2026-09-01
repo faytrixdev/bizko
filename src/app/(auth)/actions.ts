@@ -195,7 +195,7 @@ export async function deleteAccount(formData: FormData) {
     return { error: "Erreur lors de la suppression du compte." };
   }
 
-  const { error: signOutError } = await supabase.auth.signOut();
+  const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
 
   if (signOutError) {
     return { error: "Erreur lors de la déconnexion." };
@@ -223,7 +223,9 @@ export async function resendConfirmationEmail(email: string) {
 
 export async function logout(): Promise<{ error?: string }> {
   const supabase = await createClient();
-  const { error } = await supabase.auth.signOut();
+  // Local scope: only revoke THIS device's session, not the user's other
+  // logged-in devices. Global scope (the default) signs the user out everywhere.
+  const { error } = await supabase.auth.signOut({ scope: "local" });
   if (error) {
     console.error("logout error:", error);
     return { error: "Erreur lors de la deconnexion." };

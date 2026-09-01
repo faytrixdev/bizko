@@ -56,8 +56,8 @@ export function OverviewCharts() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#9ca3af" }} interval="preserveStartEnd" />
+            <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} width={35} tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(v >= 10000 ? 0 : 1)}k` : String(v)} />
             <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Area type="monotone" dataKey="active_users" name="Actifs" stroke="#111827" fill="url(#gradActive)" strokeWidth={2} />
@@ -78,8 +78,8 @@ export function OverviewCharts() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#9ca3af" }} interval="preserveStartEnd" />
+            <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} width={35} tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(v >= 10000 ? 0 : 1)}k` : String(v)} />
             <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
             <Area type="monotone" dataKey="sessions" name="Sessions" stroke="#6366f1" fill="url(#gradSession)" strokeWidth={2} />
           </AreaChart>
@@ -106,8 +106,8 @@ export function OverviewCharts() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#9ca3af" }} interval="preserveStartEnd" />
+            <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} width={35} tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(v >= 10000 ? 0 : 1)}k` : String(v)} />
             <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Area type="monotone" dataKey="profile_views" name="Profils" stroke="#111827" fill="url(#gradProfile)" strokeWidth={2} />
@@ -129,8 +129,8 @@ export function OverviewCharts() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f9fafb" />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9ca3af" }} />
-            <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#9ca3af" }} interval="preserveStartEnd" />
+            <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} width={35} tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(v >= 10000 ? 0 : 1)}k` : String(v)} />
             <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #f3f4f6", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }} />
             <Area type="monotone" dataKey="signups" name="Inscriptions" stroke="#8b5cf6" fill="url(#gradSignup)" strokeWidth={2} />
           </AreaChart>

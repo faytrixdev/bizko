@@ -72,7 +72,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string>("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [pendingVideo, setPendingVideo] = useState<File | null>(null);
+  const [thumbModalOpen, setThumbModalOpen] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLInputElement>(null);
   const thumbRef = useRef<HTMLInputElement>(null);
@@ -112,19 +112,38 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     const err = validateVideoFile(file);
     if (err) { alert(t("upload." + err)); return; }
     pendingVideoRef.current = file;
-    setPendingVideo(file);
+    setThumbModalOpen(true);
     setMenuOpen(false);
   };
 
-  const onThumbSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const thumbFile = e.target.files?.[0];
-    e.target.value = "";
-    const videoFile = pendingVideoRef.current;
-    pendingVideoRef.current = null;
-    setPendingVideo(null);
-    if (!videoFile || !thumbFile) return;
-    // Validation de la durée déplacée ici (après sélection miniature),
-    // pour ne pas consommer la user activation avant d'ouvrir le file chooser.
+  const extractVideoThumbnail = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.onloadeddata = () => {
+        video.currentTime = Math.min(1, video.duration / 3);
+      };
+      video.onseeked = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { URL.revokeObjectURL(url); reject(new Error("Canvas non supporté")); return; }
+        ctx.drawImage(video, 0, 0);
+        canvas.toBlob((blob) => {
+          URL.revokeObjectURL(url);
+          if (!blob) { reject(new Error("Conversion impossible")); return; }
+          resolve(new File([blob], "thumb.webp", { type: "image/webp" }));
+        }, "image/webp", 0.85);
+      };
+      video.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Lecture vidéo impossible")); };
+      video.src = url;
+    });
+  };
+
+  const startVideoUpload = async (videoFile: File, thumbFile: File) => {
     const duration = await getVideoDuration(videoFile);
     const durationErr = validateVideoDuration(duration);
     if (durationErr) { alert(t("upload." + durationErr)); return; }
@@ -189,21 +208,50 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     }
   };
 
+  const onThumbSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const thumbFile = e.target.files?.[0];
+    e.target.value = "";
+    const videoFile = pendingVideoRef.current;
+    pendingVideoRef.current = null;
+    setThumbModalOpen(false);
+    if (!videoFile || !thumbFile) return;
+    await startVideoUpload(videoFile, thumbFile);
+  };
+
+  const onThumbAuto = async () => {
+    const videoFile = pendingVideoRef.current;
+    pendingVideoRef.current = null;
+    setThumbModalOpen(false);
+    if (!videoFile) return;
+    try {
+      const thumbFile = await extractVideoThumbnail(videoFile);
+      await startVideoUpload(videoFile, thumbFile);
+    } catch (err) {
+      alert(String(err));
+    }
+  };
+
   return (
     <div className="relative inline-block">
-      {pendingVideo ? (
-        <button type="button" onClick={() => thumbRef.current?.click()} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
-          {status || t("upload.chooseThumbnail")}
-        </button>
-      ) : (
-        <button type="button" onClick={() => !uploading && setMenuOpen(!menuOpen)} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
-          {status || (uploading ? "Upload..." : t("upload.addMedia"))}
-        </button>
-      )}
+      <button type="button" onClick={() => !uploading && setMenuOpen(!menuOpen)} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
+        {status || (uploading ? "Upload..." : t("upload.addMedia"))}
+      </button>
       {menuOpen && (
         <div className="absolute left-0 z-10 mt-1 w-40 rounded-lg border border-gray-200 bg-white shadow-sm">
           <button type="button" className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 text-gray-700" onClick={() => { setMenuOpen(false); imageRef.current?.click(); }}>{t("upload.imageType")}</button>
           <button type="button" className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 text-gray-700" onClick={() => { setMenuOpen(false); videoRef.current?.click(); }}>{t("upload.videoType")}</button>
+        </div>
+      )}
+      {thumbModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => { setThumbModalOpen(false); pendingVideoRef.current = null; }}>
+          <div className="bg-white rounded-xl shadow-lg p-6 w-80" onClick={(e) => e.stopPropagation()}>
+            <p className="text-sm font-medium text-gray-900 mb-4">{t("upload.thumbChoice")}</p>
+            <div className="flex flex-col gap-2">
+              <button type="button" onClick={() => { setThumbModalOpen(false); setTimeout(() => thumbRef.current?.click(), 0); }} className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50 text-gray-700">{t("upload.thumbUpload")}</button>
+              <button type="button" onClick={onThumbAuto} className="w-full rounded-lg bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-800">{t("upload.thumbAuto")}</button>
+            </div>
+            <button type="button" onClick={() => { setThumbModalOpen(false); pendingVideoRef.current = null; }} className="mt-3 w-full text-center text-xs text-gray-400 hover:text-gray-600">{t("upload.cancel")}</button>
+          </div>
         </div>
       )}
       <input ref={imageRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) uploadImage(f); }} />

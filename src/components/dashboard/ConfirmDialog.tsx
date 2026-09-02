@@ -53,7 +53,10 @@ export function ConfirmDialog({
           >
             {cancelLabel}
           </button>
-          <form action={action}>
+          <form action={async (formData: FormData) => {
+            await action(formData);
+            onClose();
+          }}>
             {hiddenFields.map((f) => (
               <input key={f.name} type="hidden" name={f.name} value={f.value} />
             ))}

@@ -11,7 +11,7 @@ async function toBlobURL(url: string, mimeType: string): Promise<string> {
 
 let ffmpegPromise: Promise<FFmpeg> | null = null;
 
-async function getFFmpeg(): Promise<FFmpeg> {
+function getFFmpeg(): Promise<FFmpeg> {
   if (!ffmpegPromise) {
     ffmpegPromise = (async () => {
       const ffmpeg = new FFmpeg();
@@ -27,7 +27,10 @@ async function getFFmpeg(): Promise<FFmpeg> {
         ),
       });
       return ffmpeg;
-    })();
+    })().catch((err) => {
+      ffmpegPromise = null;
+      throw err;
+    });
   }
   return ffmpegPromise;
 }
@@ -54,33 +57,36 @@ export async function compressVideo(
       inName,
       new Uint8Array(await file.arrayBuffer()),
     );
-    const exitCode = await ffmpeg.exec([
-      "-i",
-      inName,
-      "-vf",
-      `scale='min(${maxWidth},iw)':-2`,
-      "-c:v",
-      "libx264",
-      "-preset",
-      TRANSCODE_CONFIG.preset,
-      "-b:v",
-      videoBitrate,
-      "-c:a",
-      "aac",
-      "-b:a",
-      TRANSCODE_CONFIG.audioBitrate,
-      "-movflags",
-      "+faststart",
-      outName,
-    ]);
-    if (exitCode !== 0) {
-      throw new Error(`ffmpeg exited with code ${exitCode}`);
+    try {
+      const exitCode = await ffmpeg.exec([
+        "-i",
+        inName,
+        "-vf",
+        `scale='min(${maxWidth},iw)':-2`,
+        "-c:v",
+        "libx264",
+        "-preset",
+        TRANSCODE_CONFIG.preset,
+        "-b:v",
+        videoBitrate,
+        "-c:a",
+        "aac",
+        "-b:a",
+        TRANSCODE_CONFIG.audioBitrate,
+        "-movflags",
+        "+faststart",
+        outName,
+      ]);
+      if (exitCode !== 0) {
+        throw new Error(`ffmpeg exited with code ${exitCode}`);
+      }
+      const raw = (await ffmpeg.readFile(outName)) as Uint8Array;
+      const out = new Uint8Array(raw);
+      return new Blob([out], { type: "video/mp4" });
+    } finally {
+      await ffmpeg.deleteFile(inName);
+      await ffmpeg.deleteFile(outName);
     }
-    const raw = (await ffmpeg.readFile(outName)) as Uint8Array;
-    const out = new Uint8Array(raw);
-    await ffmpeg.deleteFile(inName);
-    await ffmpeg.deleteFile(outName);
-    return new Blob([out], { type: "video/mp4" });
   } catch (err) {
     console.warn("Video compression failed, uploading original:", err);
     return file;

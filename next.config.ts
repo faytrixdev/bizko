@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         hostname: "**.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.bizko.pro",
+      },
     ],
   },
   async headers() {
@@ -37,8 +41,8 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://cdn.jsdelivr.net",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com",
-              "media-src 'self' blob:",
+              "img-src 'self' data: blob: https://*.supabase.co https://media.bizko.pro https://www.google-analytics.com https://www.googletagmanager.com",
+              "media-src 'self' blob: https://media.bizko.pro",
               "worker-src 'self' blob:",
               "font-src 'self' data:",
               "connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.r2.cloudflarestorage.com https://www.google-analytics.com https://www.google.com https://cdn.jsdelivr.net",

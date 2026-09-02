@@ -411,7 +411,10 @@
     "videoUnsupported": "Format video non supporte (mp4 ou webm)",
     "videoTooLarge": "Video trop lourde (max 50 Mo)",
     "videoTooLong": "Video trop longue (max 60 s)",
-    "videoThumbRequired": "Une miniature est requise pour la video"
+    "videoThumbRequired": "Une miniature est requise pour la video",
+    "compressing": "Compression de la video...",
+    "uploading": "Upload vers le stockage...",
+    "videoUploadError": "Erreur lors de l'upload de la video."
   },
   "settings": {
     "myAccount": "Mon compte"

@@ -72,6 +72,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string>("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pendingVideo, setPendingVideo] = useState<File | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLInputElement>(null);
   const thumbRef = useRef<HTMLInputElement>(null);
@@ -110,12 +111,9 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     if (!file) return;
     const err = validateVideoFile(file);
     if (err) { alert(t("upload." + err)); return; }
-    // On stocke le fichier et on ouvre le sélecteur miniature immédiatement,
-    // dans le même tick que le clic utilisateur, pour que le navigateur
-    // autorise l'ouverture du file chooser (user activation).
-    // La validation de la durée est déplacée dans onThumbSelect.
     pendingVideoRef.current = file;
-    thumbRef.current?.click();
+    setPendingVideo(file);
+    setMenuOpen(false);
   };
 
   const onThumbSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,6 +121,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     e.target.value = "";
     const videoFile = pendingVideoRef.current;
     pendingVideoRef.current = null;
+    setPendingVideo(null);
     if (!videoFile || !thumbFile) return;
     // Validation de la durée déplacée ici (après sélection miniature),
     // pour ne pas consommer la user activation avant d'ouvrir le file chooser.
@@ -192,9 +191,15 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
 
   return (
     <div className="relative inline-block">
-      <button type="button" onClick={() => !uploading && setMenuOpen(!menuOpen)} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
-        {status || (uploading ? "Upload..." : t("upload.addMedia"))}
-      </button>
+      {pendingVideo ? (
+        <button type="button" onClick={() => thumbRef.current?.click()} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
+          {status || t("upload.chooseThumbnail")}
+        </button>
+      ) : (
+        <button type="button" onClick={() => !uploading && setMenuOpen(!menuOpen)} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
+          {status || (uploading ? "Upload..." : t("upload.addMedia"))}
+        </button>
+      )}
       {menuOpen && (
         <div className="absolute left-0 z-10 mt-1 w-40 rounded-lg border border-gray-200 bg-white shadow-sm">
           <button type="button" className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 text-gray-700" onClick={() => { setMenuOpen(false); imageRef.current?.click(); }}>{t("upload.imageType")}</button>

@@ -258,24 +258,31 @@ function getVideoDuration(file: File): Promise<number> {
       cleanup();
       resolve(Infinity);
     };
+    // Filet de sécurité : on résout TOUJOURS dans un délai borné, pour ne jamais
+    // laisser l'upload bloqué (par ex. si le seek vers 1e7 ne déclenche ni
+    // "seeked" ni "error"). En cas de timeout, on considère la durée inconnue
+    // (Infinity), ce qui est accepté par validateVideoDuration.
+    const timer = window.setTimeout(unknown, 8000);
+    const safeResolve = (value: number) => {
+      window.clearTimeout(timer);
+      cleanup();
+      resolve(value);
+    };
+
     video.onloadedmetadata = () => {
       if (video.duration === Infinity) {
         // Certains MP4 (fragmentés / optimisés pour le streaming) ne publient pas
         // leur durée dans les métadonnées : video.duration vaut alors Infinity.
         // On cherche vers une position très loin pour forcer le navigateur à
-        // calculer la véritable durée.
+        // calculer la véritable durée. Borne par le timeout ci-dessus.
         video.currentTime = 1e7;
-        video.onseeked = () => {
-          cleanup();
-          resolve(video.duration);
-        };
-        video.onerror = unknown;
+        video.onseeked = () => safeResolve(video.duration);
+        video.onerror = () => safeResolve(Infinity);
       } else {
-        cleanup();
-        resolve(video.duration);
+        safeResolve(video.duration);
       }
     };
-    video.onerror = unknown;
+    video.onerror = () => safeResolve(Infinity);
     video.src = url;
   });
 }

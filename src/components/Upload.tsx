@@ -1,10 +1,12 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
 import { validateVideoFile, validateVideoDuration } from "@/lib/portfolioVideo";
+import { compressVideo } from "@/lib/clientTranscoder";
+import { deleteR2Object } from "@/lib/r2";
 
 export function AvatarUpload({ profileId, currentUrl }: { profileId: string; currentUrl?: string | null }) {
   const { t } = useI18n();
@@ -57,6 +59,7 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
 export function PortfolioUpload({ profileId }: { profileId: string }) {
   const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
+  const [status, setStatus] = useState<string>("");
   const [menuOpen, setMenuOpen] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLInputElement>(null);
@@ -110,28 +113,47 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     pendingVideoRef.current = null;
     if (!videoFile || !thumbFile) return;
     setUploading(true);
-    const pathsToRemove: string[] = [];
+    setStatus(t("upload.compressing"));
+    let r2Key: string | null = null;
+    let thumbPath: string | null = null;
     try {
-      const safeName = videoFile.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9-_]/g, "-");
-      const ts = Date.now();
-      const videoPath = `${profileId}/${ts}-${safeName}${videoFile.name.slice(videoFile.name.lastIndexOf("."))}`;
-      const { error: vErr } = await supabase.storage.from("portfolio").upload(videoPath, videoFile, { contentType: videoFile.type });
-      if (vErr) throw vErr;
-      pathsToRemove.push(videoPath);
-      const { data: vData } = supabase.storage.from("portfolio").getPublicUrl(videoPath);
+      const compressedVideo = await compressVideo(videoFile);
 
+      setStatus(t("upload.uploading"));
+      const signRes = await fetch("/api/r2/sign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ size: compressedVideo.size, name: videoFile.name, contentType: compressedVideo.type || "video/mp4" }),
+      });
+      if (!signRes.ok) {
+        const { error } = await signRes.json();
+        if (error === "size_too_large") { alert(t("upload.videoTooLarge")); return; }
+        if (error === "unauthorized") { redirect("/login"); return; }
+        alert(t("upload.videoUploadError"));
+        return;
+      }
+      const { uploadUrl, publicUrl, key } = await signRes.json();
+      r2Key = key;
+
+      const putRes = await fetch(uploadUrl, { method: "PUT", body: compressedVideo });
+      if (!putRes.ok) throw new Error("R2 PUT failed");
+
+      setStatus(t("upload.uploading"));
       const compressedThumb = await imageCompression(thumbFile, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
-      const thumbPath = `${profileId}/${ts}-thumb.webp`;
+      thumbPath = `${profileId}/${Date.now()}-thumb.webp`;
       const { error: tErr } = await supabase.storage.from("portfolio").upload(thumbPath, compressedThumb, { contentType: "image/webp" });
-      if (tErr) throw tErr;
-      pathsToRemove.push(thumbPath);
+      if (tErr) {
+        if (r2Key) await deleteR2Object(r2Key);
+        throw tErr;
+      }
       const { data: tData } = supabase.storage.from("portfolio").getPublicUrl(thumbPath);
 
       const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
       const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
-      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: vData.publicUrl, media_type: "video", thumbnail_url: tData.publicUrl, position: nextPos });
+      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: publicUrl, media_type: "video", thumbnail_url: tData.publicUrl, position: nextPos });
       if (insertErr) {
-        await supabase.storage.from("portfolio").remove(pathsToRemove);
+        if (thumbPath) await supabase.storage.from("portfolio").remove([thumbPath]);
+        if (r2Key) await deleteR2Object(r2Key);
         throw insertErr;
       }
       router.refresh();
@@ -139,13 +161,14 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       alert(String(err));
     } finally {
       setUploading(false);
+      setStatus("");
     }
   };
 
   return (
     <div className="relative inline-block">
       <button type="button" onClick={() => !uploading && setMenuOpen(!menuOpen)} className="inline-flex h-9 items-center rounded-lg border border-gray-200 px-4 text-sm font-medium cursor-pointer hover:bg-gray-50 text-gray-700 disabled:opacity-50" disabled={uploading}>
-        {uploading ? "Upload..." : t("upload.addMedia")}
+        {status || (uploading ? "Upload..." : t("upload.addMedia"))}
       </button>
       {menuOpen && (
         <div className="absolute left-0 z-10 mt-1 w-40 rounded-lg border border-gray-200 bg-white shadow-sm">

@@ -6,7 +6,18 @@ import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
 import { validateVideoFile, validateVideoDuration } from "@/lib/portfolioVideo";
 import { compressVideo } from "@/lib/clientTranscoder";
-import { deleteR2Object } from "@/lib/r2";
+
+async function deleteR2OnServer(key: string) {
+  try {
+    await fetch("/api/r2/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key }),
+    });
+  } catch {
+    // cleanup is best-effort; ignore failures
+  }
+}
 
 export function AvatarUpload({ profileId, currentUrl }: { profileId: string; currentUrl?: string | null }) {
   const { t } = useI18n();
@@ -142,7 +153,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       try {
         putRes = await fetch(uploadUrl, { method: "PUT", body: compressedVideo });
       } catch {
-        if (r2Key) await deleteR2Object(r2Key);
+        if (r2Key) await deleteR2OnServer(r2Key);
         throw new Error("R2 upload failed");
       }
       if (!putRes.ok) throw new Error("R2 PUT failed");
@@ -151,7 +162,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       thumbPath = `${profileId}/${Date.now()}-thumb.webp`;
       const { error: tErr } = await supabase.storage.from("portfolio").upload(thumbPath, compressedThumb, { contentType: "image/webp" });
       if (tErr) {
-        if (r2Key) await deleteR2Object(r2Key);
+        if (r2Key) await deleteR2OnServer(r2Key);
         throw tErr;
       }
       const { data: tData } = supabase.storage.from("portfolio").getPublicUrl(thumbPath);
@@ -161,7 +172,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: publicUrl, media_type: "video", thumbnail_url: tData.publicUrl, position: nextPos });
       if (insertErr) {
         if (thumbPath) await supabase.storage.from("portfolio").remove([thumbPath]);
-        if (r2Key) await deleteR2Object(r2Key);
+        if (r2Key) await deleteR2OnServer(r2Key);
         throw insertErr;
       }
       router.refresh();

@@ -18,12 +18,16 @@ export const R2_CONFIG = {
   presignExpiresSec: 600,
 };
 
+export function isS3Configured(): boolean {
+  return Boolean(accountId && bucket && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY);
+}
+
 export function isValidR2Config(): boolean {
-  return Boolean(accountId && bucket && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && process.env.R2_PUBLIC_URL);
+  return isS3Configured() && Boolean(process.env.R2_PUBLIC_URL);
 }
 
 export async function createPresignedPut(key: string, contentType: string): Promise<string | null> {
-  if (!isValidR2Config()) return null;
+  if (!isS3Configured()) return null;
   const command = new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType });
   return getSignedUrl(client, command, { expiresIn: R2_CONFIG.presignExpiresSec });
 }
@@ -34,7 +38,7 @@ export function buildPublicUrl(key: string): string {
 }
 
 export async function deleteR2Object(key: string): Promise<void> {
-  if (!isValidR2Config()) return;
+  if (!isS3Configured()) return;
   try {
     await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
   } catch {

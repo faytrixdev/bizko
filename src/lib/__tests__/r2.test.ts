@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { buildPublicUrl, keyFromPublicUrl, R2_CONFIG } from "../r2";
 
-beforeAll(() => {
+beforeEach(() => {
   process.env.R2_PUBLIC_URL = "https://media.bizko.pro";
 });
 
@@ -17,12 +17,14 @@ describe("buildPublicUrl", () => {
 
 describe("keyFromPublicUrl", () => {
   it("extracts key from matching public url", () => {
-    process.env.R2_PUBLIC_URL = "https://media.bizko.pro";
     expect(keyFromPublicUrl("https://media.bizko.pro/portfolio/u/123.mp4")).toBe("portfolio/u/123.mp4");
   });
   it("returns null for non-R2 url", () => {
-    process.env.R2_PUBLIC_URL = "https://media.bizko.pro";
     expect(keyFromPublicUrl("https://supabase.co/other.mp4")).toBeNull();
+  });
+  it("handles base with trailing slash", () => {
+    process.env.R2_PUBLIC_URL = "https://media.bizko.pro/";
+    expect(keyFromPublicUrl("https://media.bizko.pro/portfolio/u/123.mp4")).toBe("portfolio/u/123.mp4");
   });
 });
 

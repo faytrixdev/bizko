@@ -4,6 +4,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
+import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
 
 const MAX_SERVICES = 8;
 const MAX_SOCIALS = 6;
@@ -141,18 +142,22 @@ export async function deletePortfolio(formData: FormData) {
   const { error } = await supabase.from("portfolio_items").delete().eq("id", id).eq("profile_id", user.id);
   if (error) redirect(`/dashboard?error=${dashboardError(error)}`);
 
-  const publicUrl = supabase.storage.from("portfolio").getPublicUrl("").data.publicUrl;
-  const cleanUrl = publicUrl.endsWith("/") ? publicUrl.slice(0, -1) : publicUrl;
+  const supabaseBase = supabase.storage.from("portfolio").getPublicUrl("").data.publicUrl;
+  const cleanSupabaseBase = supabaseBase.endsWith("/") ? supabaseBase.slice(0, -1) : supabaseBase;
+
   for (const url of [item.media_url, item.thumbnail_url]) {
     if (!url) continue;
-    // Best-effort: remove the orphaned storage object. Never block the delete.
+    // Best-effort: remove the orphaned object (R2 or Supabase). Never block the delete.
     try {
-      if (url.startsWith(cleanUrl)) {
-        const path = url.slice(cleanUrl.length + 1);
+      const r2Key = keyFromPublicUrl(url);
+      if (r2Key) {
+        await deleteR2Object(r2Key);
+      } else if (url.startsWith(cleanSupabaseBase)) {
+        const path = url.slice(cleanSupabaseBase.length + 1);
         await supabase.storage.from("portfolio").remove([path]);
       }
     } catch {
-      /* ignore storage cleanup failures */
+      /* ignore cleanup failures */
     }
   }
 

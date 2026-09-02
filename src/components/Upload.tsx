@@ -128,17 +128,25 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       if (!signRes.ok) {
         const { error } = await signRes.json();
         if (error === "size_too_large") { alert(t("upload.videoTooLarge")); return; }
-        if (error === "unauthorized") { redirect("/login"); return; }
+        if (error === "unauthorized") {
+          try { redirect("/login"); } catch { /* NEXT_REDIRECT flows through */ }
+          return;
+        }
         alert(t("upload.videoUploadError"));
         return;
       }
       const { uploadUrl, publicUrl, key } = await signRes.json();
       r2Key = key;
 
-      const putRes = await fetch(uploadUrl, { method: "PUT", body: compressedVideo });
+      let putRes: Response;
+      try {
+        putRes = await fetch(uploadUrl, { method: "PUT", body: compressedVideo });
+      } catch {
+        if (r2Key) await deleteR2Object(r2Key);
+        throw new Error("R2 upload failed");
+      }
       if (!putRes.ok) throw new Error("R2 PUT failed");
 
-      setStatus(t("upload.uploading"));
       const compressedThumb = await imageCompression(thumbFile, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
       thumbPath = `${profileId}/${Date.now()}-thumb.webp`;
       const { error: tErr } = await supabase.storage.from("portfolio").upload(thumbPath, compressedThumb, { contentType: "image/webp" });

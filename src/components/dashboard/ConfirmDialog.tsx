@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -24,12 +24,14 @@ export function ConfirmDialog({
   hiddenFields,
 }: ConfirmDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
     if (open) {
       dialog.showModal();
+      setSubmitting(false);
     } else {
       dialog.close();
     }
@@ -49,22 +51,29 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors"
+            disabled={submitting}
+            className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 border border-gray-200 transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>
           <form action={async (formData: FormData) => {
-            await action(formData);
-            onClose();
+            setSubmitting(true);
+            try {
+              await action(formData);
+            } finally {
+              setSubmitting(false);
+              onClose();
+            }
           }}>
             {hiddenFields.map((f) => (
               <input key={f.name} type="hidden" name={f.name} value={f.value} />
             ))}
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors"
+              disabled={submitting}
+              className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {confirmLabel}
+              {submitting ? "..." : confirmLabel}
             </button>
           </form>
         </div>

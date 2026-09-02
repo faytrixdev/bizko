@@ -308,6 +308,7 @@
     "confirmDeleteTitle": "Confirmer la suppression",
     "confirmDeleteServiceMsg": "Voulez-vous vraiment supprimer ce service ?",
     "confirmDeleteImageMsg": "Voulez-vous vraiment supprimer cette image ?",
+    "confirmDeleteVideoMsg": "Voulez-vous vraiment supprimer cette vidéo ?",
     "confirmDeleteSocialMsg": "Voulez-vous vraiment supprimer ce lien ?"
   },
   "demo": {

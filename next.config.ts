@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://*.supabase.co",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co https://*.googleapis.com",
+              "connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.r2.cloudflarestorage.com",
               "frame-src https://*.supabase.co",
               "base-uri 'self'",
               "form-action 'self'",

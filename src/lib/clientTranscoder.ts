@@ -1,13 +1,6 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 
-const CORE_VERSION = "0.12.10";
-const CORE_BASE = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
-
-async function toBlobURL(url: string, mimeType: string): Promise<string> {
-  const res = await fetch(url);
-  const blob = await res.blob();
-  return URL.createObjectURL(new Blob([blob], { type: mimeType }));
-}
+const CORE_BASE = `/ffmpeg`;
 
 let ffmpegPromise: Promise<FFmpeg> | null = null;
 
@@ -17,14 +10,8 @@ function getFFmpeg(): Promise<FFmpeg> {
       const ffmpeg = new FFmpeg();
       ffmpeg.on("log", ({ message }) => console.debug("[ffmpeg]", message));
       await ffmpeg.load({
-        coreURL: await toBlobURL(
-          `${CORE_BASE}/ffmpeg-core.js`,
-          "text/javascript",
-        ),
-        wasmURL: await toBlobURL(
-          `${CORE_BASE}/ffmpeg-core.wasm`,
-          "application/wasm",
-        ),
+        coreURL: `${CORE_BASE}/ffmpeg-core.js`,
+        wasmURL: `${CORE_BASE}/ffmpeg-core.wasm`,
       });
       return ffmpeg;
     })().catch((err) => {

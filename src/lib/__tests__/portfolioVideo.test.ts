@@ -16,7 +16,7 @@ describe("validateVideoFile", () => {
     expect(err).toBe("videoUnsupported");
   });
 
-  it("rejects files over 50 MB", () => {
+  it("rejects files over the configured size limit", () => {
     const err = validateVideoFile(makeFile("big.mp4", "video/mp4", VIDEO_CONFIG.maxSizeBytes + 1));
     expect(err).toBe("videoTooLarge");
   });
@@ -27,20 +27,20 @@ describe("validateVideoFile", () => {
   });
 
   it("exposes config constants", () => {
-    expect(VIDEO_CONFIG.maxSizeMB).toBe(50);
-    expect(VIDEO_CONFIG.maxSizeBytes).toBe(50 * 1024 * 1024);
-    expect(VIDEO_CONFIG.maxDurationSec).toBe(60);
+    expect(VIDEO_CONFIG.maxSizeMB).toBe(200);
+    expect(VIDEO_CONFIG.maxSizeBytes).toBe(200 * 1024 * 1024);
+    expect(VIDEO_CONFIG.maxDurationSec).toBe(180);
   });
 });
 
 describe("validateVideoDuration", () => {
   it("accepts durations at or under limit", () => {
-    expect(validateVideoDuration(60)).toBeNull();
+    expect(validateVideoDuration(180)).toBeNull();
     expect(validateVideoDuration(1)).toBeNull();
   });
 
   it("rejects durations over limit", () => {
-    const err = validateVideoDuration(61);
+    const err = validateVideoDuration(181);
     expect(err).toBe("videoTooLong");
   });
 

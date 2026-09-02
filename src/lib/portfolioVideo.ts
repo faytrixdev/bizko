@@ -1,7 +1,7 @@
 export const VIDEO_CONFIG = {
-  maxSizeMB: 50,
-  maxSizeBytes: 50 * 1024 * 1024,
-  maxDurationSec: 60,
+  maxSizeMB: 200,
+  maxSizeBytes: 200 * 1024 * 1024,
+  maxDurationSec: 180,
   allowedMimeTypes: ["video/mp4", "video/webm"] as readonly string[],
 };
 

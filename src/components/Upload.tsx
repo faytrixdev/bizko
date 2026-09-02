@@ -104,15 +104,16 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
 
   const pendingVideoRef = useRef<File | null>(null);
 
-  const onVideoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
     const err = validateVideoFile(file);
     if (err) { alert(t("upload." + err)); return; }
-    const duration = await getVideoDuration(file);
-    const durationErr = validateVideoDuration(duration);
-    if (durationErr) { alert(t("upload." + durationErr)); return; }
+    // On stocke le fichier et on ouvre le sélecteur miniature immédiatement,
+    // dans le même tick que le clic utilisateur, pour que le navigateur
+    // autorise l'ouverture du file chooser (user activation).
+    // La validation de la durée est déplacée dans onThumbSelect.
     pendingVideoRef.current = file;
     thumbRef.current?.click();
   };
@@ -123,6 +124,11 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     const videoFile = pendingVideoRef.current;
     pendingVideoRef.current = null;
     if (!videoFile || !thumbFile) return;
+    // Validation de la durée déplacée ici (après sélection miniature),
+    // pour ne pas consommer la user activation avant d'ouvrir le file chooser.
+    const duration = await getVideoDuration(videoFile);
+    const durationErr = validateVideoDuration(duration);
+    if (durationErr) { alert(t("upload." + durationErr)); return; }
     setUploading(true);
     setStatus(t("upload.compressing"));
     let r2Key: string | null = null;

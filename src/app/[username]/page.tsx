@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://bizko.pro/${profile.username}`,
+    },
     openGraph: {
       title,
       description,

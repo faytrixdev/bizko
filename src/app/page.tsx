@@ -9,6 +9,9 @@ export const metadata = {
   title: "Bizko - Ton business en un lien",
   description:
     "Cree ton profil pro en 3 minutes. Services, prix, portfolio et WhatsApp dans un seul lien a partager partout.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default async function Home() {

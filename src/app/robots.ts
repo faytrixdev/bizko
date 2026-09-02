@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard", "/onboarding", "/verify-email"],
+        disallow: ["/dashboard", "/onboarding", "/verify-email", "/admin"],
       },
     ],
     sitemap: "https://bizko.pro/sitemap.xml",

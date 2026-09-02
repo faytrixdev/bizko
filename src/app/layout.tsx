@@ -7,8 +7,10 @@ import { SessionHeartbeat } from "@/components/SessionHeartbeat";
 import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { CookieConsentProvider } from "@/lib/cookies/consent-context";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bizko.pro"),
   title: "Bizko - Ton business en un lien",
   description:
     "Cree ton profil pro en 3 minutes. Partage-le partout. Convertis tes visiteurs en clients WhatsApp.",
@@ -30,6 +32,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </I18nProvider>
         <SessionHeartbeat />
         <AnalyticsTracker />
+        <GoogleAnalytics />
       </body>
     </html>
   );

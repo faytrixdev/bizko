@@ -8,12 +8,20 @@ import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { CookieConsentProvider } from "@/lib/cookies/consent-context";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { PwaProvider } from "@/components/pwa/PwaProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bizko.pro"),
   title: "Bizko - Ton business en un lien",
   description:
     "Cree ton profil pro en 3 minutes. Partage-le partout. Convertis tes visiteurs en clients WhatsApp.",
+  manifest: "/manifest.json",
+  applicationName: "Bizko",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Bizko",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "32x32" },
@@ -34,8 +42,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-white text-gray-900">
         <I18nProvider initialLocale={lang as "fr" | "en"} initialMessages={getMessages(lang as "fr" | "en")}>
           <CookieConsentProvider>
-            {children}
-            <CookieConsentBanner />
+            <PwaProvider>
+              {children}
+              <CookieConsentBanner />
+            </PwaProvider>
           </CookieConsentProvider>
         </I18nProvider>
         <SessionHeartbeat />

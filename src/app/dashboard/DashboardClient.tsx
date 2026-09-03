@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
+import { InstallAppButton } from "@/components/pwa/InstallAppButton";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
 import type { Profile, Service, PortfolioItem, SocialLink } from "@/types/database";
@@ -80,6 +81,7 @@ export function DashboardClient({
             <Logo size="md" />
           </Link>
           <div className="flex items-center gap-1.5 sm:gap-2">
+            <InstallAppButton />
             <LocaleSwitch />
             <div className="w-px h-5 bg-gray-200 mx-0.5 sm:mx-1" />
             <Link href={`/${profile.username}`} target="_blank"

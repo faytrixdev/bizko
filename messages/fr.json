@@ -542,5 +542,8 @@
     "privacy9": "Nous nous reservons le droit de modifier cette politique a tout moment. Les modifications sont notifiees par email ou via le service. L'utilisation continue apres modification constitue l'acceptation de la politique mise a jour.",
     "privacy10Title": "10. Contact",
     "privacy10": "Pour toute question concernant cette politique ou pour exercer vos droits, contactez-nous a support@bizko.pro."
+  },
+  "pwa": {
+    "install": "Installer l'application"
   }
 }

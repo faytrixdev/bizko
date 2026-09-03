@@ -8,6 +8,7 @@ import { DeleteAccountModal } from "@/components/account/DeleteAccountModal";
 import { useI18n } from "@/lib/i18n/provider";
 import { useConsent } from "@/lib/cookies/consent-context";
 import { Logo } from "@/components/Logo";
+import { InstallAppButton } from "@/components/pwa/InstallAppButton";
 import type { Profile } from "@/types/database";
 
 interface AccountClientProps {
@@ -30,6 +31,7 @@ export function AccountClient({ user, profile }: AccountClientProps) {
             <Logo size="md" />
           </Link>
           <div className="flex items-center gap-1.5">
+            <InstallAppButton />
             <Link
               href="/dashboard"
               className="inline-flex items-center justify-center h-8 px-2.5 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200 rounded-lg hover:bg-gray-50"

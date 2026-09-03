@@ -8,7 +8,7 @@
  *  - Never intercept cross-origin requests or /api/* calls so authentication,
  *    cookies and API responses remain untouched.
  */
-const CACHE_VERSION = "bizko-v1";
+const CACHE_VERSION = "bizko-v2";
 const APP_SHELL = ["/", "/manifest.json"];
 
 self.addEventListener("install", (event) => {

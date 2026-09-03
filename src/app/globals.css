@@ -63,6 +63,26 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
 }
 
+/* Subtle glow pulse for CTAs */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+  50% { box-shadow: 0 0 24px 6px rgba(255, 107, 53, 0.18); }
+}
+
+.glow-hover:hover {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Mockup tilt on hover */
+@keyframes mockup-float {
+  0%, 100% { transform: perspective(1200px) rotateY(0deg) rotateX(0deg) translateY(0); }
+  50% { transform: perspective(1200px) rotateY(2deg) rotateX(1deg) translateY(-4px); }
+}
+
+.mockup-float:hover {
+  animation: mockup-float 4s ease-in-out infinite;
+}
+
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;

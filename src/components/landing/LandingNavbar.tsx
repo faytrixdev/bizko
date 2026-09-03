@@ -52,7 +52,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
       >
         <div
           className={cn(
-            "mx-auto mt-2 max-w-6xl px-6 transition-[padding,background,box-shadow,border-color] duration-300 lg:px-12",
+            "mx-auto mt-2 max-w-6xl px-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:px-12",
             isScrolled &&
               "bg-white/60 max-w-4xl rounded-2xl border border-gray-200/60 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] lg:px-5"
           )}

@@ -7,6 +7,8 @@ import {
   canAddVideo,
   videoDurationLimitSec,
   videoSizeLimitBytes,
+  PLAN_COMPARISON,
+  isUnlimited,
 } from "../plans";
 
 describe("getLimits", () => {
@@ -88,5 +90,46 @@ describe("videoSizeLimitBytes", () => {
   it("limits free to 200 MB and pro to 500 MB", () => {
     expect(videoSizeLimitBytes("free")).toBe(200 * 1024 * 1024);
     expect(videoSizeLimitBytes("pro")).toBe(500 * 1024 * 1024);
+  });
+});
+
+describe("PLAN_COMPARISON", () => {
+  it("exposes exactly the 7 differentiating rows in a stable order", () => {
+    expect(PLAN_COMPARISON.map((r) => r.labelKey)).toEqual([
+      "pricing.services",
+      "pricing.socials",
+      "pricing.portfolio",
+      "pricing.videos",
+      "pricing.videoDuration",
+      "pricing.videoSize",
+      "pricing.templates",
+    ]);
+  });
+
+  it("derives capacities from LIMITS (no hardcoded drift)", () => {
+    const by = (key: string) => PLAN_COMPARISON.find((r) => r.labelKey === key)!;
+    expect(by("pricing.services")).toMatchObject({ free: "8", pro: "15" });
+    expect(by("pricing.socials")).toMatchObject({ free: "6", pro: "15" });
+    expect(by("pricing.portfolio")).toMatchObject({ free: "9", pro: "30" });
+    expect(by("pricing.templates")).toMatchObject({ free: "2", pro: "6" });
+  });
+
+  it("marks unlimited videos with the 'unlimited' sentinel", () => {
+    const videos = PLAN_COMPARISON.find((r) => r.labelKey === "pricing.videos")!;
+    expect(videos.free).toBe("3");
+    expect(videos.pro).toBe("unlimited");
+  });
+
+  it("formats video duration and size rows in minutes and MB", () => {
+    const by = (key: string) => PLAN_COMPARISON.find((r) => r.labelKey === key)!;
+    expect(by("pricing.videoDuration")).toMatchObject({ free: "3 min", pro: "5 min" });
+    expect(by("pricing.videoSize")).toMatchObject({ free: "200 MB", pro: "500 MB" });
+  });
+});
+
+describe("isUnlimited", () => {
+  it("flags only the unlimited sentinel", () => {
+    expect(isUnlimited("unlimited")).toBe(true);
+    expect(isUnlimited("3")).toBe(false);
   });
 });

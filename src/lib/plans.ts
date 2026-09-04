@@ -64,3 +64,37 @@ export function videoDurationLimitSec(plan: Plan): number {
 export function videoSizeLimitBytes(plan: Plan): number {
   return plan === "pro" ? 500 * 1024 * 1024 : 200 * 1024 * 1024;
 }
+
+export interface ComparisonRow {
+  /** i18n key for the row label, e.g. "pricing.services" */
+  labelKey: string;
+  /** Display value for the Free column. The literal "unlimited" is a sentinel the UI translates via the "pricing.unlimited" i18n key. */
+  free: string;
+  /** Display value for the Pro column (same sentinel rules as `free`). */
+  pro: string;
+}
+
+const MIB = 1024 * 1024;
+
+function capacityLabel(count: number): string {
+  return Number.isFinite(count) ? String(count) : "unlimited";
+}
+
+/**
+ * The 7 differentiating rows between Free and Pro, derived from LIMITS and the
+ * video constants so the pricing page can never drift from the real limits.
+ */
+export const PLAN_COMPARISON: ComparisonRow[] = [
+  { labelKey: "pricing.services", free: String(getLimits("free").services), pro: String(getLimits("pro").services) },
+  { labelKey: "pricing.socials", free: String(getLimits("free").socials), pro: String(getLimits("pro").socials) },
+  { labelKey: "pricing.portfolio", free: String(getLimits("free").portfolioItems), pro: String(getLimits("pro").portfolioItems) },
+  { labelKey: "pricing.videos", free: String(getLimits("free").videos), pro: capacityLabel(getLimits("pro").videos) },
+  { labelKey: "pricing.videoDuration", free: `${videoDurationLimitSec("free") / 60} min`, pro: `${videoDurationLimitSec("pro") / 60} min` },
+  { labelKey: "pricing.videoSize", free: `${videoSizeLimitBytes("free") / MIB} MB`, pro: `${videoSizeLimitBytes("pro") / MIB} MB` },
+  { labelKey: "pricing.templates", free: String(getLimits("free").templates), pro: String(getLimits("pro").templates) },
+];
+
+/** True when a comparison cell is the "unlimited" sentinel. */
+export function isUnlimited(value: string): boolean {
+  return value === "unlimited";
+}

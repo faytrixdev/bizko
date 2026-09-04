@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/provider";
@@ -21,9 +21,9 @@ interface SubscriptionClientProps {
   retryHref: string;
 }
 
-function formatDate(iso: string | null | undefined): string {
+function formatDate(iso: string | null | undefined, locale: string): string {
   if (!iso) return "";
-  return new Date(iso).toLocaleDateString("fr-FR", {
+  return new Date(iso).toLocaleDateString(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -51,12 +51,21 @@ export function SubscriptionClient({
   error,
   retryHref,
 }: SubscriptionClientProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const searchParams = useSearchParams();
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   const errorCode = searchParams.get("error");
   const successCode = searchParams.get("success");
+
+  useEffect(() => {
+    if (!showCancelModal) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowCancelModal(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showCancelModal]);
 
   let errorMsg: string | null = null;
   if (errorCode === "unavailable") errorMsg = t("subscription.errorUnavailable");
@@ -80,12 +89,12 @@ export function SubscriptionClient({
     membership?.formatted_renewal_price ??
     (planInfo?.period === "yearly" ? "20 000 FCFA" : "2 500 FCFA");
 
-  const endDate = formatDate(membership?.current_period_end);
+  const endDate = formatDate(membership?.current_period_end, locale);
   const cancelDateBody = t("subscription.cancelBody").replace("{date}", endDate);
 
   function formatAmount(p: WhopPayment): string {
     if (p.total != null) {
-      return new Intl.NumberFormat("fr-FR").format(p.total) + " " + (p.currency ?? "FCFA");
+      return new Intl.NumberFormat(locale).format(p.total) + " " + (p.currency ?? "FCFA");
     }
     return "—";
   }
@@ -185,16 +194,7 @@ export function SubscriptionClient({
                 </form>
               )}
 
-              {display === "canceled" && (
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
-                >
-                  {t("subscription.subscribeBtn")}
-                </Link>
-              )}
-
-              {display === "past_due" && (
+              {(display === "canceled" || display === "past_due") && (
                 <Link
                   href="/dashboard"
                   className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
@@ -244,7 +244,7 @@ export function SubscriptionClient({
                       <td className="py-2.5 text-gray-900 font-medium">{formatAmount(p)}</td>
                       <td className="py-2.5 text-gray-500">
                         {p.paid_at
-                          ? new Date(p.paid_at).toLocaleDateString("fr-FR", {
+                          ? new Date(p.paid_at).toLocaleDateString(locale, {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -280,9 +280,18 @@ export function SubscriptionClient({
 
       {/* Cancel confirmation modal */}
       {showCancelModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full mx-4 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setShowCancelModal(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="subscription-cancel-title"
+            className="bg-white rounded-2xl shadow-xl max-w-sm w-full mx-4 p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 id="subscription-cancel-title" className="text-lg font-bold text-gray-900 mb-2">
               {t("subscription.cancelTitle")}
             </h3>
             <p className="text-sm text-gray-600 mb-6">{cancelDateBody}</p>

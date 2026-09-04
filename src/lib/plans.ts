@@ -68,7 +68,7 @@ export function videoSizeLimitBytes(plan: Plan): number {
 export interface ComparisonRow {
   /** i18n key for the row label, e.g. "pricing.services" */
   labelKey: string;
-  /** Display value for the Free column. The literal "unlimited" is a sentinel the UI translates via the "pricing.unlimited" i18n key. */
+  /** Display value for the Free column. `UNLIMITED_SENTINEL` is a sentinel the UI translates via the "pricing.unlimited" i18n key. */
   free: string;
   /** Display value for the Pro column (same sentinel rules as `free`). */
   pro: string;
@@ -76,8 +76,11 @@ export interface ComparisonRow {
 
 const MIB = 1024 * 1024;
 
+/** Sentinel used in `PLAN_COMPARISON` cells; the UI translates it via the "pricing.unlimited" i18n key. */
+export const UNLIMITED_SENTINEL = "unlimited";
+
 function capacityLabel(count: number): string {
-  return Number.isFinite(count) ? String(count) : "unlimited";
+  return Number.isFinite(count) ? String(count) : UNLIMITED_SENTINEL;
 }
 
 /**
@@ -96,5 +99,5 @@ export const PLAN_COMPARISON: ComparisonRow[] = [
 
 /** True when a comparison cell is the "unlimited" sentinel. */
 export function isUnlimited(value: string): boolean {
-  return value === "unlimited";
+  return value === UNLIMITED_SENTINEL;
 }

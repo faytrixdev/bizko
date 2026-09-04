@@ -287,8 +287,11 @@ describe("listMembershipPayments", () => {
 
     const res = await listMembershipPayments("mber_123");
 
+    const calledUrl = String(mock.mock.calls[0][0]);
+    expect(calledUrl).toContain("/payments");
+    expect(calledUrl).toContain("query=mber_123");
     expect(mock).toHaveBeenCalledWith(
-      expect.stringContaining("query=mber_123") && expect.stringContaining("/payments"),
+      expect.stringContaining("/payments"),
       expect.objectContaining({ method: "GET" })
     );
     expect(res).toHaveLength(1);

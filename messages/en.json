@@ -587,6 +587,7 @@
     "card": "Card •••• {last4}",
     "errorUnavailable": "We couldn't load your subscription. Please try again.",
     "errorGeneric": "An error occurred. Please try again.",
+    "retry": "Try again",
     "successCanceled": "Your subscription will be canceled at the end of the period.",
     "successReactivated": "Your subscription has been reactivated.",
     "manage": "Manage subscription"

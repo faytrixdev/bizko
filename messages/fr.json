@@ -587,6 +587,7 @@
     "card": "Carte •••• {last4}",
     "errorUnavailable": "Nous n'arrivons pas à charger ton abonnement. Réessaie.",
     "errorGeneric": "Une erreur est survenue. Réessaie.",
+    "retry": "Réessayer",
     "successCanceled": "Ton abonnement sera annulé à la fin de la période.",
     "successReactivated": "Ton abonnement a été réactivé.",
     "manage": "Gérer l'abonnement"

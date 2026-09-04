@@ -105,7 +105,7 @@ export function SubscriptionClient({
             {errorMsg}
             {error === "unavailable" && (
               <Link href={retryHref} className="ml-2 underline font-medium">
-                Réessayer
+                {t("subscription.retry")}
               </Link>
             )}
           </p>

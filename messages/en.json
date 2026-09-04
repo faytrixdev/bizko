@@ -1,6 +1,7 @@
 {
   "common": {
-    "choose": "Choose..."
+    "choose": "Choose...",
+    "cancel": "Cancel"
   },
   "landing": {
     "title": "Your business",

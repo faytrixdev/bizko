@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bizko.pro"),
   title: "Bizko - Ton business en un lien",
   description:
-    "Cree ton profil pro en 3 minutes. Partage-le partout. Convertis tes visiteurs en clients WhatsApp.",
+    "Crée ton profil pro en 3 minutes. Partage-le partout. Convertis tes visiteurs en clients WhatsApp.",
   manifest: "/manifest.json",
   applicationName: "Bizko",
   appleWebApp: {

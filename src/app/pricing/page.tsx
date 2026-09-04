@@ -6,7 +6,7 @@ import { PricingClient, type PricingCtaState } from "./PricingClient";
 export const metadata = {
   title: "Bizko - Tarifs",
   description:
-    "Compare Bizko Free et Bizko Pro. Services, reseaux, portfolio, videos et templates - choisis le plan qui te fait grandir.",
+    "Compare Bizko Free et Bizko Pro. Services, réseaux, portfolio, vidéos et templates - choisis le plan qui te fait grandir.",
   alternates: {
     canonical: "/pricing",
   },

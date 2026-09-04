@@ -8,7 +8,7 @@ import { FaqItem } from "@/components/landing/FaqItem";
 export const metadata = {
   title: "Bizko - Ton business en un lien",
   description:
-    "Cree ton profil pro en 3 minutes. Services, prix, portfolio et WhatsApp dans un seul lien a partager partout.",
+    "Crée ton profil pro en 3 minutes. Services, prix, portfolio et WhatsApp dans un seul lien à partager partout.",
   alternates: {
     canonical: "/",
   },

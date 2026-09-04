@@ -9,7 +9,6 @@ import { InstallAppButton } from "@/components/pwa/InstallAppButton";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
-import { startSubscription } from "./actions";
 import type { Profile, Service, PortfolioItem, SocialLink } from "@/types/database";
 import type { DailyEvent, ClickBucket } from "@/types/analytics";
 
@@ -141,25 +140,13 @@ export function DashboardClient({
                 <p className="text-sm font-semibold text-violet-900">{t("dashboard.upgradeTitle")}</p>
                 <p className="text-xs text-violet-700 mt-0.5">{t("dashboard.upgradeSubtitle")}</p>
               </div>
-              <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
-                <form action={startSubscription} className="w-full sm:w-auto">
-                  <input type="hidden" name="interval" value="yearly" />
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200 whitespace-nowrap"
-                  >
-                    {t("dashboard.upgradeYearly")}
-                  </button>
-                </form>
-                <form action={startSubscription} className="w-full sm:w-auto">
-                  <input type="hidden" name="interval" value="monthly" />
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-5 rounded-xl bg-white text-violet-700 border border-violet-300 text-sm font-semibold hover:bg-violet-100 transition-colors duration-200 whitespace-nowrap"
-                  >
-                    {t("dashboard.upgradeMonthly")}
-                  </button>
-                </form>
+              <div className="w-full sm:w-auto">
+                <Link
+                  href="/pricing"
+                  className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200 whitespace-nowrap"
+                >
+                  {t("dashboard.upgradeCta")}
+                </Link>
               </div>
             </div>
           </div>

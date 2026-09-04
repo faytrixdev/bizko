@@ -301,11 +301,12 @@ describe("listMembershipPayments", () => {
 
 describe("derivePlanInfo", () => {
   it("resolves period and label from a plan id", () => {
-    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
     process.env.WHOP_PLAN_ID_PRO_YEARLY = "plan_yearly";
     expect(derivePlanInfo("plan_yearly")).toEqual({ period: "yearly" });
     expect(derivePlanInfo("plan_monthly")).toEqual({ period: "monthly" });
     expect(derivePlanInfo("plan_unknown")).toEqual({ period: "monthly" }); // safe default
+    expect(derivePlanInfo(undefined)).toEqual({ period: "monthly" });
+    expect(derivePlanInfo(null)).toEqual({ period: "monthly" });
   });
 
   it("maps status to a display variant", () => {

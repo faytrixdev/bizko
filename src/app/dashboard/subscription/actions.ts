@@ -22,14 +22,15 @@ export async function cancelSubscriptionAction() {
   const membershipId = await resolveMembershipId(supabase);
   if (!membershipId) redirect("/dashboard/subscription?error=generic");
 
+  let failed = false;
   try {
     await cancelMembership(membershipId, "at_period_end");
   } catch (err) {
     console.error("[subscription] cancel failed:", err);
-    redirect("/dashboard/subscription?error=generic");
+    failed = true;
   }
   revalidatePath("/dashboard/subscription");
-  redirect("/dashboard/subscription?success=canceled");
+  redirect(failed ? "/dashboard/subscription?error=generic" : "/dashboard/subscription?success=canceled");
 }
 
 export async function reactivateSubscriptionAction() {
@@ -37,12 +38,13 @@ export async function reactivateSubscriptionAction() {
   const membershipId = await resolveMembershipId(supabase);
   if (!membershipId) redirect("/dashboard/subscription?error=generic");
 
+  let failed = false;
   try {
     await uncancelMembership(membershipId);
   } catch (err) {
     console.error("[subscription] reactivate failed:", err);
-    redirect("/dashboard/subscription?error=generic");
+    failed = true;
   }
   revalidatePath("/dashboard/subscription");
-  redirect("/dashboard/subscription?success=reactivated");
+  redirect(failed ? "/dashboard/subscription?error=generic" : "/dashboard/subscription?success=reactivated");
 }

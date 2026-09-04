@@ -85,13 +85,13 @@ function capacityLabel(count: number): string {
  * video constants so the pricing page can never drift from the real limits.
  */
 export const PLAN_COMPARISON: ComparisonRow[] = [
-  { labelKey: "pricing.services", free: String(getLimits("free").services), pro: String(getLimits("pro").services) },
-  { labelKey: "pricing.socials", free: String(getLimits("free").socials), pro: String(getLimits("pro").socials) },
-  { labelKey: "pricing.portfolio", free: String(getLimits("free").portfolioItems), pro: String(getLimits("pro").portfolioItems) },
-  { labelKey: "pricing.videos", free: String(getLimits("free").videos), pro: capacityLabel(getLimits("pro").videos) },
-  { labelKey: "pricing.videoDuration", free: `${videoDurationLimitSec("free") / 60} min`, pro: `${videoDurationLimitSec("pro") / 60} min` },
-  { labelKey: "pricing.videoSize", free: `${videoSizeLimitBytes("free") / MIB} MB`, pro: `${videoSizeLimitBytes("pro") / MIB} MB` },
-  { labelKey: "pricing.templates", free: String(getLimits("free").templates), pro: String(getLimits("pro").templates) },
+  { labelKey: "pricing.rowServices", free: String(getLimits("free").services), pro: String(getLimits("pro").services) },
+  { labelKey: "pricing.rowSocials", free: String(getLimits("free").socials), pro: String(getLimits("pro").socials) },
+  { labelKey: "pricing.rowPortfolio", free: String(getLimits("free").portfolioItems), pro: String(getLimits("pro").portfolioItems) },
+  { labelKey: "pricing.rowVideos", free: String(getLimits("free").videos), pro: capacityLabel(getLimits("pro").videos) },
+  { labelKey: "pricing.rowVideoDuration", free: `${videoDurationLimitSec("free") / 60} min`, pro: `${videoDurationLimitSec("pro") / 60} min` },
+  { labelKey: "pricing.rowVideoSize", free: `${videoSizeLimitBytes("free") / MIB} MB`, pro: `${videoSizeLimitBytes("pro") / MIB} MB` },
+  { labelKey: "pricing.rowTemplates", free: String(getLimits("free").templates), pro: String(getLimits("pro").templates) },
 ];
 
 /** True when a comparison cell is the "unlimited" sentinel. */

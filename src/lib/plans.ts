@@ -1,5 +1,13 @@
 export type Plan = "free" | "pro";
 
+export type BillingInterval = "monthly" | "yearly";
+
+export const BILLING_INTERVALS: BillingInterval[] = ["monthly", "yearly"];
+
+export function isBillingInterval(value: string | null | undefined): value is BillingInterval {
+  return value === "monthly" || value === "yearly";
+}
+
 export interface PlanLimits {
   services: number;
   socials: number;

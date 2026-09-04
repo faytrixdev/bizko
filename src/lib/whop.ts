@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import type { BillingInterval } from "./plans";
 
 type Headers = Record<string, string | string[] | undefined>;
 
@@ -56,6 +57,19 @@ export function verifyWebhook(headers: Headers, rawBody: string, secret: string)
 
 const BASE_URL = process.env.WHOP_BASE_URL ?? "https://api.whop.com/api/v1";
 
+/**
+ * Resolves the Whop plan id for the requested Pro billing interval.
+ * `yearly` falls back to the (mandatory) monthly plan id when the yearly
+ * plan is not configured, keeping checkout functional even if only
+ * WHOP_PLAN_ID_PRO is set.
+ */
+export function resolveProPlanId(interval: BillingInterval): string | undefined {
+  if (interval === "yearly" && process.env.WHOP_PLAN_ID_PRO_YEARLY) {
+    return process.env.WHOP_PLAN_ID_PRO_YEARLY;
+  }
+  return process.env.WHOP_PLAN_ID_PRO;
+}
+
 export class WhopApiError extends Error {
   constructor(message: string, readonly status: number) {
     super(message);
@@ -67,9 +81,12 @@ export class WhopApiError extends Error {
  * with our profile_id so the payment/membership webhooks can be mapped back.
  * Returns the shareable checkout session id.
  */
-export async function createCheckoutConfig(profileId: string): Promise<{ sessionId: string; purchaseUrl: string }> {
+export async function createCheckoutConfig(
+  profileId: string,
+  interval: BillingInterval = "monthly"
+): Promise<{ sessionId: string; purchaseUrl: string }> {
   const apiKey = process.env.WHOP_API_KEY;
-  const planId = process.env.WHOP_PLAN_ID_PRO;
+  const planId = resolveProPlanId(interval);
   if (!apiKey || !planId) throw new WhopApiError("Whop not configured", 500);
 
   const res = await fetch(`${BASE_URL}/checkout_configurations`, {

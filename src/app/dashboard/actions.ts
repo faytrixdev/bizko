@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
-import { getLimits } from "@/lib/plans";
+import { getLimits, isBillingInterval } from "@/lib/plans";
 import { createCheckoutConfig } from "@/lib/whop";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -206,7 +206,7 @@ export async function reorderPortfolio(orderedIds: string[]) {
   updateTag(PUBLIC_PROFILES_TAG);
 }
 
-export async function startSubscription() {
+export async function startSubscription(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -214,8 +214,11 @@ export async function startSubscription() {
   const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
   if (isPro) redirect("/dashboard?success=already_pro");
 
+  const interval = (formData.get("interval") as string) ?? "monthly";
+  if (!isBillingInterval(interval)) redirect("/dashboard?error=checkout_failed");
+
   try {
-    const { purchaseUrl } = await createCheckoutConfig(user.id);
+    const { purchaseUrl } = await createCheckoutConfig(user.id, interval);
     redirect(purchaseUrl);
   } catch (err) {
     console.error("[startSubscription]", err);

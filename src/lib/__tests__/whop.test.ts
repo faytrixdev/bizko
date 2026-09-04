@@ -1,6 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect } from "vitest";
 import { createHmac } from "crypto";
-import { verifyWebhook } from "../whop";
+import { resolveProPlanId, verifyWebhook } from "../whop";
+
+const ENV_BACKUP = { ...process.env };
+
+afterEach(() => {
+  process.env.WHOP_PLAN_ID_PRO = ENV_BACKUP.WHOP_PLAN_ID_PRO;
+  process.env.WHOP_PLAN_ID_PRO_YEARLY = ENV_BACKUP.WHOP_PLAN_ID_PRO_YEARLY;
+});
 
 const SECRET = "ws_0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
@@ -50,5 +57,31 @@ describe("verifyWebhook", () => {
   it("rejects when required headers are missing", () => {
     const body = JSON.stringify({ type: "x" });
     expect(() => verifyWebhook({}, body, SECRET)).toThrow();
+  });
+});
+
+describe("resolveProPlanId", () => {
+  it("returns the monthly plan id by default", () => {
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
+    expect(resolveProPlanId("monthly")).toBe("plan_monthly");
+  });
+
+  it("returns the yearly plan id when requested and configured", () => {
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    process.env.WHOP_PLAN_ID_PRO_YEARLY = "plan_yearly";
+    expect(resolveProPlanId("yearly")).toBe("plan_yearly");
+  });
+
+  it("falls back to the monthly plan id when yearly is not configured", () => {
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
+    expect(resolveProPlanId("yearly")).toBe("plan_monthly");
+  });
+
+  it("returns undefined when no plan id is configured", () => {
+    delete process.env.WHOP_PLAN_ID_PRO;
+    delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
+    expect(resolveProPlanId("monthly")).toBeUndefined();
   });
 });

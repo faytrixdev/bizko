@@ -129,14 +129,26 @@ export function DashboardClient({
               <p className="text-sm font-semibold text-violet-900">{t("dashboard.upgradeTitle")}</p>
               <p className="text-xs text-violet-700 mt-0.5">{t("dashboard.upgradeSubtitle")}</p>
             </div>
-            <form action={startSubscription}>
-              <button
-                type="submit"
-                className="shrink-0 inline-flex items-center justify-center h-9 px-4 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200"
-              >
-                {t("dashboard.upgradeCta")}
-              </button>
-            </form>
+            <div className="flex items-center gap-2">
+              <form action={startSubscription}>
+                <input type="hidden" name="interval" value="yearly" />
+                <button
+                  type="submit"
+                  className="shrink-0 inline-flex items-center justify-center h-9 px-4 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200"
+                >
+                  {t("dashboard.upgradeYearly")}
+                </button>
+              </form>
+              <form action={startSubscription}>
+                <input type="hidden" name="interval" value="monthly" />
+                <button
+                  type="submit"
+                  className="shrink-0 inline-flex items-center justify-center h-9 px-4 rounded-xl bg-white text-violet-700 border border-violet-300 text-sm font-semibold hover:bg-violet-100 transition-colors duration-200"
+                >
+                  {t("dashboard.upgradeMonthly")}
+                </button>
+              </form>
+            </div>
           </div>
         )}
 

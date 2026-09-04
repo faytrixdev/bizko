@@ -80,14 +80,20 @@ export class WhopApiError extends Error {
  * Creates a Whop checkout configuration for the Pro plan, tagging the link
  * with our profile_id so the payment/membership webhooks can be mapped back.
  * Returns the shareable checkout session id.
+ *
+ * `redirectUrl` (where Whop sends the buyer after checkout) falls back to
+ * WHOP_CHECKOUT_REDIRECT_URL, then to /dashboard?success=pro.
  */
 export async function createCheckoutConfig(
   profileId: string,
-  interval: BillingInterval = "monthly"
+  interval: BillingInterval = "monthly",
+  redirectUrl?: string
 ): Promise<{ sessionId: string; purchaseUrl: string }> {
   const apiKey = process.env.WHOP_API_KEY;
   const planId = resolveProPlanId(interval);
   if (!apiKey || !planId) throw new WhopApiError("Whop not configured", 500);
+
+  const redirect = redirectUrl ?? process.env.WHOP_CHECKOUT_REDIRECT_URL ?? "/dashboard?success=pro";
 
   const res = await fetch(`${BASE_URL}/checkout_configurations`, {
     method: "POST",
@@ -95,6 +101,7 @@ export async function createCheckoutConfig(
     body: JSON.stringify({
       plan_id: planId,
       metadata: { profile_id: profileId },
+      redirect_url: redirect,
     }),
   });
 

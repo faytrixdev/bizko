@@ -44,10 +44,10 @@
 - `src/lib/__tests__/whop.test.ts` — verifyWebhook (signature valide/invalide/replay) + `resolveProPlanId` (mensuel/annuel/fallback) (9 tests)
 - TDD : chaque test d'abord, puis implémentation.
 
-> **Statut (4 sept. 2026)** : implémentation terminée. Bannière Pro avec choix Mensuel (2 500 FCFA) / Annuel (20 000 FCFA). 8 fichiers de tests / 57 tests passent. Lint propre sur les fichiers modifiés (4 erreurs lint préexistantes hors périmètre : ffmpeg-core.js, ConfirmDialog.tsx, consent-context.tsx). `tsc --noEmit` OK hors erreur préexistante `LayoutProps` dans layout.tsx. Backstop R2 (objet unique) remonté à 500 MB pour ne pas borner le plan Pro.
+> **Statut (4 sept. 2026)** : implémentation terminée. Bannière Pro avec choix Mensuel (2 500 FCFA) / Annuel (20 000 FCFA). Redirection checkout via `redirect_url` (`WHOP_CHECKOUT_REDIRECT_URL`, défaut `/dashboard?success=pro`). 8 fichiers de tests / 61 tests passent. Lint propre sur les fichiers modifiés (4 erreurs lint préexistantes hors périmètre : ffmpeg-core.js, ConfirmDialog.tsx, consent-context.tsx). `tsc --noEmit` OK hors erreur préexistante `LayoutProps` dans layout.tsx. Backstop R2 (objet unique) remonté à 500 MB pour ne pas borner le plan Pro.
 
 ## Notes sandbox
-- Config : sandbox-api.whop.com, sandbox.whop.com, clés dans `.env.local` (`WHOP_BASE_URL`, `WHOP_API_KEY`, `WHOP_WEBHOOK_SECRET`, `WHOP_PLAN_ID_PRO`, `WHOP_PLAN_ID_PRO_YEARLY`)
+- Config : sandbox-api.whop.com, sandbox.whop.com, clés dans `.env.local` (`WHOP_BASE_URL`, `WHOP_API_KEY`, `WHOP_WEBHOOK_SECRET`, `WHOP_PLAN_ID_PRO`, `WHOP_PLAN_ID_PRO_YEARLY`, `WHOP_CHECKOUT_REDIRECT_URL`)
 - Webhook testé via Ngrok → URL publique → POST `/api/webhooks/whop`
 - Cartes de test Whop sandbox.
 - **Pas encore fait** : création des clés/sandbox par l'utilisateur, soumission de la migration, application du vrai plan Pro sur Whop.

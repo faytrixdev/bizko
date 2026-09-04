@@ -1,12 +1,15 @@
-import { afterEach, describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook } from "../whop";
+import { resolveProPlanId, verifyWebhook, createCheckoutConfig } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
 afterEach(() => {
   process.env.WHOP_PLAN_ID_PRO = ENV_BACKUP.WHOP_PLAN_ID_PRO;
   process.env.WHOP_PLAN_ID_PRO_YEARLY = ENV_BACKUP.WHOP_PLAN_ID_PRO_YEARLY;
+  process.env.WHOP_CHECKOUT_REDIRECT_URL = ENV_BACKUP.WHOP_CHECKOUT_REDIRECT_URL;
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 const SECRET = "ws_0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -83,5 +86,64 @@ describe("resolveProPlanId", () => {
     delete process.env.WHOP_PLAN_ID_PRO;
     delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
     expect(resolveProPlanId("monthly")).toBeUndefined();
+  });
+});
+
+describe("createCheckoutConfig", () => {
+  function mockCheckoutResponse() {
+    const mock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ id: "ch_test", purchase_url: "https://sandbox.whop.com/checkout/ch_test" }),
+    }));
+    globalThis.fetch = mock as unknown as typeof fetch;
+    return mock;
+  }
+
+  it("sends redirect_url defaulting to /dashboard?success=pro", async () => {
+    const fetchMock = mockCheckoutResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
+    delete process.env.WHOP_CHECKOUT_REDIRECT_URL;
+
+    await createCheckoutConfig("profile_1", "monthly");
+
+    const [, init] = fetchMock.mock.calls[0];
+    const body = JSON.parse(init.body);
+    expect(body.plan_id).toBe("plan_monthly");
+    expect(body.metadata).toEqual({ profile_id: "profile_1" });
+    expect(body.redirect_url).toBe("/dashboard?success=pro");
+  });
+
+  it("uses WHOP_CHECKOUT_REDIRECT_URL when set", async () => {
+    const fetchMock = mockCheckoutResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    process.env.WHOP_CHECKOUT_REDIRECT_URL = "https://bizko.pro/done";
+
+    await createCheckoutConfig("profile_2", "monthly");
+
+    const [, init] = fetchMock.mock.calls[0];
+    const body = JSON.parse(init.body);
+    expect(body.redirect_url).toBe("https://bizko.pro/done");
+  });
+
+  it("allows an explicit redirectUrl override", async () => {
+    const fetchMock = mockCheckoutResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+
+    await createCheckoutConfig("profile_3", "monthly", "https://example.com/thanks");
+
+    const [, init] = fetchMock.mock.calls[0];
+    const body = JSON.parse(init.body);
+    expect(body.redirect_url).toBe("https://example.com/thanks");
+  });
+
+  it("throws WhopApiError when Whop is not configured", async () => {
+    process.env.WHOP_API_KEY = "";
+    process.env.WHOP_PLAN_ID_PRO = "";
+    await expect(createCheckoutConfig("profile_1", "monthly")).rejects.toThrow();
   });
 });

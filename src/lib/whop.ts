@@ -124,6 +124,7 @@ export interface WhopMembership {
   cancel_at_period_end?: boolean;
   current_period_end?: string | null;
   formatted_renewal_price?: string | null;
+  manage_url?: string | null;
 }
 
 async function whopGet<T>(path: string): Promise<T> {
@@ -146,6 +147,7 @@ interface WhopMembershipRaw {
   current_period_end?: string | null;
   renewal_period_end?: string | null;
   formatted_renewal_price?: string | null;
+  manage_url?: string | null;
 }
 
 export async function getMembership(membershipId: string): Promise<WhopMembership> {
@@ -157,6 +159,7 @@ export async function getMembership(membershipId: string): Promise<WhopMembershi
     cancel_at_period_end: raw.cancel_at_period_end,
     current_period_end: raw.current_period_end ?? raw.renewal_period_end ?? null,
     formatted_renewal_price: raw.formatted_renewal_price ?? null,
+    manage_url: raw.manage_url ?? null,
   };
 }
 

@@ -568,12 +568,6 @@
     "badgeCanceling": "Annulation en cours",
     "badgePastDue": "En retard",
     "badgeCanceled": "Annulé",
-    "cancelBtn": "Annuler l'abonnement",
-    "cancelTitle": "Annuler ?",
-    "cancelBody": "Tes avantages Pro restent actifs jusqu'au {date}, puis tu repasses en gratuit.",
-    "cancelConfirm": "Confirmer l'annulation",
-    "cancelAbort": "Retour",
-    "reactivateBtn": "Réactiver l'abonnement",
     "upgradeBtn": "Passer à Pro",
     "subscribeBtn": "S'abonner",
     "history": "Historique des paiements",
@@ -588,8 +582,6 @@
     "errorUnavailable": "Nous n'arrivons pas à charger ton abonnement. Réessaie.",
     "errorGeneric": "Une erreur est survenue. Réessaie.",
     "retry": "Réessayer",
-    "successCanceled": "Ton abonnement sera annulé à la fin de la période.",
-    "successReactivated": "Ton abonnement a été réactivé.",
     "manage": "Gérer l'abonnement",
     "noMembership": "Nous n'arrivons pas à récupérer les détails de ton abonnement Whop. Contacte le support si le problème persiste."
   }

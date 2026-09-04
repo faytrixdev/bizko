@@ -234,6 +234,27 @@ describe("getMembership", () => {
     expect(membership.current_period_end).toBe("2027-09-04T00:00:00.000Z");
   });
 
+  it("maps the Whop billing portal manage_url", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          id: "mber_portal",
+          plan: { id: "plan_Y19ISQ4TaOryH" },
+          status: "active",
+          manage_url: "https://whop.com/billing/manage/mem_abc123",
+        }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const membership = await getMembership("mber_portal");
+
+    expect(membership.manage_url).toBe("https://whop.com/billing/manage/mem_abc123");
+  });
+
   it("keeps top-level plan_id/current_period_end when present", async () => {
     const mock = vi.fn<FetchLike>(async () =>
       ({

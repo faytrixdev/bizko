@@ -69,9 +69,9 @@ export default async function SubscriptionPage() {
         const resolved = await findMembershipByCheckout(checkoutId);
         if (resolved) {
           await persistResolvedMembership(user.id, resolved);
-          membership = resolved;
-          if (resolved.id) {
-            payments = await listMembershipPayments(resolved.id);
+          membership = await getMembership(resolved.id);
+          if (membership.id) {
+            payments = await listMembershipPayments(membership.id);
           }
         }
       }

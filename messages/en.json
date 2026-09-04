@@ -568,12 +568,6 @@
     "badgeCanceling": "Canceling",
     "badgePastDue": "Past due",
     "badgeCanceled": "Canceled",
-    "cancelBtn": "Cancel subscription",
-    "cancelTitle": "Cancel?",
-    "cancelBody": "Your Pro benefits stay active until {date}, then you go back to free.",
-    "cancelConfirm": "Confirm cancellation",
-    "cancelAbort": "Go back",
-    "reactivateBtn": "Reactivate subscription",
     "upgradeBtn": "Upgrade to Pro",
     "subscribeBtn": "Subscribe",
     "history": "Payment history",
@@ -588,8 +582,6 @@
     "errorUnavailable": "We couldn't load your subscription. Please try again.",
     "errorGeneric": "An error occurred. Please try again.",
     "retry": "Try again",
-    "successCanceled": "Your subscription will be canceled at the end of the period.",
-    "successReactivated": "Your subscription has been reactivated.",
     "manage": "Manage subscription",
     "noMembership": "We couldn't fetch your Whop subscription details. Contact support if the problem persists."
   }

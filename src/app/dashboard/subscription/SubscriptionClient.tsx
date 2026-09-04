@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
-import { cancelSubscriptionAction, reactivateSubscriptionAction } from "./actions";
 import {
   derivePlanInfo,
   subscriptionDisplay,
@@ -56,28 +55,13 @@ export function SubscriptionClient({
 }: SubscriptionClientProps) {
   const { t, locale } = useI18n();
   const searchParams = useSearchParams();
-  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const errorCode = searchParams.get("error");
-  const successCode = searchParams.get("success");
   useCleanUrl();
-
-  useEffect(() => {
-    if (!showCancelModal) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowCancelModal(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [showCancelModal]);
 
   let errorMsg: string | null = null;
   if (errorCode === "unavailable") errorMsg = t("subscription.errorUnavailable");
   else if (errorCode) errorMsg = t("subscription.errorGeneric");
-
-  let successMsg: string | null = null;
-  if (successCode === "canceled") successMsg = t("subscription.successCanceled");
-  else if (successCode === "reactivated") successMsg = t("subscription.successReactivated");
 
   const display: SubscriptionDisplay | null = membership
     ? subscriptionDisplay(membership)
@@ -94,7 +78,6 @@ export function SubscriptionClient({
     (planInfo?.period === "yearly" ? "20 000 FCFA" : "2 500 FCFA");
 
   const endDate = formatDate(membership?.current_period_end, locale);
-  const cancelDateBody = t("subscription.cancelBody").replace("{date}", endDate);
 
   function formatAmount(p: WhopPayment): string {
     if (p.total != null) {
@@ -121,12 +104,6 @@ export function SubscriptionClient({
                 {t("subscription.retry")}
               </Link>
             )}
-          </p>
-        )}
-
-        {successMsg && (
-          <p className="mb-4 bg-green-50 border border-green-200 text-green-700 p-3 rounded-xl text-sm">
-            {successMsg}
           </p>
         )}
 
@@ -177,25 +154,15 @@ export function SubscriptionClient({
 
             {/* Actions */}
             <div className="mt-5 pt-4 border-t border-gray-100">
-              {display === "active" && (
-                <button
-                  type="button"
-                  onClick={() => setShowCancelModal(true)}
-                  className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-red-50 text-red-600 border border-red-200 text-sm font-semibold hover:bg-red-100 transition-colors"
+              {(display === "active" || display === "canceling") && membership.manage_url && (
+                <Link
+                  href={membership.manage_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
                 >
-                  {t("subscription.cancelBtn")}
-                </button>
-              )}
-
-              {display === "canceling" && (
-                <form action={reactivateSubscriptionAction}>
-                  <button
-                    type="submit"
-                    className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
-                  >
-                    {t("subscription.reactivateBtn")}
-                  </button>
-                </form>
+                  {t("subscription.manage")}
+                </Link>
               )}
 
               {(display === "canceled" || display === "past_due") && (
@@ -290,44 +257,6 @@ export function SubscriptionClient({
           )}
         </div>
       </div>
-
-      {/* Cancel confirmation modal */}
-      {showCancelModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-          onClick={() => setShowCancelModal(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="subscription-cancel-title"
-            className="bg-white rounded-2xl shadow-xl max-w-sm w-full mx-4 p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 id="subscription-cancel-title" className="text-lg font-bold text-gray-900 mb-2">
-              {t("subscription.cancelTitle")}
-            </h3>
-            <p className="text-sm text-gray-600 mb-6">{cancelDateBody}</p>
-            <div className="flex flex-col gap-2">
-              <form action={cancelSubscriptionAction}>
-                <button
-                  type="submit"
-                  className="w-full h-10 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors"
-                >
-                  {t("subscription.cancelConfirm")}
-                </button>
-              </form>
-              <button
-                type="button"
-                onClick={() => setShowCancelModal(false)}
-                className="w-full h-10 rounded-xl bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors"
-              >
-                {t("subscription.cancelAbort")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

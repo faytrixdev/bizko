@@ -90,14 +90,25 @@ describe("resolveProPlanId", () => {
 });
 
 describe("createCheckoutConfig", () => {
+  type FetchLike = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
   function mockCheckoutResponse() {
-    const mock = vi.fn(async () => ({
-      ok: true,
-      status: 200,
-      json: async () => ({ id: "ch_test", purchase_url: "https://sandbox.whop.com/checkout/ch_test" }),
-    }));
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({ id: "ch_test", purchase_url: "https://sandbox.whop.com/checkout/ch_test" }),
+      }) as unknown as Response
+    );
     globalThis.fetch = mock as unknown as typeof fetch;
     return mock;
+  }
+
+  function requestInitOf(mock: ReturnType<typeof mockCheckoutResponse>): RequestInit {
+    return mock.mock.calls[0][1];
+  }
+
+  function requestBodyOf(mock: ReturnType<typeof mockCheckoutResponse>): string {
+    return String(requestInitOf(mock).body);
   }
 
   it("sends redirect_url defaulting to /dashboard?success=pro", async () => {
@@ -109,8 +120,7 @@ describe("createCheckoutConfig", () => {
 
     await createCheckoutConfig("profile_1", "monthly");
 
-    const [, init] = fetchMock.mock.calls[0];
-    const body = JSON.parse(init.body);
+    const body = JSON.parse(requestBodyOf(fetchMock));
     expect(body.plan_id).toBe("plan_monthly");
     expect(body.metadata).toEqual({ profile_id: "profile_1" });
     expect(body.redirect_url).toBe("/dashboard?success=pro");
@@ -124,8 +134,7 @@ describe("createCheckoutConfig", () => {
 
     await createCheckoutConfig("profile_2", "monthly");
 
-    const [, init] = fetchMock.mock.calls[0];
-    const body = JSON.parse(init.body);
+    const body = JSON.parse(requestBodyOf(fetchMock));
     expect(body.redirect_url).toBe("https://bizko.pro/done");
   });
 
@@ -136,8 +145,7 @@ describe("createCheckoutConfig", () => {
 
     await createCheckoutConfig("profile_3", "monthly", "https://example.com/thanks");
 
-    const [, init] = fetchMock.mock.calls[0];
-    const body = JSON.parse(init.body);
+    const body = JSON.parse(requestBodyOf(fetchMock));
     expect(body.redirect_url).toBe("https://example.com/thanks");
   });
 

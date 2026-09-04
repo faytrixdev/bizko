@@ -606,6 +606,8 @@
     "cardYearlyLabel": "Pro Annuel",
     "cardMonthlyPrice": "2 500 FCFA / mois",
     "cardYearlyPrice": "20 000 FCFA / an",
+    "monthlyAmount": "2 500 FCFA",
+    "yearlyAmount": "20 000 FCFA",
     "cardMonthlyCta": "Passer à Pro - Mensuel",
     "cardYearlyCta": "Passer à Pro - Annuel",
     "guestCta": "Créer mon compte",

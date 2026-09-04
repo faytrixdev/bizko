@@ -75,7 +75,7 @@ export function SubscriptionClient({
 
   const price =
     membership?.formatted_renewal_price ??
-    (planInfo?.period === "yearly" ? "20 000 FCFA" : "2 500 FCFA");
+    t(planInfo?.period === "yearly" ? "pricing.yearlyAmount" : "pricing.monthlyAmount");
 
   const endDate = formatDate(membership?.current_period_end, locale);
 

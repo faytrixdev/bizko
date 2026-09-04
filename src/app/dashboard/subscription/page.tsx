@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import { isProPlan } from "@/lib/plans";
 import { getMembership, listMembershipPayments, findMembershipByCheckout, type WhopMembership, type WhopPayment } from "@/lib/whop";
 import { SubscriptionClient } from "./SubscriptionClient";
 
@@ -51,7 +52,7 @@ export default async function SubscriptionPage() {
     ? subRes as { whop_membership_id?: string | null; plan: string; status: string }
     : null;
 
-  const isPro = sub?.plan === "pro" && (sub.status === "active" || sub.status === "trialing");
+  const isPro = isProPlan(sub?.plan, sub?.status);
 
   let membership: WhopMembership | null = null;
   let payments: WhopPayment[] = [];

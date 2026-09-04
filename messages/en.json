@@ -606,6 +606,8 @@
     "cardYearlyLabel": "Pro Yearly",
     "cardMonthlyPrice": "2,500 FCFA / month",
     "cardYearlyPrice": "20,000 FCFA / year",
+    "monthlyAmount": "2,500 FCFA",
+    "yearlyAmount": "20,000 FCFA",
     "cardMonthlyCta": "Go Pro - Monthly",
     "cardYearlyCta": "Go Pro - Yearly",
     "guestCta": "Create account",

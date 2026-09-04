@@ -101,3 +101,11 @@ export const PLAN_COMPARISON: ComparisonRow[] = [
 export function isUnlimited(value: string): boolean {
   return value === UNLIMITED_SENTINEL;
 }
+
+/** True when a subscription row represents an active (or trialing) Pro plan. */
+export function isProPlan(
+  plan: string | null | undefined,
+  status: string | null | undefined,
+): boolean {
+  return plan === "pro" && (status === "active" || status === "trialing");
+}

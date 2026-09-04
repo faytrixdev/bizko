@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { isProPlan } from "@/lib/plans";
 import { DashboardClient } from "./DashboardClient";
 import type { DailyEvent, ClickBucket } from "@/types/analytics";
 
@@ -41,7 +42,7 @@ export default async function Dashboard() {
   const sub = subRes.data && !Array.isArray(subRes.data)
     ? subRes.data as { plan: string; status: string } | null
     : null;
-  const isPro = (sub?.plan === "pro" && (sub.status === "active" || sub.status === "trialing")) ?? false;
+  const isPro = isProPlan(sub?.plan, sub?.status);
 
   return (
     <DashboardClient

@@ -9,6 +9,7 @@ import {
   videoSizeLimitBytes,
   PLAN_COMPARISON,
   isUnlimited,
+  isProPlan,
 } from "../plans";
 
 describe("getLimits", () => {
@@ -131,5 +132,20 @@ describe("isUnlimited", () => {
   it("flags only the unlimited sentinel", () => {
     expect(isUnlimited("unlimited")).toBe(true);
     expect(isUnlimited("3")).toBe(false);
+  });
+});
+
+describe("isProPlan", () => {
+  it("is true only for active or trialing pro plans", () => {
+    expect(isProPlan("pro", "active")).toBe(true);
+    expect(isProPlan("pro", "trialing")).toBe(true);
+  });
+
+  it("is false for free plans, other statuses, and missing data", () => {
+    expect(isProPlan("free", "active")).toBe(false);
+    expect(isProPlan("pro", "canceled")).toBe(false);
+    expect(isProPlan("pro", "past_due")).toBe(false);
+    expect(isProPlan(null, null)).toBe(false);
+    expect(isProPlan(undefined, "active")).toBe(false);
   });
 });

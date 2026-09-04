@@ -1,5 +1,6 @@
 import { getServerMessages } from "@/lib/i18n/messages-server";
 import { createClient } from "@/lib/supabase/server";
+import { isProPlan } from "@/lib/plans";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { PricingClient, type PricingCtaState } from "./PricingClient";
 
@@ -32,8 +33,7 @@ export default async function PricingPage() {
       .eq("profile_id", user.id)
       .maybeSingle();
     const row = sub && !Array.isArray(sub) ? (sub as SubRow) : null;
-    const isPro =
-      row?.plan === "pro" && (row.status === "active" || row.status === "trialing");
+    const isPro = isProPlan(row?.plan, row?.status);
     ctaState = isPro ? "pro" : "free";
   }
 

@@ -162,3 +162,21 @@ export function cancelMembership(membershipId: string, mode: CancellationMode = 
 export function uncancelMembership(membershipId: string): Promise<WhopMembership> {
   return whopPost<WhopMembership>(`/memberships/${membershipId}/uncancel`);
 }
+
+export interface WhopPayment {
+  id: string;
+  total?: number;
+  currency?: string;
+  status?: string;
+  substatus?: string | null;
+  paid_at?: string | null;
+  created_at?: string | null;
+  card_last4?: string | null;
+}
+
+export async function listMembershipPayments(membershipId: string): Promise<WhopPayment[]> {
+  const data = await whopGet<{ data?: WhopPayment[] }>(
+    `/payments?query=${encodeURIComponent(membershipId)}&first=20`
+  );
+  return data.data ?? [];
+}

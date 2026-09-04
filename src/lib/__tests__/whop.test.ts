@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership } from "../whop";
+import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -265,5 +265,33 @@ describe("cancelMembership / uncancelMembership", () => {
       "https://api.whop.com/api/v1/memberships/mber_123/uncancel",
       expect.objectContaining({ method: "POST" })
     );
+  });
+});
+
+describe("listMembershipPayments", () => {
+  type FetchLike = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
+  it("GETs /payments filtered by membership query", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          data: [
+            { id: "pay_1", total: 2500, currency: "xof", status: "succeeded", paid_at: "2026-09-04T00:00:00.000Z" },
+          ],
+        }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const res = await listMembershipPayments("mber_123");
+
+    expect(mock).toHaveBeenCalledWith(
+      expect.stringContaining("query=mber_123") && expect.stringContaining("/payments"),
+      expect.objectContaining({ method: "GET" })
+    );
+    expect(res).toHaveLength(1);
+    expect(res[0]).toMatchObject({ id: "pay_1", currency: "xof" });
   });
 });

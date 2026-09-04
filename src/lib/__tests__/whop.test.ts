@@ -313,5 +313,6 @@ describe("derivePlanInfo", () => {
     expect(subscriptionDisplay({ status: "active", cancel_at_period_end: true })).toEqual("canceling");
     expect(subscriptionDisplay({ status: "past_due", cancel_at_period_end: false })).toEqual("past_due");
     expect(subscriptionDisplay({ status: "canceled" })).toEqual("canceled");
+    expect(subscriptionDisplay({ status: "expired" })).toEqual("canceled");
   });
 });

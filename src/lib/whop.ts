@@ -137,8 +137,27 @@ async function whopGet<T>(path: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-export function getMembership(membershipId: string): Promise<WhopMembership> {
-  return whopGet<WhopMembership>(`/memberships/${membershipId}`);
+interface WhopMembershipRaw {
+  id: string;
+  plan_id?: string | null;
+  plan?: { id?: string | null } | null;
+  status?: string;
+  cancel_at_period_end?: boolean;
+  current_period_end?: string | null;
+  renewal_period_end?: string | null;
+  formatted_renewal_price?: string | null;
+}
+
+export async function getMembership(membershipId: string): Promise<WhopMembership> {
+  const raw = await whopGet<WhopMembershipRaw>(`/memberships/${membershipId}`);
+  return {
+    id: raw.id,
+    plan_id: raw.plan_id ?? raw.plan?.id ?? null,
+    status: raw.status,
+    cancel_at_period_end: raw.cancel_at_period_end,
+    current_period_end: raw.current_period_end ?? raw.renewal_period_end ?? null,
+    formatted_renewal_price: raw.formatted_renewal_price ?? null,
+  };
 }
 
 /**
@@ -249,9 +268,14 @@ export interface WhopPayment {
 }
 
 export async function listMembershipPayments(membershipId: string): Promise<WhopPayment[]> {
-  const data = await whopGet<{ data?: WhopPayment[] }>(
-    `/payments?query=${encodeURIComponent(membershipId)}&first=20`
-  );
+  const params = new URLSearchParams({
+    query: membershipId,
+    first: "20",
+    include_free: "true",
+  });
+  const companyId = process.env.WHOP_COMPANY_ID;
+  if (companyId) params.set("company_id", companyId);
+  const data = await whopGet<{ data?: WhopPayment[] }>(`/payments?${params.toString()}`);
   return data.data ?? [];
 }
 

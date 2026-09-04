@@ -210,6 +210,52 @@ describe("getMembership", () => {
     expect(membership).toMatchObject({ id: "mber_123", status: "active", cancel_at_period_end: false });
   });
 
+  it("maps nested plan.id and renewal_period_end from the real API shape", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          id: "mber_nested",
+          plan: { id: "plan_Y9pgKmQXLWMjU", metadata: { name: "Bizko Pro Annuel" } },
+          status: "active",
+          cancel_at_period_end: false,
+          renewal_period_end: "2027-09-04T00:00:00.000Z",
+          formatted_renewal_price: "20 000 FCFA / an",
+        }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const membership = await getMembership("mber_nested");
+
+    expect(membership.plan_id).toBe("plan_Y9pgKmQXLWMjU");
+    expect(membership.current_period_end).toBe("2027-09-04T00:00:00.000Z");
+  });
+
+  it("keeps top-level plan_id/current_period_end when present", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          id: "mber_flat",
+          plan_id: "plan_X",
+          status: "active",
+          current_period_end: "2026-10-04T00:00:00.000Z",
+        }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const membership = await getMembership("mber_flat");
+
+    expect(membership.plan_id).toBe("plan_X");
+    expect(membership.current_period_end).toBe("2026-10-04T00:00:00.000Z");
+  });
+
   it("throws WhopApiError on a non-2xx response", async () => {
     const mock = vi.fn<FetchLike>(async () =>
       ({ ok: false, status: 404, json: async () => ({}) }) as unknown as Response
@@ -297,6 +343,41 @@ describe("listMembershipPayments", () => {
     );
     expect(res).toHaveLength(1);
     expect(res[0]).toMatchObject({ id: "pay_1", currency: "xof" });
+  });
+
+  it("includes include_free=true to show zero-amount sandbox payments", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          data: [{ id: "pay_free", total: 0, currency: "xof", status: "succeeded", paid_at: "2026-09-04T00:00:00.000Z" }],
+        }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const res = await listMembershipPayments("mber_free");
+
+    const calledUrl = String(mock.mock.calls[0][0]);
+    expect(calledUrl).toContain("include_free=true");
+    expect(res).toHaveLength(1);
+    expect(res[0]).toMatchObject({ id: "pay_free", total: 0 });
+  });
+
+  it("includes company_id when WHOP_COMPANY_ID is set", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({ ok: true, status: 200, json: async () => ({ data: [] }) }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_COMPANY_ID = "biz_123";
+
+    await listMembershipPayments("mber_456");
+
+    const calledUrl = String(mock.mock.calls[0][0]);
+    expect(calledUrl).toContain("company_id=biz_123");
   });
 });
 

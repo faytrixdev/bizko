@@ -18,7 +18,7 @@ export function PricingClient({ ctaState }: PricingClientProps) {
   return (
     <main className="max-w-3xl mx-auto px-5 sm:px-8 pb-24">
       {/* Hero */}
-      <section className="pt-14 pb-10 text-center">
+      <section className="pt-28 pb-10 text-center sm:pt-36">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-display text-gray-900">
           {t("pricing.title")}
         </h1>

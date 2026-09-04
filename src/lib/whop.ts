@@ -180,3 +180,22 @@ export async function listMembershipPayments(membershipId: string): Promise<Whop
   );
   return data.data ?? [];
 }
+
+export function derivePlanInfo(planId?: string | null): { period: "monthly" | "yearly" } {
+  if (planId && process.env.WHOP_PLAN_ID_PRO_YEARLY && planId === process.env.WHOP_PLAN_ID_PRO_YEARLY) {
+    return { period: "yearly" };
+  }
+  return { period: "monthly" };
+}
+
+export type SubscriptionDisplay = "active" | "canceling" | "past_due" | "canceled";
+
+export function subscriptionDisplay(m: {
+  status?: string;
+  cancel_at_period_end?: boolean;
+}): SubscriptionDisplay {
+  if (m.status === "past_due") return "past_due";
+  if (m.status === "canceled" || m.status === "expired") return "canceled";
+  if (m.status === "active" && m.cancel_at_period_end) return "canceling";
+  return "active";
+}

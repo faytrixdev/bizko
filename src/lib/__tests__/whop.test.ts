@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments } from "../whop";
+import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -296,5 +296,22 @@ describe("listMembershipPayments", () => {
     );
     expect(res).toHaveLength(1);
     expect(res[0]).toMatchObject({ id: "pay_1", currency: "xof" });
+  });
+});
+
+describe("derivePlanInfo", () => {
+  it("resolves period and label from a plan id", () => {
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    process.env.WHOP_PLAN_ID_PRO_YEARLY = "plan_yearly";
+    expect(derivePlanInfo("plan_yearly")).toEqual({ period: "yearly" });
+    expect(derivePlanInfo("plan_monthly")).toEqual({ period: "monthly" });
+    expect(derivePlanInfo("plan_unknown")).toEqual({ period: "monthly" }); // safe default
+  });
+
+  it("maps status to a display variant", () => {
+    expect(subscriptionDisplay({ status: "active", cancel_at_period_end: false })).toEqual("active");
+    expect(subscriptionDisplay({ status: "active", cancel_at_period_end: true })).toEqual("canceling");
+    expect(subscriptionDisplay({ status: "past_due", cancel_at_period_end: false })).toEqual("past_due");
+    expect(subscriptionDisplay({ status: "canceled" })).toEqual("canceled");
   });
 });

@@ -217,11 +217,12 @@ export async function startSubscription(formData: FormData) {
   const interval = (formData.get("interval") as string) ?? "monthly";
   if (!isBillingInterval(interval)) redirect("/dashboard?error=checkout_failed");
 
+  let purchaseUrl: string;
   try {
-    const { purchaseUrl } = await createCheckoutConfig(user.id, interval);
-    redirect(purchaseUrl);
+    ({ purchaseUrl } = await createCheckoutConfig(user.id, interval));
   } catch (err) {
     console.error("[startSubscription]", err);
     redirect("/dashboard?error=checkout_failed");
   }
+  redirect(purchaseUrl);
 }

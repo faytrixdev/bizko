@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     event = verifyWebhook(Object.fromEntries(req.headers), rawBody, secret ?? "");
   } catch (err) {
     console.error("[whop-webhook] verification failed:", (err as Error).message);
-    return NextResponse.json({ error: "invalid_signature", detail: (err as Error).message }, { status: 401 });
+    return NextResponse.json({ error: "invalid_signature" }, { status: 401 });
   }
 
   try {

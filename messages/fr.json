@@ -14,6 +14,7 @@
     "navHowItWorks": "Comment ça marche",
     "navExamples": "Exemples",
     "navFaq": "FAQ",
+    "navPricing": "Tarifs",
     "previewDescription": "Photographe - Abidjan, CI",
     "badge": "Pour les indépendants qui vendent leur expertise",
     "heroTitle": "Ton business.",
@@ -584,5 +585,30 @@
     "retry": "Réessayer",
     "manage": "Gérer l'abonnement",
     "noMembership": "Nous n'arrivons pas à récupérer les détails de ton abonnement Whop. Contacte le support si le problème persiste."
+  },
+  "pricing": {
+    "title": "Choisis ton plan",
+    "subtitle": "Compare ce que tu gagnes en passant a Bizko Pro. Meme profil, meme lien - juste beaucoup plus de place pour ton business.",
+    "compareTitle": "Free vs Pro",
+    "colFree": "Free",
+    "colPro": "Pro",
+    "popular": "Populaire",
+    "unlimited": "Illimite",
+    "rowServices": "Services",
+    "rowSocials": "Reseaux sociaux",
+    "rowPortfolio": "Portfolio",
+    "rowVideos": "Videos",
+    "rowVideoDuration": "Duree des videos",
+    "rowVideoSize": "Poids des videos",
+    "rowTemplates": "Templates",
+    "cardsTitle": "Un tarif simple, pense pour evoluer",
+    "cardMonthlyLabel": "Pro Mensuel",
+    "cardYearlyLabel": "Pro Annuel",
+    "cardMonthlyPrice": "2 500 FCFA / mois",
+    "cardYearlyPrice": "20 000 FCFA / an",
+    "cardMonthlyCta": "Passer a Pro - Mensuel",
+    "cardYearlyCta": "Passer a Pro - Annuel",
+    "guestCta": "Creer mon compte",
+    "manageCta": "Gerer mon abonnement"
   }
 }

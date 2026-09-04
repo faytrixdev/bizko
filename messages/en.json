@@ -14,6 +14,7 @@
     "navHowItWorks": "How it works",
     "navExamples": "Examples",
     "navFaq": "FAQ",
+    "navPricing": "Pricing",
     "previewDescription": "Photographer - Abidjan, CI",
     "badge": "For freelancers who sell their expertise",
     "heroTitle": "Your business.",
@@ -584,5 +585,30 @@
     "retry": "Try again",
     "manage": "Manage subscription",
     "noMembership": "We couldn't fetch your Whop subscription details. Contact support if the problem persists."
+  },
+  "pricing": {
+    "title": "Choose your plan",
+    "subtitle": "See exactly what you unlock by going Bizko Pro. Same profile, same link - just a lot more room for your business.",
+    "compareTitle": "Free vs Pro",
+    "colFree": "Free",
+    "colPro": "Pro",
+    "popular": "Most popular",
+    "unlimited": "Unlimited",
+    "rowServices": "Services",
+    "rowSocials": "Social links",
+    "rowPortfolio": "Portfolio",
+    "rowVideos": "Videos",
+    "rowVideoDuration": "Video length",
+    "rowVideoSize": "Video size",
+    "rowTemplates": "Templates",
+    "cardsTitle": "One simple price, built to grow",
+    "cardMonthlyLabel": "Pro Monthly",
+    "cardYearlyLabel": "Pro Yearly",
+    "cardMonthlyPrice": "2,500 FCFA / month",
+    "cardYearlyPrice": "20,000 FCFA / year",
+    "cardMonthlyCta": "Go Pro - Monthly",
+    "cardYearlyCta": "Go Pro - Yearly",
+    "guestCta": "Create account",
+    "manageCta": "Manage subscription"
   }
 }

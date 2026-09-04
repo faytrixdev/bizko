@@ -124,7 +124,7 @@ export function DashboardClient({
         )}
 
         {!isPro && (
-          <div className="mb-4 rounded-2xl border border-violet-200 bg-violet-50 p-4">
+          <div className="mb-4 rounded-2xl border border-violet-200 bg-violet-50 p-4 sm:p-5">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-semibold text-violet-900">{t("dashboard.upgradeTitle")}</p>
@@ -135,7 +135,7 @@ export function DashboardClient({
                   <input type="hidden" name="interval" value="yearly" />
                   <button
                     type="submit"
-                    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-4 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200"
+                    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200 whitespace-nowrap"
                   >
                     {t("dashboard.upgradeYearly")}
                   </button>
@@ -144,7 +144,7 @@ export function DashboardClient({
                   <input type="hidden" name="interval" value="monthly" />
                   <button
                     type="submit"
-                    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-4 rounded-xl bg-white text-violet-700 border border-violet-300 text-sm font-semibold hover:bg-violet-100 transition-colors duration-200"
+                    className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center h-9 px-5 rounded-xl bg-white text-violet-700 border border-violet-300 text-sm font-semibold hover:bg-violet-100 transition-colors duration-200 whitespace-nowrap"
                   >
                     {t("dashboard.upgradeMonthly")}
                   </button>

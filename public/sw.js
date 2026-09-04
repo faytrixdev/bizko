@@ -8,7 +8,7 @@
  *  - Never intercept cross-origin requests or /api/* calls so authentication,
  *    cookies and API responses remain untouched.
  */
-const CACHE_VERSION = "bizko-v2";
+const CACHE_VERSION = "bizko-v3";
 const APP_SHELL = ["/", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
@@ -51,9 +51,12 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() =>
-          caches
-            .match(request)
-            .then((cached) => cached || caches.match("/"))
+          caches.match(request).then((cached) => {
+            if (cached) return cached;
+            return caches.match("/").then(
+              (home) => home || new Response("Page indisponible hors ligne", { status: 503 })
+            );
+          })
         )
     );
     return;
@@ -70,7 +73,7 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(() => cached);
+        .catch(() => cached || new Response("", { status: 404 }));
       return cached || network;
     })
   );

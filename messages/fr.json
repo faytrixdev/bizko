@@ -291,6 +291,11 @@
     "successAdded": "Ajoute.",
     "successDeleted": "Supprime.",
     "successSaved": "Enregistre.",
+    "alreadyPro": "Tu es deja membre Bizko Pro.",
+    "checkoutFailed": "Impossible d'ouvrir le paiement. Reessaie.",
+    "upgradeTitle": "Passe a Bizko Pro",
+    "upgradeSubtitle": "Plus de services, de videos et de portfolio.",
+    "upgradeCta": "Passer a Pro",
     "conversion": "Taux de conversion",
     "conversionSub": "Visiteurs qui ont cliqu\u00e9",
     "last7Days": "7 derniers jours",
@@ -418,7 +423,9 @@
     "videoThumbRequired": "Une miniature est requise pour la video",
     "compressing": "Compression de la video...",
     "uploading": "Upload vers le stockage...",
-    "videoUploadError": "Erreur lors de l'upload de la video."
+    "videoUploadError": "Erreur lors de l'upload de la video.",
+    "videosLimit": "Limite de videos atteinte. Passe a Bizko Pro pour en ajouter plus.",
+    "portfolioLimit": "Limite du portfolio atteinte. Passe a Bizko Pro pour en ajouter plus."
   },
   "settings": {
     "myAccount": "Mon compte"

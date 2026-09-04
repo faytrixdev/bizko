@@ -5,9 +5,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
-
-const MAX_SERVICES = 8;
-const MAX_SOCIALS = 6;
+import { getLimits } from "@/lib/plans";
+import { createCheckoutConfig } from "@/lib/whop";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -18,6 +17,14 @@ function dashboardError(err: { code?: string; message?: string } | null): string
   // 23505 = unique_violation
   if (err.code === "23505") return "duplicate";
   return "generic";
+}
+
+// Resolve the current plan's limits for the authenticated user.
+async function currentLimits(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
+  return getLimits(isPro ? "pro" : "free");
 }
 
 export async function updateProfile(formData: FormData) {
@@ -65,8 +72,11 @@ export async function addService(formData: FormData) {
   if (title.length > 60) redirect("/dashboard?error=generic");
   if (price && (Number.isNaN(Number(price)) || Number(price) < 0)) redirect("/dashboard?error=generic");
 
+  const limits = await currentLimits(supabase);
+  if (!limits) redirect("/login");
+
   const { count } = await supabase.from("services").select("*", { count: "exact", head: true }).eq("profile_id", user.id);
-  if ((count ?? 0) >= MAX_SERVICES) redirect("/dashboard?error=services_limit");
+  if ((count ?? 0) >= limits.services) redirect("/dashboard?error=services_limit");
 
   const { data: existing } = await supabase.from("services").select("position").eq("profile_id", user.id).order("position", { ascending: false }).limit(1);
   const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
@@ -101,8 +111,11 @@ export async function addSocial(formData: FormData) {
   if (!platform || !url) redirect("/dashboard?error=missing");
   if (!/^https?:\/\/\S+$/.test(url)) redirect("/dashboard?error=invalid_url");
 
+  const limits = await currentLimits(supabase);
+  if (!limits) redirect("/login");
+
   const { count } = await supabase.from("social_links").select("*", { count: "exact", head: true }).eq("profile_id", user.id);
-  if ((count ?? 0) >= MAX_SOCIALS) redirect("/dashboard?error=socials_limit");
+  if ((count ?? 0) >= limits.socials) redirect("/dashboard?error=socials_limit");
 
   const { data: existing } = await supabase.from("social_links").select("position").eq("profile_id", user.id).order("position", { ascending: false }).limit(1);
   const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
@@ -191,4 +204,21 @@ export async function reorderPortfolio(orderedIds: string[]) {
   await Promise.all(updates);
   revalidatePath("/dashboard");
   updateTag(PUBLIC_PROFILES_TAG);
+}
+
+export async function startSubscription() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
+  if (isPro) redirect("/dashboard?success=already_pro");
+
+  try {
+    const { purchaseUrl } = await createCheckoutConfig(user.id);
+    redirect(purchaseUrl);
+  } catch (err) {
+    console.error("[startSubscription]", err);
+    redirect("/dashboard?error=checkout_failed");
+  }
 }

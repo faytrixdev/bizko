@@ -5,6 +5,7 @@ import { useRouter, redirect } from "next/navigation";
 import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
 import { validateVideoFile, validateVideoDuration } from "@/lib/portfolioVideo";
+import { videoDurationLimitSec, videoSizeLimitBytes } from "@/lib/plans";
 import { compressVideo } from "@/lib/clientTranscoder";
 
 async function deleteR2OnServer(key: string) {
@@ -67,8 +68,9 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
   );
 }
 
-export function PortfolioUpload({ profileId }: { profileId: string }) {
+export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro?: boolean }) {
   const { t } = useI18n();
+  const plan: "free" | "pro" = isPro ? "pro" : "free";
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string>("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -109,7 +111,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    const err = validateVideoFile(file);
+    const err = validateVideoFile(file, { maxSizeBytes: videoSizeLimitBytes(plan) });
     if (err) { alert(t("upload." + err)); return; }
     pendingVideoRef.current = file;
     setThumbModalOpen(true);
@@ -145,7 +147,7 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
 
   const startVideoUpload = async (videoFile: File, thumbFile: File) => {
     const duration = await getVideoDuration(videoFile);
-    const durationErr = validateVideoDuration(duration);
+    const durationErr = validateVideoDuration(duration, { maxDurationSec: videoDurationLimitSec(plan) });
     if (durationErr) { alert(t("upload." + durationErr)); return; }
     setUploading(true);
     setStatus(t("upload.compressing"));
@@ -163,6 +165,8 @@ export function PortfolioUpload({ profileId }: { profileId: string }) {
       if (!signRes.ok) {
         const { error } = await signRes.json();
         if (error === "size_too_large") { alert(t("upload.videoTooLarge")); return; }
+        if (error === "videos_limit") { alert(t("upload.videosLimit")); return; }
+        if (error === "portfolio_limit") { alert(t("upload.portfolioLimit")); return; }
         if (error === "unauthorized") {
           try { redirect("/login"); } catch { /* NEXT_REDIRECT flows through */ }
           return;

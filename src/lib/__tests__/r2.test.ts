@@ -29,7 +29,7 @@ describe("keyFromPublicUrl", () => {
 });
 
 describe("R2_CONFIG", () => {
-  it("caps minted uploads at 150 MB", () => {
-    expect(R2_CONFIG.maxVideoSizeBytes).toBe(150 * 1024 * 1024);
+  it("sets the object ceiling at the Pro video size (500 MB)", () => {
+    expect(R2_CONFIG.maxVideoSizeBytes).toBe(500 * 1024 * 1024);
   });
 });

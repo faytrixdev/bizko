@@ -14,7 +14,8 @@ const client = new S3Client({
 });
 
 export const R2_CONFIG = {
-  maxVideoSizeBytes: 150 * 1024 * 1024,
+  // Absolute safety ceiling for a single video object (>= highest plan limit).
+  maxVideoSizeBytes: 500 * 1024 * 1024,
   presignExpiresSec: 600,
 };
 

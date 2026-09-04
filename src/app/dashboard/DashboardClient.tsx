@@ -8,6 +8,7 @@ import { Logo } from "@/components/Logo";
 import { InstallAppButton } from "@/components/pwa/InstallAppButton";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
+import { startSubscription } from "./actions";
 import type { Profile, Service, PortfolioItem, SocialLink } from "@/types/database";
 import type { DailyEvent, ClickBucket } from "@/types/analytics";
 
@@ -25,6 +26,7 @@ interface DashboardClientProps {
   views7d: number;
   clicks7d: number;
   publicUrl: string;
+  isPro: boolean;
 }
 
 const ERROR_KEYS: Record<string, string> = {
@@ -41,6 +43,12 @@ const SUCCESS_KEYS: Record<string, string> = {
   profile: "dashboard.successProfile",
   added: "dashboard.successAdded",
   deleted: "dashboard.successDeleted",
+  already_pro: "dashboard.alreadyPro",
+};
+
+const ERROR_KEYS_FULL: Record<string, string> = {
+  ...ERROR_KEYS,
+  checkout_failed: "dashboard.checkoutFailed",
 };
 
 export function DashboardClient({
@@ -55,13 +63,14 @@ export function DashboardClient({
   views7d,
   clicks7d,
   publicUrl,
+  isPro,
 }: DashboardClientProps) {
   const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("apercu");
   const searchParams = useSearchParams();
   const errorCode = searchParams.get("error");
   const successCode = searchParams.get("success");
-  const errorMsg = errorCode ? t(ERROR_KEYS[errorCode] ?? "dashboard.errorGeneric") : null;
+  const errorMsg = errorCode ? t(ERROR_KEYS_FULL[errorCode] ?? "dashboard.errorGeneric") : null;
   const successMsg = successCode ? t(SUCCESS_KEYS[successCode] ?? "dashboard.successSaved") : null;
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
@@ -114,6 +123,23 @@ export function DashboardClient({
           </p>
         )}
 
+        {!isPro && (
+          <div className="mb-4 rounded-2xl border border-violet-200 bg-violet-50 p-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-violet-900">{t("dashboard.upgradeTitle")}</p>
+              <p className="text-xs text-violet-700 mt-0.5">{t("dashboard.upgradeSubtitle")}</p>
+            </div>
+            <form action={startSubscription}>
+              <button
+                type="submit"
+                className="shrink-0 inline-flex items-center justify-center h-9 px-4 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors duration-200"
+              >
+                {t("dashboard.upgradeCta")}
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Tab bar */}
         <nav className="flex w-full border-b border-gray-200 mb-6">
           {TABS.map((tabItem) => (
@@ -138,7 +164,7 @@ export function DashboardClient({
         {/* Tab content */}
         {tab === "apercu" && <TabOverview publicUrl={publicUrl} username={profile.username} views={views} waClicks={waClicks} daily={daily} breakdown={breakdown} views7d={views7d} clicks7d={clicks7d} />}
         {tab === "services" && <TabServices services={services} />}
-        {tab === "portfolio" && <TabPortfolio portfolio={portfolio} profileId={profile.id} />}
+        {tab === "portfolio" && <TabPortfolio portfolio={portfolio} profileId={profile.id} isPro={isPro} />}
         {tab === "reseaux" && <TabSocials socials={socials} />}
         {tab === "reglages" && <TabSettings profile={profile} />}
       </div>

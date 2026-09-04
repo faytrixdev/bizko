@@ -291,6 +291,11 @@
     "successAdded": "Added.",
     "successDeleted": "Deleted.",
     "successSaved": "Saved.",
+    "alreadyPro": "You are already a Bizko Pro member.",
+    "checkoutFailed": "Could not open checkout. Please try again.",
+    "upgradeTitle": "Upgrade to Bizko Pro",
+    "upgradeSubtitle": "More services, videos and portfolio items.",
+    "upgradeCta": "Go Pro",
     "conversion": "Conversion rate",
     "conversionSub": "Visitors who clicked",
     "last7Days": "Last 7 days",
@@ -418,7 +423,9 @@
     "videoThumbRequired": "A thumbnail is required for the video",
     "compressing": "Compressing video...",
     "uploading": "Uploading to storage...",
-    "videoUploadError": "Error uploading the video."
+    "videoUploadError": "Error uploading the video.",
+    "videosLimit": "Video limit reached. Upgrade to Bizko Pro to add more.",
+    "portfolioLimit": "Portfolio limit reached. Upgrade to Bizko Pro to add more."
   },
   "settings": {
     "myAccount": "My account"

@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay } from "../whop";
+import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay, findMembershipByCheckout } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -8,6 +8,7 @@ afterEach(() => {
   process.env.WHOP_PLAN_ID_PRO = ENV_BACKUP.WHOP_PLAN_ID_PRO;
   process.env.WHOP_PLAN_ID_PRO_YEARLY = ENV_BACKUP.WHOP_PLAN_ID_PRO_YEARLY;
   process.env.WHOP_CHECKOUT_REDIRECT_URL = ENV_BACKUP.WHOP_CHECKOUT_REDIRECT_URL;
+  process.env.WHOP_COMPANY_ID = ENV_BACKUP.WHOP_COMPANY_ID;
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -315,5 +316,116 @@ describe("derivePlanInfo", () => {
     expect(subscriptionDisplay({ status: "past_due", cancel_at_period_end: false })).toEqual("past_due");
     expect(subscriptionDisplay({ status: "canceled" })).toEqual("canceled");
     expect(subscriptionDisplay({ status: "expired" })).toEqual("canceled");
+  });
+});
+
+describe("findMembershipByCheckout", () => {
+  type FetchLike = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
+  function membershipsResponse(memberships: Record<string, unknown>[]) {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({ data: memberships, page_info: { has_next_page: false } }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    return mock;
+  }
+
+  it("returns the signed-in member for a matching checkout_configuration_id", async () => {
+    const memberships = [
+      { id: "mem_other", checkout_configuration_id: "ch_other", plan: { id: "plan_monthly" }, status: "active" },
+      { id: "mem_mine", checkout_configuration_id: "ch_DkK7iKsNYm7Pexj", plan: { id: "plan_monthly" }, status: "active" },
+    ];
+    const fetchMock = membershipsResponse(memberships);
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_COMPANY_ID = "biz_123";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+
+    const found = await findMembershipByCheckout("ch_DkK7iKsNYm7Pexj");
+
+    const calledUrl = String(fetchMock.mock.calls[0][0]);
+    expect(calledUrl).toContain("/memberships");
+    expect(calledUrl).toContain("company_id=biz_123");
+    expect(decodeURIComponent(calledUrl)).toContain("plan_ids[]=plan_monthly");
+    expect(found).toMatchObject({ id: "mem_mine", status: "active" });
+  });
+
+  it("returns null when no membership matches the checkout id", async () => {
+    const fetchMock = membershipsResponse([
+      { id: "mem_1", checkout_configuration_id: "ch_other", plan: { id: "plan_monthly" } },
+    ]);
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_COMPANY_ID = "biz_123";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+
+    const found = await findMembershipByCheckout("ch_none");
+    expect(found).toBeNull();
+    expect(fetchMock).toHaveBeenCalled();
+  });
+
+  it("pages through multiple results until it finds the matching membership", async () => {
+    let call = 0;
+    const mock = vi.fn<FetchLike>(async () => {
+      call += 1;
+      if (call === 1) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: [{ id: "mem_1", checkout_configuration_id: "ch_x", plan: { id: "plan_monthly" } }],
+            page_info: { has_next_page: true, end_cursor: "cursor1" },
+          }),
+        } as unknown as Response;
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          data: [{ id: "mem_mine", checkout_configuration_id: "ch_target", plan: { id: "plan_monthly" } }],
+          page_info: { has_next_page: false },
+        }),
+      } as unknown as Response;
+    });
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_COMPANY_ID = "biz_123";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+
+    const found = await findMembershipByCheckout("ch_target");
+    expect(found).toMatchObject({ id: "mem_mine" });
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+    const secondUrl = String(mock.mock.calls[1][0]);
+    expect(secondUrl).toContain("after=cursor1");
+  });
+
+  it("throws WhopApiError when no pro plan id is configured", async () => {
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_COMPANY_ID = "biz_123";
+    delete process.env.WHOP_PLAN_ID_PRO;
+    delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
+
+    await expect(findMembershipByCheckout("ch_x")).rejects.toMatchObject({ status: 500 });
+  });
+
+  it("throws WhopApiError when company id is missing", async () => {
+    process.env.WHOP_API_KEY = "apik_test";
+    delete process.env.WHOP_COMPANY_ID;
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+
+    await expect(findMembershipByCheckout("ch_x")).rejects.toMatchObject({ status: 500 });
+  });
+
+  it("throws WhopApiError on a non-2xx response", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({ ok: false, status: 403, json: async () => ({}) }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_COMPANY_ID = "biz_123";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+
+    await expect(findMembershipByCheckout("ch_x")).rejects.toMatchObject({ status: 403 });
   });
 });

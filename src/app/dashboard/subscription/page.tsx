@@ -1,9 +1,37 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
-import { getMembership, listMembershipPayments, type WhopPayment } from "@/lib/whop";
+import { getMembership, listMembershipPayments, findMembershipByCheckout, type WhopMembership, type WhopPayment } from "@/lib/whop";
 import { SubscriptionClient } from "./SubscriptionClient";
 
 export const dynamic = "force-dynamic";
+
+async function latestCheckoutId(supabase: Awaited<ReturnType<typeof createClient>>, profileId: string): Promise<string | null> {
+  const { data } = await supabase
+    .from("pro_checkouts")
+    .select("checkout_configuration_id")
+    .eq("profile_id", profileId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return data?.checkout_configuration_id ?? null;
+}
+
+async function persistResolvedMembership(
+  profileId: string,
+  membership: WhopMembership,
+) {
+  const admin = createAdminClient();
+  await admin
+    .from("subscriptions")
+    .update({
+      whop_membership_id: membership.id,
+      status: membership.status ?? "active",
+      current_period_end: membership.current_period_end ?? null,
+      cancel_at_period_end: membership.cancel_at_period_end ?? false,
+    })
+    .eq("profile_id", profileId);
+}
 
 export default async function SubscriptionPage() {
   const supabase = await createClient();
@@ -24,26 +52,41 @@ export default async function SubscriptionPage() {
     : null;
 
   const isPro = sub?.plan === "pro" && (sub.status === "active" || sub.status === "trialing");
-  const missingMembershipId = isPro && !sub?.whop_membership_id;
 
-  let membership = null;
+  let membership: WhopMembership | null = null;
   let payments: WhopPayment[] = [];
   let error: string | null = null;
 
-  if (isPro && sub?.whop_membership_id) {
-    try {
+  try {
+    if (isPro && sub?.whop_membership_id) {
       membership = await getMembership(sub.whop_membership_id);
       payments = await listMembershipPayments(sub.whop_membership_id);
-    } catch (e) {
-      console.error("[subscription] Whop fetch failed:", e);
-      error = "unavailable";
+    } else if (isPro) {
+      // Self-heal: the webhook may not have recorded the membership id yet.
+      // Resolve it from the checkout configuration we stored at checkout start.
+      const checkoutId = await latestCheckoutId(supabase, user.id);
+      if (checkoutId) {
+        const resolved = await findMembershipByCheckout(checkoutId);
+        if (resolved) {
+          await persistResolvedMembership(user.id, resolved);
+          membership = resolved;
+          if (resolved.id) {
+            payments = await listMembershipPayments(resolved.id);
+          }
+        }
+      }
     }
+  } catch (e) {
+    console.error("[subscription] Whop fetch failed:", e);
+    error = "unavailable";
   }
+
+  const missingMembership = isPro && !membership;
 
   return (
     <SubscriptionClient
       isPro={isPro}
-      missingMembership={missingMembershipId}
+      missingMembership={missingMembership}
       membership={membership}
       payments={payments}
       error={error}

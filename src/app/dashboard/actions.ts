@@ -219,7 +219,12 @@ export async function startSubscription(formData: FormData) {
 
   let purchaseUrl: string;
   try {
-    ({ purchaseUrl } = await createCheckoutConfig(user.id, interval));
+    const { sessionId, purchaseUrl: url } = await createCheckoutConfig(user.id, interval);
+    purchaseUrl = url;
+    await supabase.from("pro_checkouts").insert({
+      profile_id: user.id,
+      checkout_configuration_id: sessionId,
+    });
   } catch (err) {
     console.error("[startSubscription]", err);
     redirect("/dashboard?error=checkout_failed");

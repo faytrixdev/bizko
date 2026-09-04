@@ -141,6 +141,80 @@ export function getMembership(membershipId: string): Promise<WhopMembership> {
   return whopGet<WhopMembership>(`/memberships/${membershipId}`);
 }
 
+/**
+ * Finds a membership for a checkout configuration id (the `ch_...` session id
+ * our app created via `createCheckoutConfig`), by paging through the memberships
+ * of our Pro plans until the `checkout_configuration_id` matches.
+ *
+ * Requires `member:basic:read` and `WHOP_COMPANY_ID` (Whop requires a
+ * company id when authenticating with an API key). Returns null when no
+ * membership matches. Lets the subscription page resolve a user's membership
+ * without depending on the webhook.
+ */
+export interface WhopMembershipSummary {
+  id: string;
+  plan_id?: string | null;
+  status?: string;
+  cancel_at_period_end?: boolean;
+  current_period_end?: string | null;
+  formatted_renewal_price?: string | null;
+}
+
+interface WhopMembershipListEntry {
+  id?: string;
+  checkout_configuration_id?: string | null;
+  status?: string;
+  cancel_at_period_end?: boolean;
+  renewal_period_end?: string | null;
+  formatted_renewal_price?: string | null;
+  plan?: { id?: string | null } | null;
+}
+
+export async function findMembershipByCheckout(
+  checkoutConfigurationId: string
+): Promise<WhopMembershipSummary | null> {
+  const apiKey = process.env.WHOP_API_KEY;
+  const companyId = process.env.WHOP_COMPANY_ID;
+  const planIds = [process.env.WHOP_PLAN_ID_PRO, process.env.WHOP_PLAN_ID_PRO_YEARLY].filter(
+    (x): x is string => Boolean(x)
+  );
+  if (!apiKey) throw new WhopApiError("Whop not configured", 500);
+  if (!companyId || !planIds.length) throw new WhopApiError("Whop not configured", 500);
+
+  const params = new URLSearchParams({
+    company_id: companyId,
+    first: "100",
+  });
+  planIds.forEach((p) => params.append("plan_ids[]", p));
+
+  let after: string | null = null;
+  for (let page = 0; page < 10; page++) {
+    const query = new URLSearchParams(params);
+    if (after) query.set("after", after);
+    const data = await whopGet<{
+      data?: WhopMembershipListEntry[];
+      page_info?: { has_next_page?: boolean; end_cursor?: string | null };
+    }>(`/memberships?${query.toString()}`);
+
+    const match = (data.data ?? []).find(
+      (m) => m.checkout_configuration_id === checkoutConfigurationId
+    );
+    if (match) {
+      return {
+        id: match.id ?? "",
+        plan_id: match.plan?.id ?? null,
+        status: match.status,
+        cancel_at_period_end: match.cancel_at_period_end,
+        current_period_end: match.renewal_period_end ?? null,
+        formatted_renewal_price: match.formatted_renewal_price ?? null,
+      };
+    }
+    if (!data.page_info?.has_next_page || !data.page_info.end_cursor) return null;
+    after = data.page_info.end_cursor;
+  }
+  return null;
+}
+
 export type CancellationMode = "at_period_end" | "now";
 
 async function whopPost<T>(path: string, body?: unknown): Promise<T> {

@@ -140,3 +140,25 @@ async function whopGet<T>(path: string): Promise<T> {
 export function getMembership(membershipId: string): Promise<WhopMembership> {
   return whopGet<WhopMembership>(`/memberships/${membershipId}`);
 }
+
+export type CancellationMode = "at_period_end" | "now";
+
+async function whopPost<T>(path: string, body?: unknown): Promise<T> {
+  const apiKey = process.env.WHOP_API_KEY;
+  if (!apiKey) throw new WhopApiError("Whop not configured", 500);
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  if (!res.ok) throw new WhopApiError(`Whop POST ${path} failed (${res.status})`, res.status);
+  return (await res.json()) as T;
+}
+
+export function cancelMembership(membershipId: string, mode: CancellationMode = "at_period_end"): Promise<WhopMembership> {
+  return whopPost<WhopMembership>(`/memberships/${membershipId}/cancel`, { cancellation_mode: mode });
+}
+
+export function uncancelMembership(membershipId: string): Promise<WhopMembership> {
+  return whopPost<WhopMembership>(`/memberships/${membershipId}/uncancel`);
+}

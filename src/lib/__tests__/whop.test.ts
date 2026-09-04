@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership } from "../whop";
+import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -217,5 +217,53 @@ describe("getMembership", () => {
     process.env.WHOP_API_KEY = "apik_test";
 
     await expect(getMembership("mber_missing")).rejects.toMatchObject({ status: 404 });
+  });
+});
+
+describe("cancelMembership / uncancelMembership", () => {
+  type FetchLike = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
+  function mockOkResponse(body: unknown = {}) {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({ ok: true, status: 200, json: async () => body }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    return mock;
+  }
+  function requestInitOf(mock: ReturnType<typeof mockOkResponse>): RequestInit {
+    return mock.mock.calls[0][1];
+  }
+
+  it("cancels at_period_end by default with a POST body", async () => {
+    const fetchMock = mockOkResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+
+    await cancelMembership("mber_123");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.whop.com/api/v1/memberships/mber_123/cancel",
+      expect.objectContaining({ method: "POST" })
+    );
+    expect(JSON.parse(String(requestInitOf(fetchMock).body))).toEqual({ cancellation_mode: "at_period_end" });
+  });
+
+  it("supports immediate cancellation", async () => {
+    const fetchMock = mockOkResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+
+    await cancelMembership("mber_123", "now");
+
+    expect(JSON.parse(String(requestInitOf(fetchMock).body))).toEqual({ cancellation_mode: "now" });
+  });
+
+  it("uncancels via POST to /uncancel", async () => {
+    const fetchMock = mockOkResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+
+    await uncancelMembership("mber_123");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.whop.com/api/v1/memberships/mber_123/uncancel",
+      expect.objectContaining({ method: "POST" })
+    );
   });
 });

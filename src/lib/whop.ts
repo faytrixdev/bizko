@@ -93,7 +93,11 @@ export async function createCheckoutConfig(
   const planId = resolveProPlanId(interval);
   if (!apiKey || !planId) throw new WhopApiError("Whop not configured", 500);
 
-  const redirect = redirectUrl ?? process.env.WHOP_CHECKOUT_REDIRECT_URL ?? "/dashboard?success=pro";
+  let redirect = redirectUrl ?? process.env.WHOP_CHECKOUT_REDIRECT_URL ?? "/dashboard?success=pro";
+  if (!/^https?:\/\//i.test(redirect)) {
+    const base = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+    redirect = `${base}${redirect.startsWith("/") ? "" : "/"}${redirect}`;
+  }
 
   const res = await fetch(`${BASE_URL}/checkout_configurations`, {
     method: "POST",

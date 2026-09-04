@@ -111,10 +111,11 @@ describe("createCheckoutConfig", () => {
     return String(requestInitOf(mock).body);
   }
 
-  it("sends redirect_url defaulting to /dashboard?success=pro", async () => {
+  it("sends redirect_url defaulting to /dashboard?success=pro (absolute)", async () => {
     const fetchMock = mockCheckoutResponse();
     process.env.WHOP_API_KEY = "apik_test";
     process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    process.env.NEXT_PUBLIC_SITE_URL = "https://bizko.pro";
     delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
     delete process.env.WHOP_CHECKOUT_REDIRECT_URL;
 
@@ -123,7 +124,7 @@ describe("createCheckoutConfig", () => {
     const body = JSON.parse(requestBodyOf(fetchMock));
     expect(body.plan_id).toBe("plan_monthly");
     expect(body.metadata).toEqual({ profile_id: "profile_1" });
-    expect(body.redirect_url).toBe("/dashboard?success=pro");
+    expect(body.redirect_url).toBe("https://bizko.pro/dashboard?success=pro");
   });
 
   it("uses WHOP_CHECKOUT_REDIRECT_URL when set", async () => {
@@ -136,6 +137,19 @@ describe("createCheckoutConfig", () => {
 
     const body = JSON.parse(requestBodyOf(fetchMock));
     expect(body.redirect_url).toBe("https://bizko.pro/done");
+  });
+
+  it("turns a relative WHOP_CHECKOUT_REDIRECT_URL into an absolute one", async () => {
+    const fetchMock = mockCheckoutResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+    process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
+    process.env.WHOP_CHECKOUT_REDIRECT_URL = "/merci";
+    process.env.NEXT_PUBLIC_SITE_URL = "https://bizko.pro";
+
+    await createCheckoutConfig("profile_2b", "monthly");
+
+    const body = JSON.parse(requestBodyOf(fetchMock));
+    expect(body.redirect_url).toBe("https://bizko.pro/merci");
   });
 
   it("allows an explicit redirectUrl override", async () => {

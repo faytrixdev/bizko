@@ -116,3 +116,27 @@ export async function createCheckoutConfig(
   const json = (await res.json()) as { id: string; purchase_url?: string; url?: string };
   return { sessionId: json.id, purchaseUrl: json.purchase_url ?? json.url ?? "" };
 }
+
+export interface WhopMembership {
+  id: string;
+  plan_id?: string | null;
+  status?: string;
+  cancel_at_period_end?: boolean;
+  current_period_end?: string | null;
+  formatted_renewal_price?: string | null;
+}
+
+async function whopGet<T>(path: string): Promise<T> {
+  const apiKey = process.env.WHOP_API_KEY;
+  if (!apiKey) throw new WhopApiError("Whop not configured", 500);
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+  if (!res.ok) throw new WhopApiError(`Whop GET ${path} failed (${res.status})`, res.status);
+  return (await res.json()) as T;
+}
+
+export function getMembership(membershipId: string): Promise<WhopMembership> {
+  return whopGet<WhopMembership>(`/memberships/${membershipId}`);
+}

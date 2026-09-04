@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook, createCheckoutConfig } from "../whop";
+import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -167,5 +167,55 @@ describe("createCheckoutConfig", () => {
     process.env.WHOP_API_KEY = "";
     process.env.WHOP_PLAN_ID_PRO = "";
     await expect(createCheckoutConfig("profile_1", "monthly")).rejects.toThrow();
+  });
+});
+
+describe("getMembership", () => {
+  type FetchLike = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
+  function mockMembershipResponse() {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          id: "mber_123",
+          plan_id: "plan_Y19ISQ4TaOryH",
+          status: "active",
+          cancel_at_period_end: false,
+          current_period_end: "2026-10-04T00:00:00.000Z",
+          formatted_renewal_price: "2 500 FCFA",
+        }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    return mock;
+  }
+
+  function requestInitOf(mock: ReturnType<typeof mockMembershipResponse>): RequestInit {
+    return mock.mock.calls[0][1];
+  }
+
+  it("GETs /memberships/:id with auth and returns the membership", async () => {
+    const fetchMock = mockMembershipResponse();
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const membership = await getMembership("mber_123");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.whop.com/api/v1/memberships/mber_123",
+      expect.objectContaining({ method: "GET" })
+    );
+    expect(requestInitOf(fetchMock).headers).toMatchObject({ Authorization: "Bearer apik_test" });
+    expect(membership).toMatchObject({ id: "mber_123", status: "active", cancel_at_period_end: false });
+  });
+
+  it("throws WhopApiError on a non-2xx response", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({ ok: false, status: 404, json: async () => ({}) }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    await expect(getMembership("mber_missing")).rejects.toMatchObject({ status: 404 });
   });
 });

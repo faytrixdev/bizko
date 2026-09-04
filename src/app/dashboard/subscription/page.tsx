@@ -24,6 +24,7 @@ export default async function SubscriptionPage() {
     : null;
 
   const isPro = sub?.plan === "pro" && (sub.status === "active" || sub.status === "trialing");
+  const missingMembershipId = isPro && !sub?.whop_membership_id;
 
   let membership = null;
   let payments: WhopPayment[] = [];
@@ -42,6 +43,7 @@ export default async function SubscriptionPage() {
   return (
     <SubscriptionClient
       isPro={isPro}
+      missingMembership={missingMembershipId}
       membership={membership}
       payments={payments}
       error={error}

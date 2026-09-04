@@ -590,6 +590,7 @@
     "retry": "Try again",
     "successCanceled": "Your subscription will be canceled at the end of the period.",
     "successReactivated": "Your subscription has been reactivated.",
-    "manage": "Manage subscription"
+    "manage": "Manage subscription",
+    "noMembership": "We couldn't fetch your Whop subscription details. Contact support if the problem persists."
   }
 }

@@ -15,6 +15,7 @@ import {
 
 interface SubscriptionClientProps {
   isPro: boolean;
+  missingMembership: boolean;
   membership: WhopMembership | null;
   payments: WhopPayment[];
   error: string | null;
@@ -46,6 +47,7 @@ const BADGE_KEYS: Record<SubscriptionDisplay, string> = {
 
 export function SubscriptionClient({
   isPro,
+  missingMembership,
   membership,
   payments,
   error,
@@ -203,6 +205,15 @@ export function SubscriptionClient({
                 </Link>
               )}
             </div>
+          </div>
+        )}
+
+        {missingMembership && (
+          <div className="rounded-2xl border border-gray-200 p-5 mb-6">
+            <p className="text-sm font-semibold text-gray-900 mb-1">
+              {t("subscription.plan")}
+            </p>
+            <p className="text-sm text-gray-500">{t("subscription.noMembership")}</p>
           </div>
         )}
 

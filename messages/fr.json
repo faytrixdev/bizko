@@ -590,6 +590,7 @@
     "retry": "Réessayer",
     "successCanceled": "Ton abonnement sera annulé à la fin de la période.",
     "successReactivated": "Ton abonnement a été réactivé.",
-    "manage": "Gérer l'abonnement"
+    "manage": "Gérer l'abonnement",
+    "noMembership": "Nous n'arrivons pas à récupérer les détails de ton abonnement Whop. Contacte le support si le problème persiste."
   }
 }

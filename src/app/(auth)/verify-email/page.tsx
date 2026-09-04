@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AuthShell, Alert, SubmitButton } from "@/components/auth";
 import { resendConfirmationEmail } from "../actions";
 import { useI18n } from "@/lib/i18n/provider";
+import { useCleanUrl } from "@/lib/hooks";
 
 const COOLDOWN_SECONDS = 60;
 
@@ -15,6 +16,7 @@ export default function VerifyEmail() {
   const { t } = useI18n();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  useCleanUrl();
 
   const [cooldown, setCooldown] = useState(COOLDOWN_SECONDS);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);

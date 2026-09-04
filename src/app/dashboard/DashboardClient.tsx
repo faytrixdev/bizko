@@ -8,6 +8,7 @@ import { Logo } from "@/components/Logo";
 import { InstallAppButton } from "@/components/pwa/InstallAppButton";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
+import { useCleanUrl } from "@/lib/hooks";
 import { startSubscription } from "./actions";
 import type { Profile, Service, PortfolioItem, SocialLink } from "@/types/database";
 import type { DailyEvent, ClickBucket } from "@/types/analytics";
@@ -72,6 +73,7 @@ export function DashboardClient({
   const successCode = searchParams.get("success");
   const errorMsg = errorCode ? t(ERROR_KEYS_FULL[errorCode] ?? "dashboard.errorGeneric") : null;
   const successMsg = successCode ? t(SUCCESS_KEYS[successCode] ?? "dashboard.successSaved") : null;
+  useCleanUrl();
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "apercu", label: t("dashboard.tabs.apercu"), icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },

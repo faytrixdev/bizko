@@ -6,12 +6,14 @@ import { forgotPassword } from "../actions";
 import { AuthShell, Field, Input, SubmitButton, Alert } from "@/components/auth";
 import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
+import { useCleanUrl } from "@/lib/hooks";
 
 export default function ForgotPassword() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;
   const success = searchParams.get("success") || undefined;
   const { t } = useI18n();
+  useCleanUrl();
 
   return (
     <AuthShell title={t("auth.forgotTitle")} subtitle={t("auth.forgotSubtitle")}>

@@ -7,12 +7,14 @@ import { exchangeResetCode, resetPassword } from "../actions";
 import { AuthShell, Field, PasswordInput, SubmitButton, Alert } from "@/components/auth";
 import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
+import { useCleanUrl } from "@/lib/hooks";
 
 export default function ResetPassword() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;
   const code = searchParams.get("code");
   const { t } = useI18n();
+  useCleanUrl();
 
   const [exchangeError, setExchangeError] = useState(false);
   const [isPending, startTransition] = useTransition();

@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { useI18n } from "@/lib/i18n/provider";
+import { useCleanUrl } from "@/lib/hooks";
 import { completeOnboarding } from "./actions";
 import { UsernameField } from "@/components/UsernameField";
 import { CountrySelect } from "@/components/CountrySelect";
@@ -35,6 +36,7 @@ export default function Onboarding() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;
   const { t } = useI18n();
+  useCleanUrl();
   const [usernameStatus, setUsernameStatus] = useState("idle");
 
   const errorMsg = error ? t(ERROR_KEYS[error] ?? "onboarding.errorGeneric") : undefined;

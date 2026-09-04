@@ -6,12 +6,14 @@ import { login } from "../actions";
 import { AuthShell, Field, Input, PasswordInput, SubmitButton, Alert, GoogleOAuthButton } from "@/components/auth";
 import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
+import { useCleanUrl } from "@/lib/hooks";
 
 export default function Login() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;
   const success = searchParams.get("success") || undefined;
   const { t } = useI18n();
+  useCleanUrl();
 
   const successMessage =
     success === "password_updated" ? t("auth2.successPasswordUpdated") : undefined;

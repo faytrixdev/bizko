@@ -29,8 +29,9 @@ export async function cancelSubscriptionAction() {
     console.error("[subscription] cancel failed:", err);
     failed = true;
   }
+  if (failed) redirect("/dashboard/subscription?error=generic");
   revalidatePath("/dashboard/subscription");
-  redirect(failed ? "/dashboard/subscription?error=generic" : "/dashboard/subscription?success=canceled");
+  redirect("/dashboard/subscription?success=canceled");
 }
 
 export async function reactivateSubscriptionAction() {
@@ -45,6 +46,7 @@ export async function reactivateSubscriptionAction() {
     console.error("[subscription] reactivate failed:", err);
     failed = true;
   }
+  if (failed) redirect("/dashboard/subscription?error=generic");
   revalidatePath("/dashboard/subscription");
-  redirect(failed ? "/dashboard/subscription?error=generic" : "/dashboard/subscription?success=reactivated");
+  redirect("/dashboard/subscription?success=reactivated");
 }

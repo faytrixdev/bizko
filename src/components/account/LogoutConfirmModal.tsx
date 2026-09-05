@@ -36,7 +36,14 @@ export function LogoutConfirmModal({ open, onClose }: LogoutConfirmModalProps) {
     setError(null);
     try {
       const result = await logout();
-      if (result?.error) setError(result.error);
+      if (result && "error" in result && result.error) {
+        setError(result.error);
+      } else {
+        // Hard navigation clears any client-side session leftovers (localStorage)
+        // a soft router.push wouldn't wipe.
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+        window.location.href = "/";
+      }
     } catch {
       setError(t("auth2.logoutError"));
     } finally {

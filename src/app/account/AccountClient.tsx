@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useConsent } from "@/lib/cookies/consent-context";
 import { Logo } from "@/components/Logo";
 import { InstallAppButton } from "@/components/pwa/InstallAppButton";
+import { Cookie } from "lucide-react";
 import type { Profile } from "@/types/database";
 
 interface AccountClientProps {
@@ -51,8 +52,8 @@ export function AccountClient({ user, profile }: AccountClientProps) {
         <div className="flex flex-col gap-4">
           {/* Security Section */}
           <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+<div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 shrink-0 rounded-xl bg-gray-100 flex items-center justify-center">
                 <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
@@ -80,7 +81,7 @@ export function AccountClient({ user, profile }: AccountClientProps) {
           {/* Session Section */}
           <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 rounded-xl bg-gray-100 flex items-center justify-center">
                 <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                 </svg>
@@ -107,10 +108,8 @@ export function AccountClient({ user, profile }: AccountClientProps) {
           {/* Cookie Preferences Section */}
           <div className="border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                </svg>
+              <div className="w-10 h-10 shrink-0 rounded-xl bg-gray-100 flex items-center justify-center">
+                <Cookie className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-gray-900">{t("cookieConsent.title")}</h2>

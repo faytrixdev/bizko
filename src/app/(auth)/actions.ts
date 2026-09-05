@@ -233,7 +233,7 @@ export async function resendConfirmationEmail(email: string) {
   return { success: msg.auth2.successEmailResent };
 }
 
-export async function logout(): Promise<{ error?: string }> {
+export async function logout(): Promise<{ error?: string } | { ok: true }> {
   const supabase = await createClient();
   const msg = await actionMessages();
   // Local scope: only revoke THIS device's session, not the user's other
@@ -243,8 +243,9 @@ export async function logout(): Promise<{ error?: string }> {
     console.error("logout error:", error);
     return { error: msg.auth2.logoutError };
   }
-  revalidatePath("/", "layout");
-  redirect("/");
+  // Navigate client-side to "/" (see LogoutConfirmModal): redirect() here would
+  // surface as a NEXT_REDIRECT error to the imperative `await logout()` caller.
+  return { ok: true };
 }
 
 export async function forgotPassword(formData: FormData) {

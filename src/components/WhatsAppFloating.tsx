@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useI18n } from "@/lib/i18n/provider";
 
 interface WhatsAppFloatingProps {
   href: string;
 }
 
 export function WhatsAppFloating({ href }: WhatsAppFloatingProps) {
+  const { t } = useI18n();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export function WhatsAppFloating({ href }: WhatsAppFloatingProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Contacter sur WhatsApp"
+      aria-label={t("profile.whatsappAria")}
       className="hidden sm:flex fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-whatsapp items-center justify-center shadow-lg shadow-[#25D366]/30 hover:bg-whatsapp-hover hover:scale-110 transition-all duration-300"
     >
       <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">

@@ -40,7 +40,6 @@ export async function updateProfile(formData: FormData) {
   const phone_e164 = (formData.get("phone_e164") as string).replace(/\s/g, "");
   const email_public = (formData.get("email_public") as string)?.trim() || null;
   const template = formData.get("template") as string;
-  const locale = formData.get("locale") as string;
 
   if (!display_name || !tagline || !city || !country || !phone_e164) {
     redirect("/dashboard?error=missing");
@@ -49,7 +48,7 @@ export async function updateProfile(formData: FormData) {
   if (email_public && !EMAIL_RE.test(email_public)) redirect("/dashboard?error=invalid_email");
 
   const { error } = await supabase.from("profiles").update({
-    display_name, tagline, bio, city, country, phone_e164, email_public, template, locale,
+    display_name, tagline, bio, city, country, phone_e164, email_public, template,
   }).eq("id", user.id);
 
   if (error) redirect(`/dashboard?error=${dashboardError(error)}`);

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { getServerMessagesForLocale } from "@/lib/i18n/messages-server";
+import { getMessages } from "@/lib/i18n/messages";
+import { getServerMessages, resolveServerLocale } from "@/lib/i18n/messages-server";
 import { getCachedPublicProfileData } from "@/lib/supabase/queries";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import { PortfolioGallery } from "@/components/Lightbox";
@@ -15,15 +16,19 @@ type Props = { params: Promise<{ username: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params;
+  const locale = await resolveServerLocale();
+  const msg = getMessages(locale);
   const data = await getCachedPublicProfileData(username);
 
-  // NOTE: Metadata is FR-only for MVP. generateMetadata lacks access to locale context.
-  // Profile data comes from the database; adding a locale field to profiles would enable full i18n.
-  if (!data) return { title: "Profil introuvable - Bizko" };
+  if (!data) return { title: `${msg.notFound.title} | Bizko` };
 
   const { profile } = data;
   const title = `${profile.display_name} - ${profile.tagline} | Bizko`;
-  const description = profile.bio?.slice(0, 155) || `${profile.tagline} a ${profile.city}. Contacte sur WhatsApp via Bizko.`;
+  const description =
+    profile.bio?.slice(0, 155) ||
+    (locale === "en"
+      ? `${profile.tagline} in ${profile.city}. ${msg.profile.metaFallback}`
+      : `${profile.tagline} a ${profile.city}. ${msg.profile.metaFallback}`);
 
   return {
     title,
@@ -50,7 +55,7 @@ export default async function PublicProfile({ params }: Props) {
 
   const { profile, services, portfolio, socials } = data;
 
-  const msg = await getServerMessagesForLocale(profile.locale);
+  const msg = await getServerMessages();
 
   const mainWaRaw = buildWaLink(profile.phone_e164, buildMainWaMessage(profile.display_name));
   const telLink = `tel:${profile.phone_e164}`;

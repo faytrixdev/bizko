@@ -5,6 +5,15 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
+import { getMessages } from "@/lib/i18n/messages";
+import { resolveServerLocale } from "@/lib/i18n/messages-server";
+
+// Localize messages returned to the client by server actions. Server actions have
+// access to the request's cookie / Accept-Language, matching the page they were
+// called from.
+async function actionMessages() {
+  return getMessages(await resolveServerLocale());
+}
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
@@ -99,19 +108,20 @@ export async function changePassword(formData: FormData) {
   const currentPassword = formData.get("currentPassword") as string;
   const newPassword = formData.get("newPassword") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
+  const msg = await actionMessages();
 
   if (newPassword !== confirmPassword) {
-    return { error: "Les mots de passe ne correspondent pas." };
+    return { error: msg.password.errorMismatch };
   }
 
   if (newPassword.length < 6) {
-    return { error: "Le mot de passe doit contenir au moins 6 caractères." };
+    return { error: msg.password.errorMin };
   }
 
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user?.email) {
-    return { error: "Utilisateur non trouvé." };
+    return { error: msg.password.errorNotFound };
   }
 
   const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -120,7 +130,7 @@ export async function changePassword(formData: FormData) {
   });
 
   if (signInError) {
-    return { error: "Mot de passe actuel incorrect." };
+    return { error: msg.password.errorCurrent };
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -129,10 +139,10 @@ export async function changePassword(formData: FormData) {
 
   if (error) {
     console.error("changePassword updateUser error:", error);
-    return { error: "Une erreur est survenue. Reessaie." };
+    return { error: msg.password.error };
   }
 
-  return { success: "Mot de passe modifié avec succès." };
+  return { success: msg.password.success };
 }
 
 const DELETE_CONFIRMATION = "DELETE";
@@ -141,23 +151,24 @@ export async function deleteAccount(formData: FormData) {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
+  const msg = await actionMessages();
 
   if (!user) {
-    return { error: "Utilisateur non trouvé." };
+    return { error: msg.auth2.userNotFound };
   }
 
   const confirmation = (formData.get("confirmation") as string) ?? "";
   if (confirmation !== DELETE_CONFIRMATION) {
-    return { error: "Veuillez taper DELETE pour confirmer la suppression." };
+    return { error: msg.accountPage.deleteConfirmationRequired };
   }
 
   const currentPassword = formData.get("currentPassword") as string;
   if (!currentPassword) {
-    return { error: "Mot de passe actuel requis pour supprimer le compte." };
+    return { error: msg.accountPage.passwordRequiredForDelete };
   }
 
   if (!user.email) {
-    return { error: "Impossible de re-vérifier le compte (email manquant)." };
+    return { error: msg.accountPage.reverifyEmailMissing };
   }
 
   // Re-authenticate before any destructive operation. Prevents account
@@ -167,7 +178,7 @@ export async function deleteAccount(formData: FormData) {
     password: currentPassword,
   });
   if (signInError) {
-    return { error: "Mot de passe actuel incorrect." };
+    return { error: msg.password.errorCurrent };
   }
 
   const uid = user.id;
@@ -192,13 +203,13 @@ export async function deleteAccount(formData: FormData) {
   const { error: deleteUserError } = await admin.auth.admin.deleteUser(uid);
 
   if (deleteUserError) {
-    return { error: "Erreur lors de la suppression du compte." };
+    return { error: msg.deleteAccount.error };
   }
 
   const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
 
   if (signOutError) {
-    return { error: "Erreur lors de la déconnexion." };
+    return { error: msg.auth2.logoutError };
   }
 
   updateTag(PUBLIC_PROFILES_TAG);
@@ -207,6 +218,7 @@ export async function deleteAccount(formData: FormData) {
 
 export async function resendConfirmationEmail(email: string) {
   const supabase = await createClient();
+  const msg = await actionMessages();
 
   const { error } = await supabase.auth.resend({
     type: "signup",
@@ -215,20 +227,21 @@ export async function resendConfirmationEmail(email: string) {
 
   if (error) {
     console.error("resendConfirmationEmail error:", error);
-    return { error: "Une erreur est survenue. Reessaie dans un instant." };
+    return { error: msg.auth2.errorFetchFailed };
   }
 
-  return { success: "Email de confirmation renvoyé." };
+  return { success: msg.auth2.successEmailResent };
 }
 
 export async function logout(): Promise<{ error?: string }> {
   const supabase = await createClient();
+  const msg = await actionMessages();
   // Local scope: only revoke THIS device's session, not the user's other
   // logged-in devices. Global scope (the default) signs the user out everywhere.
   const { error } = await supabase.auth.signOut({ scope: "local" });
   if (error) {
     console.error("logout error:", error);
-    return { error: "Erreur lors de la deconnexion." };
+    return { error: msg.auth2.logoutError };
   }
   revalidatePath("/", "layout");
   redirect("/");
@@ -252,7 +265,7 @@ export async function forgotPassword(formData: FormData) {
     if (digest?.startsWith("NEXT_REDIRECT")) throw e;
     redirect(`/forgot-password?error=${encodeURIComponent("forgot_failed")}`);
   }
-  redirect(`/forgot-password?success=${encodeURIComponent("Lien envoyé - vérifie ta boîte mail.")}`);
+  redirect(`/forgot-password?success=${encodeURIComponent("email_sent")}`);
 }
 
 export async function exchangeResetCode(code: string) {

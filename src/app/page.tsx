@@ -1,18 +1,21 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getServerMessages } from "@/lib/i18n/messages-server";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SectionReveal } from "@/components/landing/SectionReveal";
 import { ProfileMockup } from "@/components/landing/ProfileMockup";
 import { FaqItem } from "@/components/landing/FaqItem";
 
-export const metadata = {
-  title: "Bizko - Ton business en un lien",
-  description:
-    "Crée ton profil pro en 3 minutes. Services, prix, portfolio et WhatsApp dans un seul lien à partager partout.",
-  alternates: {
-    canonical: "/",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const msg = await getServerMessages();
+  return {
+    title: msg.meta.title,
+    description: msg.meta.landingDescription,
+    alternates: {
+      canonical: "/",
+    },
+  };
+}
 
 export default async function Home() {
   const msg = await getServerMessages();

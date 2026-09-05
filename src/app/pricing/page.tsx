@@ -1,17 +1,20 @@
+import type { Metadata } from "next";
 import { getServerMessages } from "@/lib/i18n/messages-server";
 import { createClient } from "@/lib/supabase/server";
 import { isProPlan } from "@/lib/plans";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { PricingClient, type PricingCtaState } from "./PricingClient";
 
-export const metadata = {
-  title: "Bizko - Tarifs",
-  description:
-    "Compare Bizko Free et Bizko Pro. Services, réseaux, portfolio, vidéos et templates - choisis le plan qui te fait grandir.",
-  alternates: {
-    canonical: "/pricing",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const msg = await getServerMessages();
+  return {
+    title: msg.meta.pricingTitle,
+    description: msg.meta.pricingDescription,
+    alternates: {
+      canonical: "/pricing",
+    },
+  };
+}
 
 type SubRow = {
   plan?: string | null;

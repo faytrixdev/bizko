@@ -51,15 +51,6 @@ export function TabSettings({ profile }: TabSettingsProps) {
           ]}
           className="h-10"
         />
-        <CustomSelect
-          name="locale"
-          defaultValue={profile.locale || "fr"}
-          options={[
-            { value: "fr", label: "Français" },
-            { value: "en", label: "English" },
-          ]}
-          className="h-10"
-        />
         <SaveButton label={t("dashboard.save")} />
       </form>
 

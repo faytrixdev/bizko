@@ -3,6 +3,13 @@
     "choose": "Choose...",
     "cancel": "Cancel"
   },
+  "meta": {
+    "title": "Bizko - Your business in one link",
+    "description": "Create your pro profile in 3 minutes. Share it everywhere. Turn your visitors into WhatsApp clients.",
+    "landingDescription": "Create your pro profile in 3 minutes. Services, prices, portfolio and WhatsApp in a single link to share everywhere.",
+    "pricingDescription": "Compare Bizko Free and Bizko Pro. Services, socials, portfolio, videos and templates - choose the plan that helps you grow.",
+    "pricingTitle": "Bizko - Pricing"
+  },
   "landing": {
     "title": "Your business",
     "titleAccent": "in one link.",
@@ -344,7 +351,9 @@
     "call": "Call",
     "demandBtn": "Request",
     "madeWith": "Made with",
-    "stickyWa": "Chat on WhatsApp"
+    "stickyWa": "Chat on WhatsApp",
+    "metaFallback": "Contact on WhatsApp via Bizko.",
+    "whatsappAria": "Contact on WhatsApp"
   },
   "notFound": {
     "title": "This Bizko doesn't exist",
@@ -380,7 +389,8 @@
     "errorCurrent": "Current password is incorrect.",
     "errorNotFound": "User not found.",
     "errorMismatch": "Passwords do not match.",
-    "errorMin": "Password must contain at least 6 characters."
+    "errorMin": "Password must contain at least 6 characters.",
+    "error": "An error occurred."
   },
   "deleteAccount": {
     "zone": "Danger zone",
@@ -449,7 +459,9 @@
     "errorResetMismatch": "Passwords do not match.",
     "errorResetTooShort": "Password must be at least 6 characters.",
     "errorResetExpired": "This reset link is invalid or expired. Request a new link.",
-    "successPasswordUpdated": "Password updated - log in."
+    "successPasswordUpdated": "Password updated - log in.",
+    "successEmailResent": "Confirmation email resent.",
+    "successForgotEmail": "Link sent - check your inbox."
   },
   "username": {
     "available": "Username available",
@@ -502,7 +514,10 @@
     "passwordCancel": "Cancel",
     "passwordChangeBtn": "Change password",
     "passwordSuccess": "Password changed successfully.",
-    "passwordError": "An error occurred."
+    "passwordError": "An error occurred.",
+    "deleteConfirmationRequired": "Please type DELETE to confirm deletion.",
+    "passwordRequiredForDelete": "Current password required to delete your account.",
+    "reverifyEmailMissing": "Unable to re-verify the account (email missing)."
   },
   "legal": {
     "back": "Back to home",

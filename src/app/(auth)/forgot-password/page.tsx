@@ -15,10 +15,12 @@ export default function ForgotPassword() {
   const { t } = useI18n();
   useCleanUrl();
 
+  const successMessage = success === "email_sent" ? t("auth2.successForgotEmail") : undefined;
+
   return (
     <AuthShell title={t("auth.forgotTitle")} subtitle={t("auth.forgotSubtitle")}>
       {authErrorText(t, error) && <div className="mb-5"><Alert type="error">{authErrorText(t, error)}</Alert></div>}
-      {success && <div className="mb-5"><Alert type="success">{decodeURIComponent(success)}</Alert></div>}
+      {successMessage && <div className="mb-5"><Alert type="success">{successMessage}</Alert></div>}
 
       <form action={forgotPassword} className="flex flex-col gap-4">
         <Field label={t("auth.email")}>

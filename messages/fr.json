@@ -3,6 +3,13 @@
     "choose": "Choisir...",
     "cancel": "Annuler"
   },
+  "meta": {
+    "title": "Bizko - Ton business en un lien",
+    "description": "Crée ton profil pro en 3 minutes. Partage-le partout. Convertis tes visiteurs en clients WhatsApp.",
+    "landingDescription": "Crée ton profil pro en 3 minutes. Services, prix, portfolio et WhatsApp dans un seul lien à partager partout.",
+    "pricingDescription": "Compare Bizko Free et Bizko Pro. Services, réseaux, portfolio, vidéos et templates - choisis le plan qui te fait grandir.",
+    "pricingTitle": "Bizko - Tarifs"
+  },
   "landing": {
     "title": "Ton business",
     "titleAccent": "en un lien.",
@@ -344,7 +351,9 @@
     "call": "Appeler",
     "demandBtn": "Demander",
     "madeWith": "Fait avec",
-    "stickyWa": "Discuter sur WhatsApp"
+    "stickyWa": "Discuter sur WhatsApp",
+    "metaFallback": "Contacte sur WhatsApp via Bizko.",
+    "whatsappAria": "Contacter sur WhatsApp"
   },
   "notFound": {
     "title": "Ce Bizko n'existe pas",
@@ -380,7 +389,8 @@
     "errorCurrent": "Mot de passe actuel incorrect.",
     "errorNotFound": "Utilisateur non trouvé.",
     "errorMismatch": "Les mots de passe ne correspondent pas.",
-    "errorMin": "Le mot de passe doit contenir au moins 6 caractères."
+    "errorMin": "Le mot de passe doit contenir au moins 6 caractères.",
+    "error": "Une erreur est survenue."
   },
   "deleteAccount": {
     "zone": "Zone de danger",
@@ -449,7 +459,9 @@
     "errorResetMismatch": "Les mots de passe ne correspondent pas.",
     "errorResetTooShort": "Le mot de passe doit contenir au moins 6 caractères.",
     "errorResetExpired": "Ce lien de réinitialisation est invalide ou expiré. Redemande un nouveau lien.",
-    "successPasswordUpdated": "Mot de passe mis à jour - connecte-toi."
+    "successPasswordUpdated": "Mot de passe mis à jour - connecte-toi.",
+    "successEmailResent": "Email de confirmation renvoyé.",
+    "successForgotEmail": "Lien envoyé - vérifie ta boîte mail."
   },
   "username": {
     "available": "Username disponible",
@@ -502,7 +514,10 @@
     "passwordCancel": "Annuler",
     "passwordChangeBtn": "Modifier le mot de passe",
     "passwordSuccess": "Mot de passe modifié avec succès.",
-    "passwordError": "Une erreur est survenue."
+    "passwordError": "Une erreur est survenue.",
+    "deleteConfirmationRequired": "Veuillez taper DELETE pour confirmer la suppression.",
+    "passwordRequiredForDelete": "Mot de passe actuel requis pour supprimer le compte.",
+    "reverifyEmailMissing": "Impossible de re-vérifier le compte (email manquant)."
   },
   "legal": {
     "back": "Retour à l'accueil",

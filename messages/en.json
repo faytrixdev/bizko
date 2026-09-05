@@ -626,5 +626,22 @@
     "coach": "Coach / Trainer",
     "music": "Musician",
     "autre": "Other"
+  },
+  "explore": {
+    "title": "Explore talents",
+    "description": "Find freelancers and service providers in Côte d’Ivoire",
+    "searchPlaceholder": "Search a name, a job, a city…",
+    "searchLabel": "Search",
+    "filterCity": "City",
+    "filterCategory": "Category",
+    "allCities": "All cities",
+    "allCategories": "All categories",
+    "pro": "Pro",
+    "empty": "No profile found",
+    "emptyHint": "Try different filters",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}",
+    "reset": "Reset"
   }
 }

@@ -626,5 +626,22 @@
     "coach": "Coach / Formateur",
     "music": "Musicien",
     "autre": "Autre"
+  },
+  "explore": {
+    "title": "Explorer les talents",
+    "description": "Trouvez des freelances et prestataires en Côte d’Ivoire",
+    "searchPlaceholder": "Rechercher un nom, un métier, une ville…",
+    "searchLabel": "Rechercher",
+    "filterCity": "Ville",
+    "filterCategory": "Catégorie",
+    "allCities": "Toutes les villes",
+    "allCategories": "Toutes les catégories",
+    "pro": "Pro",
+    "empty": "Aucun profil trouvé",
+    "emptyHint": "Essayez d’autres filtres",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {current} sur {total}",
+    "reset": "Réinitialiser"
   }
 }

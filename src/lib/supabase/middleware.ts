@@ -28,6 +28,7 @@ export async function updateSession(request: NextRequest) {
     "/reset-password",
     "/verify-email",
     "/auth/callback",
+    "/explore",
   ];
   const publicApiRoutes = [
     "/api/check-username",

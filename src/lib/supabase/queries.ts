@@ -45,3 +45,75 @@ export const getCachedPublicProfileData = unstable_cache(
   ["public-profile"],
   { revalidate: 60, tags: [PUBLIC_PROFILES_TAG] }
 );
+
+export type ExploreFilters = {
+  q?: string;
+  city?: string;
+  category?: string;
+  page?: number;
+};
+
+export type ExploreResult = {
+  id: string;
+  username: string;
+  displayName: string;
+  tagline: string;
+  avatarUrl: string | null;
+  city: string;
+  country: string;
+  category: string | null;
+  template: string;
+  isPro: boolean;
+};
+
+export type ExplorePage = { items: ExploreResult[]; total: number };
+
+export const EXPLORE_PAGE_SIZE = 24;
+
+export type ExploreRow = {
+  id: string;
+  username: string;
+  display_name: string;
+  tagline: string;
+  avatar_url: string | null;
+  city: string;
+  country: string;
+  category: string | null;
+  template: string;
+  is_pro: boolean;
+  total: number;
+};
+
+export function mapExploreRow(row: ExploreRow): ExploreResult {
+  return {
+    id: row.id,
+    username: row.username,
+    displayName: row.display_name,
+    tagline: row.tagline,
+    avatarUrl: row.avatar_url,
+    city: row.city,
+    country: row.country,
+    category: row.category,
+    template: row.template,
+    isPro: row.is_pro,
+  };
+}
+
+export async function searchExplore(filters: ExploreFilters): Promise<ExplorePage> {
+  const page = Math.max(1, filters.page ?? 1);
+  const safe = {
+    q: filters.q?.trim() || null,
+    city: filters.city?.trim() || null,
+    category: filters.category?.trim() || null,
+  };
+  const { data, error } = await createPublicClient().rpc("search_public_profiles", {
+    p_query: safe.q,
+    p_city: safe.city,
+    p_category: safe.category,
+    p_limit: EXPLORE_PAGE_SIZE,
+    p_offset: (page - 1) * EXPLORE_PAGE_SIZE,
+  });
+  if (error) throw error;
+  const rows = (data ?? []) as unknown as ExploreRow[];
+  return { items: rows.map(mapExploreRow), total: rows[0]?.total ?? 0 };
+}

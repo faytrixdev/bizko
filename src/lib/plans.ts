@@ -56,8 +56,8 @@ export function canAddPortfolioItem(plan: Plan, current: number): boolean {
   return current < getLimits(plan).portfolioItems;
 }
 
-export function canAddTestimonial(plan: Plan, current: number): boolean {
-  return current < getLimits(plan).publishedTestimonials;
+export function canPublishTestimonial(plan: Plan, publishedCount: number): boolean {
+  return publishedCount < getLimits(plan).publishedTestimonials;
 }
 
 export function canAddVideo(plan: Plan, currentVideos: number): boolean {

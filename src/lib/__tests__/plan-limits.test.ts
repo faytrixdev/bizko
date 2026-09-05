@@ -1,17 +1,17 @@
 import { describe, it, expect } from "vitest";
-import { getLimits, canAddTestimonial, PLAN_COMPARISON, isUnlimited } from "../plans";
+import { getLimits, canPublishTestimonial, PLAN_COMPARISON, isUnlimited } from "../plans";
 
-describe("canAddTestimonial", () => {
+describe("canPublishTestimonial", () => {
   it("allows free users up to 2 published testimonials", () => {
-    expect(canAddTestimonial("free", 0)).toBe(true);
-    expect(canAddTestimonial("free", 1)).toBe(true);
-    expect(canAddTestimonial("free", 2)).toBe(false);
+    expect(canPublishTestimonial("free", 0)).toBe(true);
+    expect(canPublishTestimonial("free", 1)).toBe(true);
+    expect(canPublishTestimonial("free", 2)).toBe(false);
   });
 
-  it("allows pro users unlimited testimonials", () => {
-    expect(canAddTestimonial("pro", 0)).toBe(true);
-    expect(canAddTestimonial("pro", 2)).toBe(true);
-    expect(canAddTestimonial("pro", 100)).toBe(true);
+  it("allows pro users unlimited published testimonials", () => {
+    expect(canPublishTestimonial("pro", 0)).toBe(true);
+    expect(canPublishTestimonial("pro", 2)).toBe(true);
+    expect(canPublishTestimonial("pro", 100)).toBe(true);
   });
 });
 

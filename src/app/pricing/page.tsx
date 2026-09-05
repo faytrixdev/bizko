@@ -3,6 +3,7 @@ import { getServerMessages } from "@/lib/i18n/messages-server";
 import { createClient } from "@/lib/supabase/server";
 import { isProPlan } from "@/lib/plans";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
+import { DashboardHeader } from "@/components/DashboardHeader";
 import { PricingClient, type PricingCtaState } from "./PricingClient";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,6 +30,7 @@ export default async function PricingPage() {
   } = await supabase.auth.getUser();
 
   let ctaState: PricingCtaState = "guest";
+  let username: string | undefined;
   if (user) {
     const { data: sub } = await supabase
       .from("subscriptions")
@@ -38,11 +40,18 @@ export default async function PricingPage() {
     const row = sub && !Array.isArray(sub) ? (sub as SubRow) : null;
     const isPro = isProPlan(row?.plan, row?.status);
     ctaState = isPro ? "pro" : "free";
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", user.id)
+      .maybeSingle();
+    const p = profile && !Array.isArray(profile) ? profile : null;
+    username = p?.username ?? undefined;
   }
 
   return (
     <div className="min-h-screen bg-white">
-      <LandingNavbar msg={msg} />
+      {user ? <DashboardHeader username={username} isPro={ctaState === "pro"} /> : <LandingNavbar msg={msg} />}
       <PricingClient ctaState={ctaState} />
 
       <footer className="border-t border-gray-100 py-10">

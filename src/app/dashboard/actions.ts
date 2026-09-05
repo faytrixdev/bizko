@@ -7,8 +7,18 @@ import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
 import { getLimits, isBillingInterval } from "@/lib/plans";
 import { createCheckoutConfig } from "@/lib/whop";
+import { isValidTestimonialInput } from "@/lib/testimonials";
+import { getMessages } from "@/lib/i18n/messages";
+import { resolveServerLocale } from "@/lib/i18n/messages-server";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Localize messages returned to the client by server actions. Server actions have
+// access to the request's cookie / Accept-Language, matching the page they were
+// called from.
+async function actionMessages() {
+  return getMessages(await resolveServerLocale());
+}
 
 // Map raw PostgREST/Supabase errors to safe, user-facing codes. Never leak
 // internal DB messages to end users.
@@ -229,4 +239,75 @@ export async function startSubscription(formData: FormData) {
     redirect("/dashboard?error=checkout_failed");
   }
   redirect(purchaseUrl);
+}
+
+export async function addTestimonial(formData: FormData): Promise<{ success?: string; error?: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  const msg = await actionMessages();
+
+  const authorName = (formData.get("authorName") as string)?.trim() || "";
+  const authorRole = (formData.get("authorRole") as string)?.trim() || undefined;
+  const content = (formData.get("content") as string)?.trim() || "";
+  const ratingRaw = formData.get("rating") as string;
+  const rating = ratingRaw ? Number(ratingRaw) : undefined;
+
+  if (!isValidTestimonialInput({ authorName, authorRole, content, rating })) {
+    return { error: msg.dashboard.errorMissing };
+  }
+
+  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
+  const limits = getLimits(isPro ? "pro" : "free");
+  const { count } = await supabase.from("testimonials").select("*", { count: "exact", head: true }).eq("profile_id", user.id).eq("is_published", true);
+  if ((count ?? 0) >= limits.publishedTestimonials) return { error: msg.dashboard.testimonialsFull };
+
+  const { error } = await supabase.from("testimonials").insert({
+    profile_id: user.id, author_name: authorName, author_role: authorRole ?? null,
+    content, rating: rating ?? null, is_published: true,
+  });
+  if (error) return { error: msg.dashboard.errorGeneric };
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/[username]`, "page");
+  updateTag(PUBLIC_PROFILES_TAG);
+  return { success: msg.dashboard.successAdded };
+}
+
+export async function approveTestimonial(testimonialId: string): Promise<{ success?: string; error?: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  const msg = await actionMessages();
+
+  const { data: existing } = await supabase.from("testimonials").select("id").eq("id", testimonialId).eq("profile_id", user.id).eq("is_published", false).maybeSingle();
+  if (!existing) return { error: msg.dashboard.errorGeneric };
+
+  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
+  const limits = getLimits(isPro ? "pro" : "free");
+  const { count } = await supabase.from("testimonials").select("*", { count: "exact", head: true }).eq("profile_id", user.id).eq("is_published", true);
+  if ((count ?? 0) >= limits.publishedTestimonials) return { error: msg.dashboard.testimonialsFull };
+
+  const { error } = await supabase.from("testimonials").update({ is_published: true }).eq("id", testimonialId).eq("profile_id", user.id).eq("is_published", false);
+  if (error) return { error: msg.dashboard.errorGeneric };
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/[username]`, "page");
+  updateTag(PUBLIC_PROFILES_TAG);
+  return { success: msg.dashboard.successAdded };
+}
+
+export async function deleteTestimonial(testimonialId: string): Promise<{ ok: true } | { error: string }> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  const msg = await actionMessages();
+
+  const { error } = await supabase.from("testimonials").delete().eq("id", testimonialId).eq("profile_id", user.id);
+  if (error) return { error: msg.dashboard.errorGeneric };
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/[username]`, "page");
+  updateTag(PUBLIC_PROFILES_TAG);
+  return { ok: true };
 }

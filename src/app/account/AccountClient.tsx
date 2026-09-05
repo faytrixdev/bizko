@@ -165,6 +165,7 @@ export function AccountClient({ user, profile }: AccountClientProps) {
       <PasswordChangeModal
         open={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
+        email={user.email ?? ""}
       />
       <LogoutConfirmModal
         open={showLogoutModal}

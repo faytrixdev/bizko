@@ -380,17 +380,7 @@
     "error": "Une erreur est survenue."
   },
   "password": {
-    "current": "Mot de passe actuel",
-    "new": "Nouveau mot de passe",
-    "newHint": "6 caractères minimum",
-    "confirm": "Confirmer le mot de passe",
-    "changeBtn": "Modifier le mot de passe",
-    "success": "Mot de passe modifié avec succès.",
-    "errorCurrent": "Mot de passe actuel incorrect.",
-    "errorNotFound": "Utilisateur non trouvé.",
-    "errorMismatch": "Les mots de passe ne correspondent pas.",
-    "errorMin": "Le mot de passe doit contenir au moins 6 caractères.",
-    "error": "Une erreur est survenue."
+    "errorCurrent": "Mot de passe actuel incorrect."
   },
   "deleteAccount": {
     "zone": "Zone de danger",
@@ -507,14 +497,11 @@
     "deletePasswordPlaceholder": "Votre mot de passe actuel",
     "deleteCancel": "Annuler",
     "deleteConfirmBtn": "Supprimer le compte",
-    "passwordCurrent": "Mot de passe actuel",
-    "passwordNew": "Nouveau mot de passe",
-    "passwordNewHint": "6 caractères minimum",
-    "passwordConfirm": "Confirmer le nouveau mot de passe",
     "passwordCancel": "Annuler",
-    "passwordChangeBtn": "Modifier le mot de passe",
-    "passwordSuccess": "Mot de passe modifié avec succès.",
-    "passwordError": "Une erreur est survenue.",
+    "passwordSendLink": "Envoyer le lien",
+    "passwordModalDesc": "Nous allons t'envoyer un lien de réinitialisation à l'adresse ci-dessous. Tu cliqueras sur le lien pour choisir un nouveau mot de passe.",
+    "passwordCheckInbox": "Vérifie ta boîte mail et clique sur le lien reçu pour choisir un nouveau mot de passe.",
+    "passwordDone": "Terminé",
     "deleteConfirmationRequired": "Veuillez taper DELETE pour confirmer la suppression.",
     "passwordRequiredForDelete": "Mot de passe actuel requis pour supprimer le compte.",
     "reverifyEmailMissing": "Impossible de re-vérifier le compte (email manquant)."

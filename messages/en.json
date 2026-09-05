@@ -380,17 +380,7 @@
     "error": "An error occurred."
   },
   "password": {
-    "current": "Current password",
-    "new": "New password",
-    "newHint": "6 characters minimum",
-    "confirm": "Confirm password",
-    "changeBtn": "Change password",
-    "success": "Password changed successfully.",
-    "errorCurrent": "Current password is incorrect.",
-    "errorNotFound": "User not found.",
-    "errorMismatch": "Passwords do not match.",
-    "errorMin": "Password must contain at least 6 characters.",
-    "error": "An error occurred."
+    "errorCurrent": "Current password is incorrect."
   },
   "deleteAccount": {
     "zone": "Danger zone",
@@ -507,14 +497,11 @@
     "deletePasswordPlaceholder": "Your current password",
     "deleteCancel": "Cancel",
     "deleteConfirmBtn": "Delete account",
-    "passwordCurrent": "Current password",
-    "passwordNew": "New password",
-    "passwordNewHint": "6 characters minimum",
-    "passwordConfirm": "Confirm new password",
     "passwordCancel": "Cancel",
-    "passwordChangeBtn": "Change password",
-    "passwordSuccess": "Password changed successfully.",
-    "passwordError": "An error occurred.",
+    "passwordSendLink": "Send link",
+    "passwordModalDesc": "We'll send a reset link to the address below. Click the link to choose a new password.",
+    "passwordCheckInbox": "Check your inbox and click the link you received to choose a new password.",
+    "passwordDone": "Done",
     "deleteConfirmationRequired": "Please type DELETE to confirm deletion.",
     "passwordRequiredForDelete": "Current password required to delete your account.",
     "reverifyEmailMissing": "Unable to re-verify the account (email missing)."

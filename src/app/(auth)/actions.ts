@@ -102,47 +102,33 @@ export async function loginWithGoogle() {
   }
 }
 
-export async function changePassword(formData: FormData) {
+export async function sendPasswordResetEmail(): Promise<{ success?: string; error?: string }> {
   const supabase = await createClient();
-
-  const currentPassword = formData.get("currentPassword") as string;
-  const newPassword = formData.get("newPassword") as string;
-  const confirmPassword = formData.get("confirmPassword") as string;
   const msg = await actionMessages();
 
-  if (newPassword !== confirmPassword) {
-    return { error: msg.password.errorMismatch };
-  }
-
-  if (newPassword.length < 6) {
-    return { error: msg.password.errorMin };
-  }
-
   const { data: { user } } = await supabase.auth.getUser();
-
   if (!user?.email) {
-    return { error: msg.password.errorNotFound };
+    return { error: msg.auth2.userNotFound };
   }
 
-  const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: user.email,
-    password: currentPassword,
-  });
-
-  if (signInError) {
-    return { error: msg.password.errorCurrent };
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${siteUrl}/reset-password`,
+    });
+    if (error) {
+      console.error("sendPasswordResetEmail error:", error);
+      return { error: msg.auth2.errorFetchFailed };
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
+    const digest = (e as { digest?: string })?.digest;
+    if (digest?.startsWith("NEXT_REDIRECT")) throw e;
+    console.error("sendPasswordResetEmail fetch exception:", e);
+    return { error: msg.auth2.errorFetchFailed };
   }
 
-  const { error } = await supabase.auth.updateUser({
-    password: newPassword,
-  });
-
-  if (error) {
-    console.error("changePassword updateUser error:", error);
-    return { error: msg.password.error };
-  }
-
-  return { success: msg.password.success };
+  return { success: msg.auth2.successForgotEmail };
 }
 
 const DELETE_CONFIRMATION = "DELETE";

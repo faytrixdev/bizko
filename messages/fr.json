@@ -256,6 +256,7 @@
       "apercu": "Aperçu",
       "services": "Services",
       "portfolio": "Portfolio",
+      "temoignages": "Témoignages",
       "reseaux": "Réseaux",
       "reglages": "Réglages"
     },
@@ -278,6 +279,15 @@
     "socialsTitle": "Réseaux sociaux",
     "socialsFull": "Limite 6 liens atteinte.",
     "testimonialsFull": "Limite de témoignages atteinte.",
+    "testimonialsTitle": "Témoignages",
+    "testimonialNamePlaceholder": "Nom de l'auteur",
+    "testimonialRolePlaceholder": "Rôle (optionnel)",
+    "testimonialContentPlaceholder": "Ton témoignage…",
+    "testimonialRatingPlaceholder": "Note",
+    "testimonialNoRating": "Sans note",
+    "testimonialApprove": "Approuver",
+    "testimonialPending": "En attente",
+    "noTestimonials": "Aucun témoignage - ajoute tes clients satisfaits.",
     "settingsTitle": "Paramètres du profil",
     "save": "Enregistrer",
     "namePlaceholder": "Nom",
@@ -325,7 +335,8 @@
     "confirmDeleteServiceMsg": "Voulez-vous vraiment supprimer ce service ?",
     "confirmDeleteImageMsg": "Voulez-vous vraiment supprimer cette image ?",
     "confirmDeleteVideoMsg": "Voulez-vous vraiment supprimer cette vidéo ?",
-    "confirmDeleteSocialMsg": "Voulez-vous vraiment supprimer ce lien ?"
+    "confirmDeleteSocialMsg": "Voulez-vous vraiment supprimer ce lien ?",
+    "confirmDeleteTestimonialMsg": "Voulez-vous vraiment supprimer ce témoignage ?"
   },
   "demo": {
     "createMine": "Créer le mien",

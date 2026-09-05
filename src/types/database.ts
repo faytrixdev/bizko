@@ -41,6 +41,17 @@ export interface SocialLink {
   position: number;
 }
 
+export interface Testimonial {
+  id: string;
+  profile_id: string;
+  author_name: string;
+  author_role: string | null;
+  content: string;
+  rating: number | null;
+  is_published: boolean;
+  created_at: string;
+}
+
 export type Template = 'minimal' | 'portfolio';
 export type Locale = 'fr' | 'en';
 export type Currency = 'XOF' | 'XAF' | 'NGN' | 'KES' | 'ZAR' | 'DZD' | 'GHS' | 'TZS' | 'UGX' | 'USD' | 'EUR' | 'GBP';

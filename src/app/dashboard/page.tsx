@@ -16,6 +16,7 @@ export default async function Dashboard() {
     { data: services },
     { data: portfolio },
     { data: socials },
+    { data: testimonials },
     statsRes,
     dailyRes,
     breakdownRes,
@@ -24,6 +25,7 @@ export default async function Dashboard() {
     supabase.from("services").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("portfolio_items").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("social_links").select("*").eq("profile_id", profile.id).order("position"),
+    supabase.from("testimonials").select("*").eq("profile_id", profile.id).order("created_at", { ascending: false }),
     supabase.from("profile_stats").select("views, clicks").eq("profile_id", profile.id).maybeSingle(),
     supabase.rpc("get_daily_events", { p_profile_id: profile.id, p_days: 7 }),
     supabase.rpc("get_profile_clicks_breakdown", { p_profile_id: profile.id, p_days: 7 }),
@@ -50,6 +52,7 @@ export default async function Dashboard() {
       services={services || []}
       portfolio={portfolio || []}
       socials={socials || []}
+      testimonials={testimonials || []}
       views={views}
       waClicks={waClicks}
       daily={daily}

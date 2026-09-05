@@ -614,5 +614,17 @@
     "cardYearlyCta": "Passer à Pro - Annuel",
     "guestCta": "Créer mon compte",
     "manageCta": "Gérer mon abonnement"
+  },
+  "categories": {
+    "photo": "Photographe",
+    "design": "Designer",
+    "video": "Vidéaste",
+    "makeup": "Maquilleur",
+    "dev": "Développeur",
+    "community": "Community manager",
+    "consult": "Consultant",
+    "coach": "Coach / Formateur",
+    "music": "Musicien",
+    "autre": "Autre"
   }
 }

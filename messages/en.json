@@ -614,5 +614,17 @@
     "cardYearlyCta": "Go Pro - Yearly",
     "guestCta": "Create account",
     "manageCta": "Manage subscription"
+  },
+  "categories": {
+    "photo": "Photographer",
+    "design": "Designer",
+    "video": "Videographer",
+    "makeup": "Makeup artist",
+    "dev": "Developer",
+    "community": "Community manager",
+    "consult": "Consultant",
+    "coach": "Coach / Trainer",
+    "music": "Musician",
+    "autre": "Other"
   }
 }

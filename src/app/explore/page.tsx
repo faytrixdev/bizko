@@ -19,18 +19,29 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type Props = {
-  searchParams: Promise<{ q?: string; ville?: string; cat?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string | string[];
+    ville?: string | string[];
+    cat?: string | string[];
+    page?: string | string[];
+  }>;
 };
+
+const param = (value: string | string[] | undefined): string | undefined =>
+  typeof value === "string" ? value.trim() || undefined : undefined;
 
 export default async function ExplorePage({ searchParams }: Props) {
   const raw = await searchParams;
   const msg = await getServerMessages();
 
-  const page = Math.max(1, Number(raw.page) || 1);
+  const q = param(raw.q);
+  const ville = param(raw.ville);
+  const cat = param(raw.cat);
+  const page = Math.max(1, Number(param(raw.page)) || 1);
   const filters: ExploreFiltersQuery = {
-    q: raw.q?.trim() || undefined,
-    city: raw.ville?.trim() || undefined,
-    category: raw.cat?.trim() || undefined,
+    q,
+    city: ville,
+    category: cat,
     page,
   };
 
@@ -61,9 +72,9 @@ export default async function ExplorePage({ searchParams }: Props) {
 
   const makePageHref = (targetPage: number): string => {
     const params = new URLSearchParams();
-    if (raw.q?.trim()) params.set("q", raw.q.trim());
-    if (raw.ville?.trim()) params.set("ville", raw.ville.trim());
-    if (raw.cat?.trim()) params.set("cat", raw.cat.trim());
+    if (q) params.set("q", q);
+    if (ville) params.set("ville", ville);
+    if (cat) params.set("cat", cat);
     params.set("page", String(targetPage));
     return `/explore?${params.toString()}`;
   };

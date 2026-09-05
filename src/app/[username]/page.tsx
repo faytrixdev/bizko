@@ -4,13 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { getMessages } from "@/lib/i18n/messages";
-import { getServerMessages, resolveServerLocale } from "@/lib/i18n/messages-server";
+import { resolveServerLocale } from "@/lib/i18n/messages-server";
 import { getCachedPublicProfileData } from "@/lib/supabase/queries";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import { PortfolioGallery } from "@/components/Lightbox";
 import { ViewTracker } from "@/components/ViewTracker";
 import { ServiceViewTracker } from "@/components/ServiceViewTracker";
 import { SocialIcon } from "@/components/socialIcons";
+import { TestimonialCard } from "@/components/TestimonialCard";
+import { TestimonialForm } from "@/components/TestimonialForm";
 
 type Props = { params: Promise<{ username: string }> };
 
@@ -53,14 +55,16 @@ export default async function PublicProfile({ params }: Props) {
 
   if (!data) notFound();
 
-  const { profile, services, portfolio, socials } = data;
+  const { profile, services, portfolio, socials, testimonials } = data;
 
-  const msg = await getServerMessages();
+  const locale = await resolveServerLocale();
+  const msg = getMessages(locale);
 
   const mainWaRaw = buildWaLink(profile.phone_e164, buildMainWaMessage(profile.display_name));
   const telLink = `tel:${profile.phone_e164}`;
   const isPortfolio = profile.template === "portfolio";
   const pid = profile.id;
+  const testimonialDate = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" });
 
   function trackClick(type: string, to: string) {
     return `/api/track-click?pid=${pid}&type=${type}&to=${encodeURIComponent(to)}`;
@@ -194,6 +198,27 @@ export default async function PublicProfile({ params }: Props) {
               {msg.profile.portfolio}
             </h2>
             <PortfolioGallery items={portfolio} />
+          </div>
+        )}
+
+        {/* Testimonials */}
+        {testimonials && testimonials.length > 0 && (
+          <div className="mt-8">
+            <h2 className={`font-bold font-display px-1 mb-4 text-gray-900 ${isPortfolio ? "" : "text-xs tracking-widest uppercase text-gray-400 font-medium"}`}>
+              {msg.profile.testimonials.title}
+            </h2>
+            <p className="px-1 mb-4 -mt-2 text-xs text-gray-500">{msg.profile.testimonials.subtitle}</p>
+            <div className="flex flex-col gap-3">
+              {testimonials.map((t) => (
+                <TestimonialCard
+                  key={t.id}
+                  testimonial={t}
+                  starLabel={msg.profile.testimonials.starsAria}
+                  date={testimonialDate.format(new Date(t.createdAt))}
+                />
+              ))}
+            </div>
+            <TestimonialForm profileId={profile.id} />
           </div>
         )}
 

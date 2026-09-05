@@ -4,12 +4,31 @@ import type { PortfolioItem, Profile, Service, SocialLink } from "@/types/databa
 
 export const PUBLIC_PROFILES_TAG = "public-profiles";
 
+export type PublicTestimonial = {
+  id: string;
+  authorName: string;
+  authorRole: string | null;
+  content: string;
+  rating: number | null;
+  createdAt: string;
+};
+
 export interface PublicProfileData {
   profile: Profile;
   services: Service[];
   portfolio: PortfolioItem[];
   socials: SocialLink[];
+  testimonials: PublicTestimonial[];
 }
+
+type TestimonialRow = {
+  id: string;
+  author_name: string;
+  author_role: string | null;
+  content: string;
+  rating: number | null;
+  created_at: string;
+};
 
 async function fetchPublicProfileData(
   username: string
@@ -25,18 +44,34 @@ async function fetchPublicProfileData(
 
   if (!profile) return null;
 
-  const [{ data: services }, { data: portfolio }, { data: socials }] =
+  const [{ data: services }, { data: portfolio }, { data: socials }, { data: rows }] =
     await Promise.all([
       supabase.from("services").select("*").eq("profile_id", profile.id).order("position"),
       supabase.from("portfolio_items").select("*").eq("profile_id", profile.id).order("position"),
       supabase.from("social_links").select("*").eq("profile_id", profile.id).order("position"),
+      supabase
+        .from("testimonials")
+        .select("id, author_name, author_role, content, rating, created_at")
+        .eq("profile_id", profile.id)
+        .eq("is_published", true)
+        .order("created_at", { ascending: false }),
     ]);
+
+  const testimonials = ((rows ?? []) as TestimonialRow[]).map((r) => ({
+    id: r.id,
+    authorName: r.author_name,
+    authorRole: r.author_role,
+    content: r.content,
+    rating: r.rating,
+    createdAt: r.created_at,
+  }));
 
   return {
     profile,
     services: services ?? [],
     portfolio: portfolio ?? [],
     socials: socials ?? [],
+    testimonials,
   };
 }
 

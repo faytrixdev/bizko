@@ -366,7 +366,24 @@
     "madeWith": "Made with",
     "stickyWa": "Chat on WhatsApp",
     "metaFallback": "Contact on WhatsApp via Bizko.",
-    "whatsappAria": "Contact on WhatsApp"
+    "whatsappAria": "Contact on WhatsApp",
+    "testimonials": {
+      "title": "Testimonials",
+      "subtitle": "What my clients say about me",
+      "formTitle": "Leave a testimonial",
+      "namePlaceholder": "Your name",
+      "rolePlaceholder": "Your role (optional)",
+      "contentPlaceholder": "Tell us about your experience…",
+      "ratingLabel": "Rating",
+      "noRating": "No rating",
+      "submit": "Submit my testimonial",
+      "pendingSuccess": "Thank you! Your testimonial is awaiting approval.",
+      "errorMissing": "Please fill in all required fields.",
+      "errorGeneric": "An error occurred. Please try again.",
+      "errorRateLimited": "Too many requests. Please try again in a few minutes.",
+      "errorHoneypot": "An error occurred. Please try again.",
+      "starsAria": "Rating out of 5 stars"
+    }
   },
   "notFound": {
     "title": "This Bizko doesn't exist",

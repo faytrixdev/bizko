@@ -29,18 +29,17 @@ function sweep(): void {
 }
 
 /**
- * Very small in-memory fixed-window rate limiter keyed by client IP + endpoint.
+ * Very small in-memory fixed-window rate limiter keyed by an arbitrary string.
  * Suitable for a single server instance (e.g. one Vercel/Node lambda).
  * NOTE: not shared across instances/restarts — for multi-region/scale, move to
  * an external store (Upstash/Redis).
  */
-export function rateLimit(
-  request: NextRequest,
+export function checkRateLimit(
+  key: string,
   options: RateLimitOptions
 ): { allowed: boolean; retryAfterSeconds: number } {
   sweep();
 
-  const key = `${clientKey(request)}:${request.nextUrl.pathname}`;
   const now = Date.now();
   const bucket = buckets.get(key);
 
@@ -58,4 +57,11 @@ export function rateLimit(
 
   bucket.count += 1;
   return { allowed: true, retryAfterSeconds: 0 };
+}
+
+export function rateLimit(
+  request: NextRequest,
+  options: RateLimitOptions
+): { allowed: boolean; retryAfterSeconds: number } {
+  return checkRateLimit(`${clientKey(request)}:${request.nextUrl.pathname}`, options);
 }

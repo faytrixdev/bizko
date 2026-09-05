@@ -95,11 +95,12 @@ describe("videoSizeLimitBytes", () => {
 });
 
 describe("PLAN_COMPARISON", () => {
-  it("exposes exactly the 7 differentiating rows in a stable order", () => {
+  it("exposes exactly the 8 differentiating rows in a stable order", () => {
     expect(PLAN_COMPARISON.map((r) => r.labelKey)).toEqual([
       "pricing.rowServices",
       "pricing.rowSocials",
       "pricing.rowPortfolio",
+      "pricing.rowTestimonials",
       "pricing.rowVideos",
       "pricing.rowVideoDuration",
       "pricing.rowVideoSize",

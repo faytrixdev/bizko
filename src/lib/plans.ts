@@ -12,6 +12,7 @@ export interface PlanLimits {
   services: number;
   socials: number;
   portfolioItems: number;
+  publishedTestimonials: number;
   videos: number;
   templates: number;
 }
@@ -21,6 +22,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
     services: 8,
     socials: 6,
     portfolioItems: 9,
+    publishedTestimonials: 2,
     videos: 3,
     templates: 2,
   },
@@ -28,6 +30,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
     services: 15,
     socials: 15,
     portfolioItems: 30,
+    publishedTestimonials: Number.POSITIVE_INFINITY,
     videos: Number.POSITIVE_INFINITY,
     templates: 6,
   },
@@ -51,6 +54,10 @@ export function canAddSocial(plan: Plan, current: number): boolean {
 
 export function canAddPortfolioItem(plan: Plan, current: number): boolean {
   return current < getLimits(plan).portfolioItems;
+}
+
+export function canAddTestimonial(plan: Plan, current: number): boolean {
+  return current < getLimits(plan).publishedTestimonials;
 }
 
 export function canAddVideo(plan: Plan, currentVideos: number): boolean {
@@ -84,13 +91,14 @@ function capacityLabel(count: number): string {
 }
 
 /**
- * The 7 differentiating rows between Free and Pro, derived from LIMITS and the
+ * The 8 differentiating rows between Free and Pro, derived from LIMITS and the
  * video constants so the pricing page can never drift from the real limits.
  */
 export const PLAN_COMPARISON: ComparisonRow[] = [
   { labelKey: "pricing.rowServices", free: String(getLimits("free").services), pro: String(getLimits("pro").services) },
   { labelKey: "pricing.rowSocials", free: String(getLimits("free").socials), pro: String(getLimits("pro").socials) },
   { labelKey: "pricing.rowPortfolio", free: String(getLimits("free").portfolioItems), pro: String(getLimits("pro").portfolioItems) },
+  { labelKey: "pricing.rowTestimonials", free: String(getLimits("free").publishedTestimonials), pro: capacityLabel(getLimits("pro").publishedTestimonials) },
   { labelKey: "pricing.rowVideos", free: String(getLimits("free").videos), pro: capacityLabel(getLimits("pro").videos) },
   { labelKey: "pricing.rowVideoDuration", free: `${videoDurationLimitSec("free") / 60} min`, pro: `${videoDurationLimitSec("pro") / 60} min` },
   { labelKey: "pricing.rowVideoSize", free: `${videoSizeLimitBytes("free") / MIB} MB`, pro: `${videoSizeLimitBytes("pro") / MIB} MB` },

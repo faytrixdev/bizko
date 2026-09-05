@@ -13,13 +13,13 @@ create index if not exists idx_testimonials_profile on public.testimonials(profi
 
 alter table public.testimonials enable row level security;
 
-create policy "public read published" on public.testimonials
+create policy "Anyone can view published testimonials" on public.testimonials
   for select using (is_published = true);
 
-create policy "owner all" on public.testimonials
+create policy "Owners can manage own testimonials" on public.testimonials
   for all using (auth.uid() = profile_id)
   with check (auth.uid() = profile_id);
 
-create policy "visitor insert pending" on public.testimonials
+create policy "Visitors can submit pending testimonials" on public.testimonials
   for insert to anon, authenticated
   with check (auth.uid() is distinct from profile_id and is_published = false);

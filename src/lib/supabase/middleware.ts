@@ -54,6 +54,7 @@ export async function updateSession(request: NextRequest) {
     "/onboarding",
     "/demo",
     "/admin",
+    "/explore",
   ];
   // Un profil public est servi à la racine sur un seul segment : /<username>
   const isRootPublicProfile =

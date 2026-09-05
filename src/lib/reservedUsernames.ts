@@ -22,6 +22,7 @@ const RESERVED = [
   "www",
   "mail",
   "support",
+  "explore",
   "help",
 ];
 

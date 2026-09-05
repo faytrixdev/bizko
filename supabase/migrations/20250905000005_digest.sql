@@ -18,40 +18,40 @@ create table if not exists public.digest_sends (
 -- RLS sur digest_prefs : propriétaire seulement (préférences privées)
 alter table public.digest_prefs enable row level security;
 
-create policy "Owner can view own digest prefs"
+create policy if not exists "Owner can view own digest prefs"
   on public.digest_prefs for select
   using (auth.uid() = profile_id);
 
-create policy "Owner can insert own digest prefs"
+create policy if not exists "Owner can insert own digest prefs"
   on public.digest_prefs for insert
   with check (auth.uid() = profile_id);
 
-create policy "Owner can update own digest prefs"
+create policy if not exists "Owner can update own digest prefs"
   on public.digest_prefs for update
   using (auth.uid() = profile_id)
   with check (auth.uid() = profile_id);
 
-create policy "Owner can delete own digest prefs"
+create policy if not exists "Owner can delete own digest prefs"
   on public.digest_prefs for delete
   using (auth.uid() = profile_id);
 
 -- RLS sur digest_sends : propriétaire seulement
 alter table public.digest_sends enable row level security;
 
-create policy "Owner can view own digest sends"
+create policy if not exists "Owner can view own digest sends"
   on public.digest_sends for select
   using (auth.uid() = profile_id);
 
-create policy "Owner can insert own digest sends"
+create policy if not exists "Owner can insert own digest sends"
   on public.digest_sends for insert
   with check (auth.uid() = profile_id);
 
-create policy "Owner can update own digest sends"
+create policy if not exists "Owner can update own digest sends"
   on public.digest_sends for update
   using (auth.uid() = profile_id)
   with check (auth.uid() = profile_id);
 
-create policy "Owner can delete own digest sends"
+create policy if not exists "Owner can delete own digest sends"
   on public.digest_sends for delete
   using (auth.uid() = profile_id);
 
@@ -70,6 +70,7 @@ as $$
     from public.events
     where profile_id = p_profile_id
       and created_at >= now() - interval '7 days'
+      and created_at <= now()
   ),
   prev as (
     select
@@ -85,9 +86,10 @@ as $$
     from public.events e
     join public.services s on s.id = e.service_id
     where e.profile_id = p_profile_id
-      and e.type = 'view'
+      and e.type ILIKE 'click%'
       and e.service_id is not null
       and e.created_at >= now() - interval '7 days'
+      and e.created_at <= now()
     group by s.title
     order by seen desc
     limit 1
@@ -105,3 +107,8 @@ $$;
 
 revoke all on function public.get_profile_weekly_digest(uuid) from public;
 grant execute on function public.get_profile_weekly_digest(uuid) to authenticated;
+
+-- Indexes for RPC query performance
+create index if not exists idx_events_profile_created on public.events (profile_id, created_at);
+create index if not exists idx_events_profile_type_created on public.events (profile_id, type, created_at);
+create index if not exists idx_events_profile_service_type_created on public.events (profile_id, service_id, type, created_at);

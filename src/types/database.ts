@@ -52,6 +52,6 @@ export interface Testimonial {
   created_at: string;
 }
 
-export type Template = 'minimal' | 'portfolio';
+export type Template = 'minimal' | 'portfolio' | 'studio' | 'edito' | 'urban' | 'obsidienne';
 export type Locale = 'fr' | 'en';
 export type Currency = 'XOF' | 'XAF' | 'NGN' | 'KES' | 'ZAR' | 'DZD' | 'GHS' | 'TZS' | 'UGX' | 'USD' | 'EUR' | 'GBP';

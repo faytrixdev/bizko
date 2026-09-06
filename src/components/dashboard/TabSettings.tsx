@@ -5,12 +5,13 @@ import { useFormStatus } from "react-dom";
 import { updateProfile } from "@/app/dashboard/actions";
 import { AvatarUpload } from "@/components/Upload";
 import { CountrySelect } from "@/components/CountrySelect";
-import { CustomSelect } from "@/components/CustomSelect";
+import { TemplatePicker } from "./TemplatePicker";
 import { useI18n } from "@/lib/i18n/provider";
 import type { Profile } from "@/types/database";
 
 interface TabSettingsProps {
   profile: Profile;
+  isPro: boolean;
 }
 
 function SaveButton({ label }: { label: string }) {
@@ -22,7 +23,7 @@ function SaveButton({ label }: { label: string }) {
   );
 }
 
-export function TabSettings({ profile }: TabSettingsProps) {
+export function TabSettings({ profile, isPro }: TabSettingsProps) {
   const { t } = useI18n();
 
   return (
@@ -42,15 +43,7 @@ export function TabSettings({ profile }: TabSettingsProps) {
         <input name="phone_e164" defaultValue={profile.phone_e164} required type="tel" inputMode="tel" autoComplete="tel" title={t("dashboard.phoneHint")} pattern="^\+[0-9]{6,15}$" placeholder={t("dashboard.phonePlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
         <p className="text-xs text-gray-400 -mt-1">{t("dashboard.phoneHint")}</p>
         <input name="email_public" defaultValue={profile.email_public || ""} type="email" autoComplete="email" title={t("dashboard.emailHint")} pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" placeholder={t("dashboard.emailPlaceholder")} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 transition-all duration-200" />
-        <CustomSelect
-          name="template"
-          defaultValue={profile.template}
-          options={[
-            { value: "minimal", label: t("dashboard.templateMinimal") },
-            { value: "portfolio", label: t("dashboard.templatePortfolio") },
-          ]}
-          className="h-10"
-        />
+        <TemplatePicker current={profile.template} isPro={isPro} />
         <SaveButton label={t("dashboard.save")} />
       </form>
 

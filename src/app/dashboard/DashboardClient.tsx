@@ -146,7 +146,7 @@ export function DashboardClient({
         {tab === "portfolio" && <TabPortfolio portfolio={portfolio} profileId={profile.id} isPro={isPro} />}
         {tab === "temoignages" && <TabTestimonials testimonials={testimonials} isPro={isPro} />}
         {tab === "reseaux" && <TabSocials socials={socials} />}
-        {tab === "reglages" && <TabSettings profile={profile} />}
+        {tab === "reglages" && <TabSettings profile={profile} isPro={isPro} />}
       </div>
     </div>
   );

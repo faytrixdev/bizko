@@ -67,7 +67,7 @@ export default async function Demo() {
               />
             </svg>
             <span className="text-xs font-medium text-gray-500">
-              Abidjan, CI
+              Ouagadougou, BF
             </span>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default async function Demo() {
         {/* WhatsApp + Call */}
         <div className="mt-6 flex flex-col gap-3">
           <a
-            href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20tes%20services%20vu%20sur%20ton%20profil%20Bizko."
+            href="https://wa.me/22670000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20tes%20services%20vu%20sur%20ton%20profil%20Bizko."
             target="_blank"
             rel="noopener noreferrer"
             className="h-12 w-full rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-whatsapp-hover transition-all duration-200 shadow-md shadow-[#25D366]/20"
@@ -95,7 +95,7 @@ export default async function Demo() {
             {msg.profile.whatsapp} - Amadou
           </a>
           <a
-            href="tel:+2250700000000"
+            href="tel:+22670000000"
             className="h-11 w-full rounded-xl border border-gray-200 bg-white text-sm font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-50 text-gray-700 transition-all duration-200"
           >
             <svg
@@ -139,7 +139,7 @@ export default async function Demo() {
                   </p>
                 </div>
                 <a
-                  href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20ton%20service"
+                  href="https://wa.me/22670000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20ton%20service"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-whatsapp text-white text-xs font-semibold shadow-sm shadow-[#25D366]/20"
@@ -225,7 +225,7 @@ export default async function Demo() {
       {/* Sticky WhatsApp CTA - mobile only */}
       <div className="sm:hidden fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-xl border-t border-gray-200 p-4 z-50">
         <a
-          href="https://wa.me/2250700000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20tes%20services%20vu%20sur%20ton%20profil%20Bizko."
+          href="https://wa.me/22670000000?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20tes%20services%20vu%20sur%20ton%20profil%20Bizko."
           target="_blank"
           rel="noopener noreferrer"
           className="h-12 w-full rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 shadow-md shadow-[#25D366]/20"

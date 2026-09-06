@@ -42,21 +42,26 @@ const AVATARS = {
   obsidienne: "/avatars-demo/min-nora.jpg",
 } as const;
 
-const PHOTO = (id: string, w = 800, h = 800) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`;
-
-// Portfolio visuals per persona (Unsplash).
+// Local sourced African portfolio visuals (public/portfolios-demo).
 const P = {
-  wedding: PHOTO("photo-1519741497674-611481863552", 800, 800), // wedding
-  portrait: PHOTO("photo-1506794778202-cad84cf45f1d", 800, 800), // portrait
-  studio: PHOTO("photo-1516035069371-29a1b244cc32", 800, 800), // camera
-  landscape: PHOTO("photo-1500530855697-b586d89ba3ee", 800, 800), // landscape
-  interior: PHOTO("photo-1618221195710-dd6b41faaea6", 800, 800), // interior
-  brand: PHOTO("photo-1561070791-2526d30994b5", 800, 800), // design
-  fashion: PHOTO("photo-1445205170230-053b83016050", 800, 800), // fashion
-  makeup: PHOTO("photo-1522337360788-8b13dee7a37e", 800, 800), // makeup
-  street: PHOTO("photo-1449824913935-59a10b8d2000", 800, 800), // city
-  texture: PHOTO("photo-1509718443690-d8e2fb3474b7", 800, 800), // fabric
+  minimalWedding: "/portfolios-demo/minimal-wedding.jpg", // couple, tenues traditionnelles
+  minimalCouple: "/portfolios-demo/minimal-couple.jpg", // cérémonie africaine
+  minimalKiss: "/portfolios-demo/minimal-kiss.jpg", // couple nigérian
+  basketWeave: "/portfolios-demo/portfolio-baskets.jpg", // paniers tissés géométriques
+  artisanBowls: "/portfolios-demo/portfolio-bowls.png", // bols artisanaux marocains
+  afroInterior: "/portfolios-demo/portfolio-interior.jpg", // intérieur art africain
+  bwPortrait1: "/portfolios-demo/studio-portrait1.jpg", // portrait N&B
+  bwPortrait2: "/portfolios-demo/studio-portrait2.png", // portrait N&B Lagos
+  bwPortrait3: "/portfolios-demo/studio-portrait3.jpg", // portrait N&B dramatique
+  bambooDecor: "/portfolios-demo/edito-bamboo.jpg", // déco bambou chaleureuse
+  moroccanCeiling: "/portfolios-demo/edito-moroccan.jpg", // plafond marocain
+  kaftanInterior: "/portfolios-demo/edito-kaftan.jpg", // kaftan en intérieur africain
+  durbanMural: "/portfolios-demo/urban-graffiti.jpg", // graff mural Durban
+  streetFace: "/portfolios-demo/urban-face.jpg", // street-art portrait
+  waxFabric: "/portfolios-demo/urban-wax.jpg", // tissus wax colorés
+  runwayGown: "/portfolios-demo/obsidienne-runway.jpg", // robe noire défilé
+  coutureMan: "/portfolios-demo/obsidienne-man.jpg", // homme tenue nigériane
+  obsidianBaskets: "/portfolios-demo/obsidienne-baskets.jpg", // paniers africains sur noir
 } as const;
 
 function wa(phone: string): { mainWa: string; telLink: string } {
@@ -91,9 +96,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "s3", profile_id: "demo-minimal", title: "Pack évènement", description: "Baptême, anniversaire, remise de diplôme — 3h.", price: 75000, currency: "XOF", position: 2 },
     ],
     portfolio: [
-      { id: "pf1", profile_id: "demo-minimal", media_url: P.wedding, media_type: "image", thumbnail_url: P.wedding, title: "Mariage Koffi", position: 0 },
-      { id: "pf2", profile_id: "demo-minimal", media_url: P.portrait, media_type: "image", thumbnail_url: P.portrait, title: "Portrait studio", position: 1 },
-      { id: "pf3", profile_id: "demo-minimal", media_url: P.landscape, media_type: "image", thumbnail_url: P.landscape, title: "Paysage", position: 2 },
+      { id: "pf1", profile_id: "demo-minimal", media_url: P.minimalWedding, media_type: "image", thumbnail_url: P.minimalWedding, title: "Mariage Koffi", position: 0 },
+      { id: "pf2", profile_id: "demo-minimal", media_url: P.minimalCouple, media_type: "image", thumbnail_url: P.minimalCouple, title: "Cérémonie Akpé", position: 1 },
+      { id: "pf3", profile_id: "demo-minimal", media_url: P.minimalKiss, media_type: "image", thumbnail_url: P.minimalKiss, title: "Couple", position: 2 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-minimal", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -128,9 +133,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "s2", profile_id: "demo-portfolio", title: "Direction artistique", description: "Pour vos campagnes et réseaux sociaux.", price: 200000, currency: "XOF", position: 1 },
     ],
     portfolio: [
-      { id: "pf1", profile_id: "demo-portfolio", media_url: P.brand, media_type: "image", thumbnail_url: P.brand, title: "Identité de marque", position: 0 },
-      { id: "pf2", profile_id: "demo-portfolio", media_url: P.studio, media_type: "image", thumbnail_url: P.studio, title: "Packshot studio", position: 1 },
-      { id: "pf3", profile_id: "demo-portfolio", media_url: P.interior, media_type: "image", thumbnail_url: P.interior, title: "Moodboard intérieur", position: 2 },
+      { id: "pf1", profile_id: "demo-portfolio", media_url: P.basketWeave, media_type: "image", thumbnail_url: P.basketWeave, title: "Paniers tissés", position: 0 },
+      { id: "pf2", profile_id: "demo-portfolio", media_url: P.artisanBowls, media_type: "image", thumbnail_url: P.artisanBowls, title: "Artisanat", position: 1 },
+      { id: "pf3", profile_id: "demo-portfolio", media_url: P.afroInterior, media_type: "image", thumbnail_url: P.afroInterior, title: "Direction artistique", position: 2 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-portfolio", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -166,8 +171,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "s3", profile_id: "demo-studio", title: "Direction artistique", description: "Conception du concept et de la scénographie.", price: 120000, currency: "XOF", position: 2 },
     ],
     portfolio: [
-      { id: "pf1", profile_id: "demo-studio", media_url: P.studio, media_type: "image", thumbnail_url: P.studio, title: "Série studio", position: 0 },
-      { id: "pf2", profile_id: "demo-studio", media_url: P.portrait, media_type: "image", thumbnail_url: P.portrait, title: "Portrait", position: 1 },
+      { id: "pf1", profile_id: "demo-studio", media_url: P.bwPortrait1, media_type: "image", thumbnail_url: P.bwPortrait1, title: "Série studio", position: 0 },
+      { id: "pf2", profile_id: "demo-studio", media_url: P.bwPortrait2, media_type: "image", thumbnail_url: P.bwPortrait2, title: "Portrait Lagos", position: 1 },
+      { id: "pf3", profile_id: "demo-studio", media_url: P.bwPortrait3, media_type: "image", thumbnail_url: P.bwPortrait3, title: "Portrait dramatique", position: 2 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-studio", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -202,8 +208,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "s3", profile_id: "demo-edito", title: "Rénovation clé en main", description: "De l'esquisse à la remise des clés.", price: 5000, currency: "USD", position: 2 },
     ],
     portfolio: [
-      { id: "pf1", profile_id: "demo-edito", media_url: P.interior, media_type: "image", thumbnail_url: P.interior, title: "Salon sur mesure", position: 0 },
-      { id: "pf2", profile_id: "demo-edito", media_url: P.brand, media_type: "image", thumbnail_url: P.brand, title: "Ambiance minimaliste", position: 1 },
+      { id: "pf1", profile_id: "demo-edito", media_url: P.bambooDecor, media_type: "image", thumbnail_url: P.bambooDecor, title: "Décor bambou", position: 0 },
+      { id: "pf2", profile_id: "demo-edito", media_url: P.moroccanCeiling, media_type: "image", thumbnail_url: P.moroccanCeiling, title: "Plafond marocain", position: 1 },
+      { id: "pf3", profile_id: "demo-edito", media_url: P.kaftanInterior, media_type: "image", thumbnail_url: P.kaftanInterior, title: "Ambiance kaftan", position: 2 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-edito", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -239,9 +246,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "s3", profile_id: "demo-urban", title: "Visuels réseaux", description: "Kit de contenu dynamique pour vos réseaux.", price: 80000, currency: "XOF", position: 2 },
     ],
     portfolio: [
-      { id: "pf1", profile_id: "demo-urban", media_url: P.street, media_type: "image", thumbnail_url: P.street, title: "Série urbaine", position: 0 },
-      { id: "pf2", profile_id: "demo-urban", media_url: P.brand, media_type: "image", thumbnail_url: P.brand, title: "Campagne", position: 1 },
-      { id: "pf3", profile_id: "demo-urban", media_url: P.texture, media_type: "image", thumbnail_url: P.texture, title: "Textures", position: 2 },
+      { id: "pf1", profile_id: "demo-urban", media_url: P.durbanMural, media_type: "image", thumbnail_url: P.durbanMural, title: "Mural Durban", position: 0 },
+      { id: "pf2", profile_id: "demo-urban", media_url: P.waxFabric, media_type: "image", thumbnail_url: P.waxFabric, title: "Matière wax", position: 1 },
+      { id: "pf3", profile_id: "demo-urban", media_url: P.streetFace, media_type: "image", thumbnail_url: P.streetFace, title: "Street-art", position: 2 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-urban", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -277,8 +284,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "s3", profile_id: "demo-obsidienne", title: "Collection capsule", description: "Petite série cohérente pour marque.", price: 900000, currency: "XOF", position: 2 },
     ],
     portfolio: [
-      { id: "pf1", profile_id: "demo-obsidienne", media_url: P.fashion, media_type: "image", thumbnail_url: P.fashion, title: "Collection haute couture", position: 0 },
-      { id: "pf2", profile_id: "demo-obsidienne", media_url: P.texture, media_type: "image", thumbnail_url: P.texture, title: "Matériaux", position: 1 },
+      { id: "pf1", profile_id: "demo-obsidienne", media_url: P.runwayGown, media_type: "image", thumbnail_url: P.runwayGown, title: "Collection haute couture", position: 0 },
+      { id: "pf2", profile_id: "demo-obsidienne", media_url: P.coutureMan, media_type: "image", thumbnail_url: P.coutureMan, title: "Tenue couture", position: 1 },
+      { id: "pf3", profile_id: "demo-obsidienne", media_url: P.obsidianBaskets, media_type: "image", thumbnail_url: P.obsidianBaskets, title: "Matières", position: 2 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-obsidienne", platform: "instagram", url: "https://instagram.com", position: 0 },

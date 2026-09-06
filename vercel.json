@@ -2,10 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/digest",
-      "schedule": "0 7 * * 1",
-      "headers": {
-        "x-cron-secret": "REMPLACER_PAR_TA_VALEUR_CRON_SECRET"
-      }
+      "schedule": "0 7 * * 1"
     }
   ]
 }

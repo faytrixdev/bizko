@@ -9,8 +9,8 @@ const RESEND_FROM = process.env.RESEND_FROM;
 const CRON_SECRET = process.env.CRON_SECRET;
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get("x-cron-secret");
-  if (!CRON_SECRET || authHeader !== CRON_SECRET) {
+  const authHeader = req.headers.get("authorization");
+  if (!CRON_SECRET || authHeader !== `Bearer ${CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

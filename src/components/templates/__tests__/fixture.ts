@@ -9,8 +9,26 @@ const msg = {
   demandBtn: "Demander",
   madeWith: "Fait avec",
   stickyWa: "Discuter sur WhatsApp",
-  testimonials: { title: "Témoignages", subtitle: "Ce que mes clients disent", starsAria: "Note" },
-} satisfies ProfileMessages;
+  metaFallback: "Contactez-moi directement.",
+  whatsappAria: "Ouvrir WhatsApp",
+  testimonials: {
+    title: "Témoignages",
+    subtitle: "Ce que mes clients disent",
+    formTitle: "Laisser un avis",
+    namePlaceholder: "Votre nom",
+    rolePlaceholder: "Votre métier",
+    contentPlaceholder: "Votre avis",
+    ratingLabel: "Note",
+    noRating: "Aucune note",
+    submit: "Envoyer",
+    pendingSuccess: "Merci !",
+    errorMissing: "Champs manquants",
+    errorGeneric: "Erreur",
+    errorRateLimited: "Trop de demandes",
+    errorHoneypot: "Invalide",
+    starsAria: "Note",
+  },
+} as ProfileMessages;
 
 export function makeTemplateProps(overrides: Partial<TemplateProps> = {}): TemplateProps {
   return {

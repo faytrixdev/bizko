@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { ExploreResult } from "@/lib/supabase/queries";
+import { ProBadge } from "@/components/ProBadge";
 
 type Props = {
   item: ExploreResult;
@@ -48,11 +49,7 @@ export function ExploreCard({ item, strings, avatarAlt }: Props) {
           <p className="truncate font-display text-sm font-semibold text-gray-900 transition-colors duration-200 group-hover:text-accent">
             {item.displayName}
           </p>
-          {item.isPro && (
-            <span className="inline-flex shrink-0 items-center rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700">
-              {strings.pro}
-            </span>
-          )}
+          {item.isPro && <ProBadge label={strings.pro} />}
         </div>
 
         {item.tagline && (

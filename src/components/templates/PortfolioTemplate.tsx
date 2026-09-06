@@ -79,7 +79,7 @@ export function PortfolioTemplate({ profile, services, portfolio, socials, testi
           <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">{msg.testimonials.title}</h2>
           <div data-testid="testimonials" className="mt-4 flex flex-col gap-5">
             {testimonials.map((t) => (
-              <div key={t.id} className="rounded-2xl border-l-4 border-[#B45309] bg-white px-4 py-4 shadow-sm">
+              <div key={t.id} className="rounded-2xl bg-white px-4 py-4 shadow-sm">
                 <p className="text-sm leading-6 text-gray-700">« {t.content} »</p>
                 <p className="mt-2 text-xs font-semibold text-gray-900">{t.authorName}{t.authorRole ? ` · ${t.authorRole}` : ""}</p>
                 {t.createdAt && <p className="mt-0.5 text-[11px] text-gray-400">{formatTestimonialDate(locale, t.createdAt)}</p>}

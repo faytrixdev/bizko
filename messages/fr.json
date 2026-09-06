@@ -688,6 +688,14 @@
     "proCtaUrl": "https://bizko.pro/pricing",
     "footerUnsub": "Vous recevez ce résumé car votre profil Bizko a de l'activité.",
     "footerUnsubLink": "Se désinscrire",
-    "footerBrand": "Envoyé avec Bizko"
+    "footerBrand": "Envoyé avec Bizko",
+    "unsubscribe": {
+      "successTitle": "Désinscrit",
+      "successDescription": "Vous avez été désinscrit du résumé hebdomadaire. Vous pouvez vous réinscrire depuis les réglages de votre tableau de bord.",
+      "errorInvalidTitle": "Lien invalide",
+      "errorInvalidDescription": "Ce lien de désinscription est invalide ou a expiré.",
+      "errorServerTitle": "Une erreur est survenue",
+      "errorServerDescription": "Nous n'avons pas pu traiter votre demande. Veuillez réessayer plus tard."
+    }
   }
 }

@@ -688,6 +688,14 @@
     "proCtaUrl": "https://bizko.pro/pricing",
     "footerUnsub": "You're receiving this summary because your Bizko profile has activity.",
     "footerUnsubLink": "Unsubscribe",
-"footerBrand": "Sent with Bizko"
+    "footerBrand": "Sent with Bizko",
+    "unsubscribe": {
+      "successTitle": "Unsubscribed",
+      "successDescription": "You've been unsubscribed from the weekly digest. You can re-subscribe from your dashboard settings.",
+      "errorInvalidTitle": "Invalid link",
+      "errorInvalidDescription": "This unsubscribe link is invalid or has expired.",
+      "errorServerTitle": "Something went wrong",
+      "errorServerDescription": "We couldn't process your request. Please try again later."
+    }
   }
 }

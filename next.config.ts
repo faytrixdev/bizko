@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.bizko.pro",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
   async headers() {
@@ -41,7 +45,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://cdn.jsdelivr.net",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://*.supabase.co https://media.bizko.pro https://www.google-analytics.com https://www.googletagmanager.com",
+              "img-src 'self' data: blob: https://*.supabase.co https://media.bizko.pro https://images.unsplash.com https://www.google-analytics.com https://www.googletagmanager.com",
               "media-src 'self' blob: https://media.bizko.pro",
               "worker-src 'self' blob:",
               "font-src 'self' data:",

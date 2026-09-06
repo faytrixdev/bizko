@@ -124,7 +124,7 @@ export default async function ExplorePage({ searchParams }: Props) {
     <div className="min-h-screen bg-gray-50/50 flex flex-col">
       {user ? <DashboardHeader username={username} isPro={isPro} /> : <LandingNavbar msg={msg} />}
 
-      <main className="flex-1 max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16 w-full">
+      <main className={`flex-1 max-w-6xl mx-auto px-5 sm:px-8 w-full ${user ? "py-12 sm:py-16" : "pt-28 sm:pt-32 pb-12 sm:pb-16"}`}>
         <header className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-display text-gray-900">
             {msg.explore.title}

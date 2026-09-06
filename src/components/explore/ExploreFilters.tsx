@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 
 type Props = {
   strings: {
@@ -20,7 +20,34 @@ type Props = {
 };
 
 const selectClass =
-  "h-11 shrink-0 sm:w-44 rounded-lg border border-gray-200 bg-white px-3 pr-8 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10";
+  "h-11 w-full appearance-none cursor-pointer rounded-lg border border-gray-200 bg-white pl-3 pr-9 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10";
+
+function FilterSelect({
+  name,
+  value,
+  ariaLabel,
+  options,
+  selectClass: cls,
+}: {
+  name: string;
+  value?: string;
+  ariaLabel: string;
+  options: { value: string; label: string }[];
+  selectClass: string;
+}) {
+  return (
+    <div className="relative shrink-0 sm:w-44">
+      <select name={name} defaultValue={value ?? ""} aria-label={ariaLabel} className={cls}>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+    </div>
+  );
+}
 
 export function ExploreFilters({ strings, cities, countries, categories, values }: Props) {
   return (
@@ -32,30 +59,27 @@ export function ExploreFilters({ strings, cities, countries, categories, values 
         placeholder={strings.searchPlaceholder}
         className="h-11 min-w-[180px] flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm outline-none transition-all duration-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10"
       />
-      <select name="ville" defaultValue={values.city ?? ""} aria-label={strings.filterCity} className={selectClass}>
-        <option value="">{strings.allCities}</option>
-        {cities.map((city) => (
-          <option key={city} value={city}>
-            {city}
-          </option>
-        ))}
-      </select>
-      <select name="pays" defaultValue={values.country ?? ""} aria-label={strings.filterCountry} className={selectClass}>
-        <option value="">{strings.allCountries}</option>
-        {countries.map((country) => (
-          <option key={country} value={country}>
-            {country}
-          </option>
-        ))}
-      </select>
-      <select name="cat" defaultValue={values.category ?? ""} aria-label={strings.filterCategory} className={selectClass}>
-        <option value="">{strings.allCategories}</option>
-        {categories.map((category) => (
-          <option key={category.value} value={category.value}>
-            {category.label}
-          </option>
-        ))}
-      </select>
+      <FilterSelect
+        name="ville"
+        value={values.city}
+        ariaLabel={strings.filterCity}
+        selectClass={selectClass}
+        options={[{ value: "", label: strings.allCities }, ...cities.map((city) => ({ value: city, label: city }))]}
+      />
+      <FilterSelect
+        name="pays"
+        value={values.country}
+        ariaLabel={strings.filterCountry}
+        selectClass={selectClass}
+        options={[{ value: "", label: strings.allCountries }, ...countries.map((country) => ({ value: country, label: country }))]}
+      />
+      <FilterSelect
+        name="cat"
+        value={values.category}
+        ariaLabel={strings.filterCategory}
+        selectClass={selectClass}
+        options={[{ value: "", label: strings.allCategories }, ...categories]}
+      />
       <button
         type="submit"
         aria-label={strings.searchLabel}

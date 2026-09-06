@@ -18,40 +18,48 @@ create table if not exists public.digest_sends (
 -- RLS sur digest_prefs : propriétaire seulement (préférences privées)
 alter table public.digest_prefs enable row level security;
 
-create policy if not exists "Owner can view own digest prefs"
+drop policy if exists "Owner can view own digest prefs" on public.digest_prefs;
+create policy "Owner can view own digest prefs"
   on public.digest_prefs for select
   using (auth.uid() = profile_id);
 
-create policy if not exists "Owner can insert own digest prefs"
+drop policy if exists "Owner can insert own digest prefs" on public.digest_prefs;
+create policy "Owner can insert own digest prefs"
   on public.digest_prefs for insert
   with check (auth.uid() = profile_id);
 
-create policy if not exists "Owner can update own digest prefs"
+drop policy if exists "Owner can update own digest prefs" on public.digest_prefs;
+create policy "Owner can update own digest prefs"
   on public.digest_prefs for update
   using (auth.uid() = profile_id)
   with check (auth.uid() = profile_id);
 
-create policy if not exists "Owner can delete own digest prefs"
+drop policy if exists "Owner can delete own digest prefs" on public.digest_prefs;
+create policy "Owner can delete own digest prefs"
   on public.digest_prefs for delete
   using (auth.uid() = profile_id);
 
 -- RLS sur digest_sends : propriétaire seulement
 alter table public.digest_sends enable row level security;
 
-create policy if not exists "Owner can view own digest sends"
+drop policy if exists "Owner can view own digest sends" on public.digest_sends;
+create policy "Owner can view own digest sends"
   on public.digest_sends for select
   using (auth.uid() = profile_id);
 
-create policy if not exists "Owner can insert own digest sends"
+drop policy if exists "Owner can insert own digest sends" on public.digest_sends;
+create policy "Owner can insert own digest sends"
   on public.digest_sends for insert
   with check (auth.uid() = profile_id);
 
-create policy if not exists "Owner can update own digest sends"
+drop policy if exists "Owner can update own digest sends" on public.digest_sends;
+create policy "Owner can update own digest sends"
   on public.digest_sends for update
   using (auth.uid() = profile_id)
   with check (auth.uid() = profile_id);
 
-create policy if not exists "Owner can delete own digest sends"
+drop policy if exists "Owner can delete own digest sends" on public.digest_sends;
+create policy "Owner can delete own digest sends"
   on public.digest_sends for delete
   using (auth.uid() = profile_id);
 

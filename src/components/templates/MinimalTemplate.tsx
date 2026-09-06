@@ -1,110 +1,119 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
+import { Star } from "lucide-react";
+import Image from "next/image";
 import { SocialIcon } from "@/components/socialIcons";
-import { TestimonialCard } from "@/components/TestimonialCard";
-import { PortfolioGallery } from "@/components/Lightbox";
 import { Avatar, formatTestimonialDate } from "./shared";
 import type { TemplateProps } from "./types";
 
-const Pin = () => (
-  <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-  </svg>
-);
-
 const Phone = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
   </svg>
 );
 
 export function MinimalTemplate({ profile, services, portfolio, socials, testimonials, msg, locale, links, trackClick }: TemplateProps) {
+  const stars = (t: (typeof testimonials)[number]) =>
+    Array.from({ length: 5 }, (_, i) => (
+      <Star key={i} className={i < (t.rating ?? 0) ? "h-3.5 w-3.5 fill-amber-500 text-amber-500" : "h-3.5 w-3.5 text-gray-300"} />
+    ));
+
   return (
     <>
-      {/* Header */}
+      {/* Header — Signature */}
       <div className="flex flex-col items-center text-center">
-        <Avatar profile={profile} className="ring-4 ring-white shadow-lg" />
-        <h1 className="mt-5 text-3xl font-bold tracking-tight font-display leading-none text-gray-900">{profile.display_name}</h1>
-        <p className="mt-2 text-base font-medium text-accent">{profile.tagline}</p>
-        <div className="mt-3 inline-flex items-center gap-1.5 bg-gray-100 rounded-full px-3 py-1">
-          <Pin />
-          <span className="text-xs font-medium text-gray-500">{profile.city} / {profile.country}</span>
-        </div>
+        <Avatar profile={profile} className="h-24 w-24 ring-1 ring-black/5 shadow-sm" />
+        <h1 data-testid="t-name" className="mt-6 text-5xl font-semibold tracking-tighter text-gray-900 font-display leading-none">
+          {profile.display_name}
+        </h1>
+        <p className="mt-3 text-base font-medium text-accent">{profile.tagline}</p>
+        <p className="mt-3 text-xs text-gray-400">{profile.city}, {profile.country}</p>
         {profile.bio && (
-          <p className="mt-6 text-sm leading-7 text-gray-600 max-w-md bg-gray-50/50 border border-gray-100 rounded-2xl p-5 shadow-sm text-left">{profile.bio}</p>
+          <p className="mt-6 max-w-md text-base leading-8 text-gray-600">{profile.bio}</p>
         )}
-        <div className="mt-6 w-full max-w-[400px] flex flex-col gap-3">
-          <a href={links.mainWa} target="_blank" rel="noopener noreferrer" className="h-12 w-full rounded-xl bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-whatsapp-hover transition-all duration-200 shadow-md shadow-[#25D366]/20">
-            <SocialIcon platform="whatsapp" />
-            {msg.whatsapp} - {profile.display_name.split(" ")[0]}
+        <div className="mt-8 w-full max-w-[400px] flex flex-col gap-3">
+          <a data-testid="cta-wa" href={links.mainWa} target="_blank" rel="noopener noreferrer" className="h-14 w-full rounded-full bg-whatsapp text-white font-semibold inline-flex items-center justify-center gap-2 transition-colors duration-200 hover:bg-whatsapp-hover">
+            <SocialIcon platform="whatsapp" className="h-4 w-4" />
+            {msg.whatsapp} — {profile.display_name.split(" ")[0]}
           </a>
-          <a href={links.telLink} className="h-11 w-full rounded-xl border border-gray-200 bg-white text-sm font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-50 text-gray-700 transition-all duration-200">
+          <a href={links.telLink} className="h-12 w-full rounded-full border border-gray-300 text-gray-700 text-sm font-medium inline-flex items-center justify-center gap-2 transition-colors duration-200 hover:bg-gray-50">
             <Phone />
             {msg.call}
           </a>
         </div>
       </div>
 
-      {/* Services */}
+      {/* Services — liste éditoriale à filets */}
       {services.length > 0 && (
-        <div className="mt-8">
-          <h2 className="font-bold font-display px-1 mb-4 text-xs tracking-widest uppercase text-gray-400 font-medium">{msg.services}</h2>
-          <div className="grid gap-3">
+        <section className="mt-12">
+          <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{msg.services}</h2>
+          <div data-testid="services" className="mt-4 border-t border-gray-200 divide-y divide-gray-200">
             {services.map((s) => {
               const href = trackClick(`click_service_${s.id}`, buildWaLink(profile.phone_e164, buildServiceWaMessage(s.title, s.price, s.currency)));
               return (
-                <div key={s.id} className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 shadow-sm flex items-start justify-between gap-4">
+                <div key={s.id} className="py-5 flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900">{s.title}</p>
-                    {s.description && <p className="text-sm text-gray-500 mt-1">{s.description}</p>}
-                    {s.price != null && <p className="text-sm font-bold text-accent mt-2">{s.price.toLocaleString()} {s.currency}</p>}
+                    <p className="text-[17px] font-medium text-gray-900">{s.title}</p>
+                    {s.description && <p className="mt-1 text-sm leading-6 text-gray-500">{s.description}</p>}
                   </div>
-                  <a href={href} target="_blank" rel="noopener noreferrer" className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-whatsapp text-white text-xs font-semibold hover:bg-whatsapp-hover transition-all duration-200 shadow-sm shadow-[#25D366]/20">
-                    <SocialIcon platform="whatsapp" className="w-3.5 h-3.5" />
-                    {msg.demandBtn}
-                  </a>
+                  <div className="shrink-0 text-right">
+                    {s.price != null && <p className="text-lg font-semibold text-accent">{s.price.toLocaleString()} {s.currency}</p>}
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs font-medium text-gray-500 underline underline-offset-4 transition-colors hover:text-accent">
+                      {msg.demandBtn} →
+                    </a>
+                  </div>
                 </div>
               );
             })}
           </div>
-        </div>
+        </section>
       )}
 
       {/* Portfolio */}
       {portfolio.length > 0 && (
-        <div className="mt-8">
-          <h2 className="font-bold font-display px-1 mb-4 text-xs tracking-widest uppercase text-gray-400 font-medium">{msg.portfolio}</h2>
-          <PortfolioGallery items={portfolio} />
-        </div>
-      )}
-
-      {/* Testimonials */}
-      {testimonials.length > 0 && (
-        <div className="mt-8">
-          <h2 className="font-bold font-display px-1 mb-4 text-xs tracking-widest uppercase text-gray-400 font-medium">{msg.testimonials.title}</h2>
-          <p className="px-1 mb-4 -mt-2 text-xs text-gray-500">{msg.testimonials.subtitle}</p>
-          <div className="flex flex-col gap-3">
-            {testimonials.map((t) => (
-              <TestimonialCard key={t.id} testimonial={t} starLabel={msg.testimonials.starsAria} date={formatTestimonialDate(locale, t.createdAt)} />
+        <section className="mt-12">
+          <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{msg.portfolio}</h2>
+          <div data-testid="portfolio" className="mt-4 grid grid-cols-3 gap-2">
+            {portfolio.map((p) => (
+              <div key={p.id} className="relative aspect-square overflow-hidden rounded-2xl">
+                <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 33vw, 200px" className="object-cover" />
+              </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Socials */}
+      {/* Testimonials — blocs éditoriaux */}
+      {testimonials.length > 0 && (
+        <section className="mt-12">
+          <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{msg.testimonials.title}</h2>
+          <div data-testid="testimonials" className="mt-4 flex flex-col gap-6">
+            {testimonials.map((t) => (
+              <div key={t.id} className="border-l-2 border-gray-200 pl-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-0.5">{stars(t)}</div>
+                </div>
+                <p className="mt-2 text-[15px] leading-7 text-gray-700">« {t.content} »</p>
+                <p className="mt-2 text-xs font-semibold text-gray-900">{t.authorName}{t.authorRole ? ` · ${t.authorRole}` : ""}</p>
+                {t.createdAt && <p className="mt-0.5 text-[11px] text-gray-400">{formatTestimonialDate(locale, t.createdAt)}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Socials — lignes */}
       {socials.length > 0 && (
-        <div className="mt-8">
-          <h2 className="font-bold font-display px-1 mb-4 text-xs tracking-widest uppercase text-gray-400 font-medium">{msg.socials}</h2>
-          <div className="grid gap-2">
+        <section className="mt-12">
+          <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{msg.socials}</h2>
+          <div data-testid="socials" className="mt-3 border-y border-gray-200 divide-y divide-gray-200">
             {socials.map((s) => (
-              <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer"
-                className="h-12 rounded-xl bg-gray-900 text-white font-semibold inline-flex items-center justify-center gap-2 hover:bg-gray-800 transition-all duration-200 shadow-sm">
-                <SocialIcon platform={s.platform} />
+              <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 py-3 text-sm font-medium text-gray-700 transition-colors hover:text-gray-900">
+                <SocialIcon platform={s.platform} className="h-4 w-4" />
                 <span className="capitalize">{s.platform}</span>
               </a>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </>
   );

@@ -120,12 +120,12 @@ export function DashboardClient({
         )}
 
         {/* Tab bar */}
-        <nav className="flex w-full border-b border-gray-200 mb-6">
+        <nav className="flex w-full overflow-x-auto border-b border-gray-200 mb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {TABS.map((tabItem) => (
             <button
               key={tabItem.id}
               onClick={() => setTab(tabItem.id)}
-              className={`relative flex-1 flex items-center justify-center gap-1.5 h-11 text-xs font-medium transition-colors duration-200 ${
+              className={`relative flex-1 min-w-max whitespace-nowrap flex items-center justify-center gap-1.5 px-3 h-11 text-xs font-medium transition-colors duration-200 ${
                 tab === tabItem.id
                   ? "text-gray-900"
                   : "text-gray-400 hover:text-gray-600"

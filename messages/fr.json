@@ -500,6 +500,7 @@
     "statusRefused": "Refusé"
   },
   "accountPage": {
+    "account": "Compte",
     "title": "Paramètres du compte",
     "security": "Sécurité",
     "securityDesc": "Gérez la sécurité de votre compte.",

@@ -11,7 +11,7 @@ export function StudioTemplate({ profile, services, portfolio, socials, testimon
   return (
     <>
       {/* Hero — Noir Éditorial */}
-      <header className="bg-[#0A0A0A] px-4 py-14 text-center text-white">
+      <header className="rounded-2xl bg-[#0A0A0A] px-4 py-14 text-center text-white">
         <Avatar profile={profile} className="h-24 w-24 rounded-full ring-1 ring-white/20" />
         <h1 data-testid="t-name" style={CONDENSED} className="mt-6 text-5xl font-bold uppercase leading-[0.9] text-white">
           {profile.display_name}

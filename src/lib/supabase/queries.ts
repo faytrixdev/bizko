@@ -85,6 +85,7 @@ export type ExploreFilters = {
   q?: string;
   city?: string;
   category?: string;
+  country?: string;
   page?: number;
 };
 
@@ -140,11 +141,13 @@ export async function searchExplore(filters: ExploreFilters): Promise<ExplorePag
     q: filters.q?.trim() || null,
     city: filters.city?.trim() || null,
     category: filters.category?.trim() || null,
+    country: filters.country?.trim() || null,
   };
   const { data, error } = await createPublicClient().rpc("search_public_profiles", {
     p_query: safe.q,
     p_city: safe.city,
     p_category: safe.category,
+    p_country: safe.country,
     p_limit: EXPLORE_PAGE_SIZE,
     p_offset: (page - 1) * EXPLORE_PAGE_SIZE,
   });

@@ -2,10 +2,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getServerMessages } from "@/lib/i18n/messages-server";
 import { createPublicClient } from "@/lib/supabase/public-client";
+import { createClient } from "@/lib/supabase/server";
+import { isProPlan } from "@/lib/plans";
 import { searchExplore, EXPLORE_PAGE_SIZE, type ExploreFilters as ExploreFiltersQuery } from "@/lib/supabase/queries";
 import { CATEGORIES, isCategory } from "@/lib/categories";
 import { ExploreCard } from "@/components/explore/ExploreCard";
 import { ExploreFilters } from "@/components/explore/ExploreFilters";
+import { LandingNavbar } from "@/components/landing/LandingNavbar";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 export async function generateMetadata(): Promise<Metadata> {
   const msg = await getServerMessages();
@@ -22,6 +26,7 @@ type Props = {
   searchParams: Promise<{
     q?: string | string[];
     ville?: string | string[];
+    pays?: string | string[];
     cat?: string | string[];
     page?: string | string[];
   }>;
@@ -30,35 +35,70 @@ type Props = {
 const param = (value: string | string[] | undefined): string | undefined =>
   typeof value === "string" ? value.trim() || undefined : undefined;
 
+type SubRow = {
+  plan?: string | null;
+  status?: string | null;
+};
+
 export default async function ExplorePage({ searchParams }: Props) {
   const raw = await searchParams;
   const msg = await getServerMessages();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let isPro = false;
+  let username: string | undefined;
+  if (user) {
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("plan, status")
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    const row = sub && !Array.isArray(sub) ? (sub as SubRow) : null;
+    isPro = isProPlan(row?.plan, row?.status);
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", user.id)
+      .maybeSingle();
+    const p = profile && !Array.isArray(profile) ? profile : null;
+    username = p?.username ?? undefined;
+  }
 
   const q = param(raw.q);
   const ville = param(raw.ville);
+  const pays = param(raw.pays);
   const cat = param(raw.cat);
   const page = Math.max(1, Number(param(raw.page)) || 1);
   const filters: ExploreFiltersQuery = {
     q,
     city: ville,
     category: cat,
+    country: pays,
     page,
   };
 
   const result = await searchExplore(filters);
 
   let cities: string[] = [];
+  let countries: string[] = [];
   try {
     const { data: citiesData } = await createPublicClient()
       .from("profiles")
-      .select("city")
+      .select("city, country")
       .eq("is_public", true);
-    const seen = new Set<string>();
+    const seenCities = new Set<string>();
+    const seenCountries = new Set<string>();
     for (const row of citiesData ?? []) {
       const city = row.city?.trim();
-      if (city) seen.add(city);
+      if (city) seenCities.add(city);
+      const country = row.country?.trim();
+      if (country) seenCountries.add(country);
     }
-    cities = [...seen].sort((a, b) => a.localeCompare(b));
+    cities = [...seenCities].sort((a, b) => a.localeCompare(b));
+    countries = [...seenCountries].sort((a, b) => a.localeCompare(b));
   } catch {
     // directory must not crash if the city list fails
   }
@@ -74,14 +114,17 @@ export default async function ExplorePage({ searchParams }: Props) {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
     if (ville) params.set("ville", ville);
+    if (pays) params.set("pays", pays);
     if (cat) params.set("cat", cat);
     params.set("page", String(targetPage));
     return `/explore?${params.toString()}`;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <main className="max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
+    <div className="min-h-screen bg-gray-50/50 flex flex-col">
+      {user ? <DashboardHeader username={username} isPro={isPro} /> : <LandingNavbar msg={msg} />}
+
+      <main className="flex-1 max-w-6xl mx-auto px-5 sm:px-8 py-12 sm:py-16 w-full">
         <header className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-display text-gray-900">
             {msg.explore.title}
@@ -94,17 +137,21 @@ export default async function ExplorePage({ searchParams }: Props) {
             strings={{
               searchPlaceholder: msg.explore.searchPlaceholder,
               filterCity: msg.explore.filterCity,
+              filterCountry: msg.explore.filterCountry,
               filterCategory: msg.explore.filterCategory,
               allCities: msg.explore.allCities,
+              allCountries: msg.explore.allCountries,
               allCategories: msg.explore.allCategories,
               searchLabel: msg.explore.searchLabel,
             }}
             cities={cities}
+            countries={countries}
             categories={categoriesList}
             values={{
               q: filters.q,
               city: filters.city,
               category: filters.category,
+              country: filters.country,
             }}
           />
         </div>
@@ -170,6 +217,13 @@ export default async function ExplorePage({ searchParams }: Props) {
           </nav>
         )}
       </main>
+
+      <footer className="border-t border-gray-100 py-10 bg-white">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          <span className="text-lg font-bold font-display text-gray-900 tracking-tight">Bizko</span>
+          <p className="mt-2 text-sm text-gray-400">{msg.landing.footerTagline}</p>
+        </div>
+      </footer>
     </div>
   );
 }

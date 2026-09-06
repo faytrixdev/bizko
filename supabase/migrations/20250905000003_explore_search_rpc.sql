@@ -3,6 +3,7 @@ create or replace function public.search_public_profiles(
   p_query text default null,
   p_city text default null,
   p_category text default null,
+  p_country text default null,
   p_limit int default 24,
   p_offset int default 0
 )
@@ -51,10 +52,11 @@ as $$
     )
     and (p_city is null or p_city = '' or p.city = p_city)
     and (p_category is null or p_category = '' or p.category = p_category)
+    and (p_country is null or p_country = '' or p.country = p_country)
   order by is_pro desc, p.display_name asc
   limit greatest(least(p_limit, 48), 1)
   offset greatest(p_offset, 0);
 $$;
 
-revoke all on function public.search_public_profiles(text, text, text, int, int) from public;
-grant execute on function public.search_public_profiles(text, text, text, int, int) to anon, authenticated;
+revoke all on function public.search_public_profiles(text, text, text, text, int, int) from public;
+grant execute on function public.search_public_profiles(text, text, text, text, int, int) to anon, authenticated;

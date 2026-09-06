@@ -7,19 +7,22 @@ type Props = {
     searchPlaceholder: string;
     filterCity: string;
     filterCategory: string;
+    filterCountry: string;
     allCities: string;
     allCategories: string;
+    allCountries: string;
     searchLabel: string;
   };
   cities: string[];
+  countries: string[];
   categories: { value: string; label: string }[];
-  values: { q?: string; city?: string; category?: string };
+  values: { q?: string; city?: string; category?: string; country?: string };
 };
 
 const selectClass =
   "h-11 shrink-0 sm:w-44 rounded-lg border border-gray-200 bg-white px-3 pr-8 text-sm text-gray-900 outline-none transition-all duration-200 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10";
 
-export function ExploreFilters({ strings, cities, categories, values }: Props) {
+export function ExploreFilters({ strings, cities, countries, categories, values }: Props) {
   return (
     <form method="get" action="/explore" className="flex flex-wrap items-center gap-2.5">
       <input
@@ -34,6 +37,14 @@ export function ExploreFilters({ strings, cities, categories, values }: Props) {
         {cities.map((city) => (
           <option key={city} value={city}>
             {city}
+          </option>
+        ))}
+      </select>
+      <select name="pays" defaultValue={values.country ?? ""} aria-label={strings.filterCountry} className={selectClass}>
+        <option value="">{strings.allCountries}</option>
+        {countries.map((country) => (
+          <option key={country} value={country}>
+            {country}
           </option>
         ))}
       </select>

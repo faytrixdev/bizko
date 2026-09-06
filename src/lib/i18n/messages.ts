@@ -4,8 +4,10 @@ import { defaultLocale, locales, type Locale } from "./config";
 
 export { defaultLocale, locales, type Locale };
 
+export type Messages = typeof fr;
+
 export const messages = { fr, en } as const;
 
-export function getMessages(locale: Locale) {
+export function getMessages(locale: Locale): Messages {
   return messages[locale] ?? messages[defaultLocale];
 }

@@ -658,9 +658,9 @@
     "music": "Musicien",
     "autre": "Autre"
   },
-  "explore": {
+"explore": {
     "title": "Explorer les talents",
-    "description": "Trouvez des freelances et prestataires en Côte d’Ivoire",
+    "description": "Trouvez des freelances et prestataires en Côte d'Ivoire",
     "searchPlaceholder": "Rechercher un nom, un métier, une ville…",
     "searchLabel": "Rechercher",
     "filterCity": "Ville",
@@ -669,10 +669,25 @@
     "allCategories": "Toutes les catégories",
     "pro": "Pro",
     "empty": "Aucun profil trouvé",
-    "emptyHint": "Essayez d’autres filtres",
+    "emptyHint": "Essayez d'autres filtres",
     "previous": "Précédent",
     "next": "Suivant",
     "page": "Page {current} sur {total}",
     "reset": "Réinitialiser"
+  },
+  "digest": {
+    "subject": "Vos stats de la semaine sur Bizko",
+    "hello": "Bonjour {name},",
+    "viewsLabel": "Vues",
+    "clicksLabel": "Clics WhatsApp",
+    "topService": "Votre service le plus visité",
+    "variationUp": "+{value}%",
+    "variationDown": "{value}%",
+    "suggestionTitle": "L'idée de la semaine",
+    "proCtaLabel": "Passez Pro",
+    "proCtaUrl": "https://bizko.pro/pricing",
+    "footerUnsub": "Vous recevez ce résumé car votre profil Bizko a de l'activité.",
+    "footerUnsubLink": "Se désinscrire",
+    "footerBrand": "Envoyé avec Bizko"
   }
 }

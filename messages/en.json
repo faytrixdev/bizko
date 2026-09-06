@@ -658,9 +658,9 @@
     "music": "Musician",
     "autre": "Other"
   },
-  "explore": {
+"explore": {
     "title": "Explore talents",
-    "description": "Find freelancers and service providers in Côte d’Ivoire",
+    "description": "Find freelancers and service providers in Côte d'Ivoire",
     "searchPlaceholder": "Search a name, a job, a city…",
     "searchLabel": "Search",
     "filterCity": "City",
@@ -674,5 +674,20 @@
     "next": "Next",
     "page": "Page {current} of {total}",
     "reset": "Reset"
+  },
+  "digest": {
+    "subject": "Your weekly stats on Bizko",
+    "hello": "Hi {name},",
+    "viewsLabel": "Views",
+    "clicksLabel": "WhatsApp clicks",
+    "topService": "Your most viewed service",
+    "variationUp": "+{value}%",
+    "variationDown": "{value}%",
+    "suggestionTitle": "Idea of the week",
+    "proCtaLabel": "Go Pro",
+    "proCtaUrl": "https://bizko.pro/pricing",
+    "footerUnsub": "You're receiving this summary because your Bizko profile has activity.",
+    "footerUnsubLink": "Unsubscribe",
+"footerBrand": "Sent with Bizko"
   }
 }

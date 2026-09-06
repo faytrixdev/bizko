@@ -7,7 +7,6 @@ import type { TemplateProps } from "./types";
 const SERIF = { fontFamily: "var(--font-garamond, Georgia, serif)" };
 const CONDENSED = { fontFamily: "var(--font-archivo, 'Arial Narrow', sans-serif)" };
 const GOLD = "#D4AF37";
-const GOLD_SOFT = "#E6C87A";
 
 export function ObsidienneTemplate({ profile, services, portfolio, socials, testimonials, msg, locale, links, trackClick }: TemplateProps) {
   return (

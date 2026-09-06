@@ -7,7 +7,7 @@ afterEach(() => cleanup());
 
 describe("MinimalTemplate", () => {
   it("renders identity, contact, services, portfolio and socials", () => {
-    const { container } = render(<MinimalTemplate {...makeTemplateProps()} />);
+    render(<MinimalTemplate {...makeTemplateProps()} />);
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Awa Konaté");
     expect(screen.getByText("Photographe à Abidjan")).toBeInTheDocument();
     expect(screen.getByText("Mes services")).toBeInTheDocument();

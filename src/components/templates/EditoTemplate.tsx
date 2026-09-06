@@ -13,7 +13,7 @@ export function EditoTemplate({ profile, services, portfolio, socials, testimoni
     <>
       {/* Header — Magazine */}
       <header className="pt-4 text-center">
-        <Avatar profile={profile} className="h-20 w-20 ring-4 ring-[#FAF7F2] shadow-sm" />
+        <Avatar profile={profile} className="mx-auto h-20 w-20 ring-4 ring-[#FAF7F2] shadow-sm" />
         <h1 data-testid="t-name" style={SERIF} className="mt-5 text-4xl font-medium text-[#1C1917] sm:text-5xl">
           {profile.display_name}
         </h1>

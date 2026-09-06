@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
 import { getLimits, isBillingInterval } from "@/lib/plans";
+import { canUseTemplate } from "@/lib/template-config";
 import { createCheckoutConfig } from "@/lib/whop";
 import { isValidTestimonialInput } from "@/lib/testimonials";
 import { getMessages } from "@/lib/i18n/messages";
@@ -29,12 +30,19 @@ function dashboardError(err: { code?: string; message?: string } | null): string
   return "generic";
 }
 
+// Resolve the current plan for the authenticated user.
+async function currentPlan(supabase: Awaited<ReturnType<typeof createClient>>): Promise<"free" | "pro"> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return "free";
+  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
+  return isPro ? "pro" : "free";
+}
+
 // Resolve the current plan's limits for the authenticated user.
 async function currentLimits(supabase: Awaited<ReturnType<typeof createClient>>) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
-  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
-  return getLimits(isPro ? "pro" : "free");
+  return getLimits(await currentPlan(supabase));
 }
 
 export async function updateProfile(formData: FormData) {
@@ -56,6 +64,11 @@ export async function updateProfile(formData: FormData) {
   }
   if (bio && bio.length > 280) redirect("/dashboard?error=generic");
   if (email_public && !EMAIL_RE.test(email_public)) redirect("/dashboard?error=invalid_email");
+
+  // Pro templates are locked for free users server-side (never trust the client).
+  if (!canUseTemplate(await currentPlan(supabase), template)) {
+    redirect("/dashboard?error=template_locked");
+  }
 
   const { error } = await supabase.from("profiles").update({
     display_name, tagline, bio, city, country, phone_e164, email_public, template,

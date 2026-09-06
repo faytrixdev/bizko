@@ -36,6 +36,7 @@ const ERROR_KEYS: Record<string, string> = {
   invalid_url: "dashboard.errorInvalidUrl",
   services_limit: "dashboard.servicesFull",
   socials_limit: "dashboard.socialsFull",
+  template_locked: "dashboard.errorTemplateLocked",
 };
 
 const SUCCESS_KEYS: Record<string, string> = {

@@ -6,11 +6,17 @@ import { makeTemplateProps } from "./fixture";
 afterEach(() => cleanup());
 
 describe("PortfolioTemplate", () => {
-  it("renders the card header and key sections", () => {
+  it("renders identity, contact, services and socials", () => {
     render(<PortfolioTemplate {...makeTemplateProps()} />);
-    expect(screen.getAllByRole("heading", { level: 1 }).length).toBeGreaterThan(0);
-    expect(screen.getByText("Awa Konaté")).toBeInTheDocument();
-    expect(screen.getByText("Séance studio")).toBeInTheDocument();
-    expect(screen.getByText("Me retrouver")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Awa Konaté");
+    expect(screen.getByText("Photographe à Abidjan")).toBeInTheDocument();
+    expect(screen.getByText("Mes services")).toBeInTheDocument();
+    expect(screen.getByText(/Awa Konaté/, { selector: "h1" })).toBeInTheDocument();
+  });
+
+  it("is gallery-first: portfolio is present and services stay compact", () => {
+    render(<PortfolioTemplate {...makeTemplateProps()} />);
+    expect(screen.getByTestId("portfolio")).not.toBeNull();
+    expect(screen.getByTestId("services").classList.contains("grid")).toBe(true);
   });
 });

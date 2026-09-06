@@ -37,7 +37,7 @@ const COMPONENTS: Record<Template, ComponentType<TemplateProps>> = {
 
 const BG_CLASS: Record<Template, string> = {
   minimal: "bg-white",
-  portfolio: "bg-white",
+  portfolio: "bg-[#FAFAF6]",
   studio: "bg-white",
   edito: "bg-[#FAF7F2]",
   urban: "bg-white",

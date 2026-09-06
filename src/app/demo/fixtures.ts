@@ -62,6 +62,10 @@ const P = {
   runwayGown: "/portfolios-demo/obsidienne-runway.jpg", // robe noire défilé
   coutureMan: "/portfolios-demo/obsidienne-man.jpg", // homme tenue nigériane
   obsidianBaskets: "/portfolios-demo/obsidienne-baskets.jpg", // paniers africains sur noir
+  nairobiHeaddress: "/portfolios-demo/obsidienne-nairobi-head.jpg", // mode avant-garde Nairobi
+  patternBags: "/portfolios-demo/portfolio-pattern-bags.jpg", // mains/ordures africaines sur fond sombre
+  bwSmoke: "/portfolios-demo/studio-bw-smoke.jpg", // portrait N&B fumée
+  africanLivingRoom: "/portfolios-demo/edito-african-livingroom.jpg", // salon africain moderne
 } as const;
 
 function wa(phone: string): { mainWa: string; telLink: string } {
@@ -136,6 +140,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "pf1", profile_id: "demo-portfolio", media_url: P.basketWeave, media_type: "image", thumbnail_url: P.basketWeave, title: "Paniers tissés", position: 0 },
       { id: "pf2", profile_id: "demo-portfolio", media_url: P.artisanBowls, media_type: "image", thumbnail_url: P.artisanBowls, title: "Artisanat", position: 1 },
       { id: "pf3", profile_id: "demo-portfolio", media_url: P.afroInterior, media_type: "image", thumbnail_url: P.afroInterior, title: "Direction artistique", position: 2 },
+      { id: "pf4", profile_id: "demo-portfolio", media_url: P.patternBags, media_type: "image", thumbnail_url: P.patternBags, title: "Packaging patterns", position: 3 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-portfolio", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -174,6 +179,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "pf1", profile_id: "demo-studio", media_url: P.bwPortrait1, media_type: "image", thumbnail_url: P.bwPortrait1, title: "Série studio", position: 0 },
       { id: "pf2", profile_id: "demo-studio", media_url: P.bwPortrait2, media_type: "image", thumbnail_url: P.bwPortrait2, title: "Portrait Lagos", position: 1 },
       { id: "pf3", profile_id: "demo-studio", media_url: P.bwPortrait3, media_type: "image", thumbnail_url: P.bwPortrait3, title: "Portrait dramatique", position: 2 },
+      { id: "pf4", profile_id: "demo-studio", media_url: P.bwSmoke, media_type: "image", thumbnail_url: P.bwSmoke, title: "Série fumée", position: 3 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-studio", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -211,6 +217,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "pf1", profile_id: "demo-edito", media_url: P.bambooDecor, media_type: "image", thumbnail_url: P.bambooDecor, title: "Décor bambou", position: 0 },
       { id: "pf2", profile_id: "demo-edito", media_url: P.moroccanCeiling, media_type: "image", thumbnail_url: P.moroccanCeiling, title: "Plafond marocain", position: 1 },
       { id: "pf3", profile_id: "demo-edito", media_url: P.kaftanInterior, media_type: "image", thumbnail_url: P.kaftanInterior, title: "Ambiance kaftan", position: 2 },
+      { id: "pf4", profile_id: "demo-edito", media_url: P.africanLivingRoom, media_type: "image", thumbnail_url: P.africanLivingRoom, title: "Salon référence", position: 3 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-edito", platform: "instagram", url: "https://instagram.com", position: 0 },
@@ -287,6 +294,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       { id: "pf1", profile_id: "demo-obsidienne", media_url: P.runwayGown, media_type: "image", thumbnail_url: P.runwayGown, title: "Collection haute couture", position: 0 },
       { id: "pf2", profile_id: "demo-obsidienne", media_url: P.coutureMan, media_type: "image", thumbnail_url: P.coutureMan, title: "Tenue couture", position: 1 },
       { id: "pf3", profile_id: "demo-obsidienne", media_url: P.obsidianBaskets, media_type: "image", thumbnail_url: P.obsidianBaskets, title: "Matières", position: 2 },
+      { id: "pf4", profile_id: "demo-obsidienne", media_url: P.nairobiHeaddress, media_type: "image", thumbnail_url: P.nairobiHeaddress, title: "Avant-garde Nairobi", position: 3 },
     ],
     socials: [
       { id: "so1", profile_id: "demo-obsidienne", platform: "instagram", url: "https://instagram.com", position: 0 },

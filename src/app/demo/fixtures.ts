@@ -32,17 +32,14 @@ const msg = {
   },
 } satisfies ProfileMessages;
 
-const u = (id: string, w = 800, h = 800) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`;
-
-// Stable Unsplash photo IDs used for avatars & portfolio visuals.
+// Local AI-generated West African avatar portraits (public/avatars-demo).
 const AVATARS = {
-  minimal: "photo-1494790108377-be9c29b29330", // woman portrait
-  portfolio: "photo-1507003211169-0a1dd7228f2d", // man portrait
-  studio: "photo-1519085360753-af0119f7cbe7", // man portrait
-  edito: "photo-1438761681033-6461ffad8d80", // woman portrait
-  urban: "photo-1500648767791-00dcc994a43e", // man portrait
-  obsidienne: "photo-1534528741775-53994a69daeb", // woman portrait
+  minimal: "/avatars-demo/min-awa.jpg",
+  portfolio: "/avatars-demo/min-mamadou.jpg",
+  studio: "/avatars-demo/min-yann.jpg",
+  edito: "/avatars-demo/min-clara.jpg",
+  urban: "/avatars-demo/min-jules.jpg",
+  obsidienne: "/avatars-demo/min-nora.jpg",
 } as const;
 
 const PHOTO = (id: string, w = 800, h = 800) =>
@@ -86,7 +83,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       email_public: "awa@exemple.com",
       template: "minimal",
       locale: "fr",
-      avatar_url: u(AVATARS.minimal, 400, 400),
+      avatar_url: AVATARS.minimal,
     },
     services: [
       { id: "s1", profile_id: "demo-minimal", title: "Séance portrait", description: "1h de shooting en extérieur ou studio.", price: 25000, currency: "XOF", position: 0 },
@@ -124,7 +121,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       email_public: null,
       template: "portfolio",
       locale: "fr",
-      avatar_url: u(AVATARS.portfolio, 400, 400),
+      avatar_url: AVATARS.portfolio,
     },
     services: [
       { id: "s1", profile_id: "demo-portfolio", title: "Logo & identité", description: "Logo + déclinaisons + charte graphique.", price: 120000, currency: "XOF", position: 0 },
@@ -161,7 +158,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       email_public: null,
       template: "studio",
       locale: "fr",
-      avatar_url: u(AVATARS.studio, 400, 400),
+      avatar_url: AVATARS.studio,
     },
     services: [
       { id: "s1", profile_id: "demo-studio", title: "Portrait corporate", description: "Photo professionnelle pour CV et LinkedIn.", price: 30000, currency: "XOF", position: 0 },
@@ -197,7 +194,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       email_public: null,
       template: "edito",
       locale: "fr",
-      avatar_url: u(AVATARS.edito, 400, 400),
+      avatar_url: AVATARS.edito,
     },
     services: [
       { id: "s1", profile_id: "demo-edito", title: "Moodboard & conseil", description: "Première vision de votre espace.", price: 200, currency: "USD", position: 0 },
@@ -234,7 +231,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       email_public: null,
       template: "urban",
       locale: "fr",
-      avatar_url: u(AVATARS.urban, 400, 400),
+      avatar_url: AVATARS.urban,
     },
     services: [
       { id: "s1", profile_id: "demo-urban", title: "Fresque murale", description: "Conception et réalisation sur site.", price: 350000, currency: "XOF", position: 0 },
@@ -272,7 +269,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       email_public: null,
       template: "obsidienne",
       locale: "fr",
-      avatar_url: u(AVATARS.obsidienne, 400, 400),
+      avatar_url: AVATARS.obsidienne,
     },
     services: [
       { id: "s1", profile_id: "demo-obsidienne", title: "Robe sur mesure", description: "Création unique, 2 essayages inclus.", price: 300000, currency: "XOF", position: 0 },

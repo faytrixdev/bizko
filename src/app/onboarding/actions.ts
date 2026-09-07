@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
 import { trackEvent } from "@/lib/analytics";
+import { canUseTemplate } from "@/lib/template-config";
 import { isValidUsername } from "@/lib/validators";
 import { normalizePhoneE164 } from "@/lib/utils";
 
@@ -24,6 +25,7 @@ export async function completeOnboarding(formData: FormData) {
   const service_title = (formData.get("service_title") as string)?.trim();
   const service_price = formData.get("service_price") as string;
   const service_currency = (formData.get("service_currency") as string) || "XOF";
+  const template = (formData.get("template") as string) || "minimal";
 
   // Validate username
   if (!isValidUsername(username)) {
@@ -34,6 +36,11 @@ export async function completeOnboarding(formData: FormData) {
   }
   if (!display_name || !tagline || !city || !country || !phone_e164) {
     redirect("/onboarding?error=champs_requis");
+  }
+
+  // Pro templates are locked for free users server-side (never trust the client).
+  if (!canUseTemplate("free", template)) {
+    redirect("/onboarding?error=template_locked");
   }
 
   const { data: existingProfile } = await supabase
@@ -51,7 +58,7 @@ export async function completeOnboarding(formData: FormData) {
       city,
       country,
       phone_e164,
-      template: "minimal",
+      template,
       locale: "fr",
     });
 

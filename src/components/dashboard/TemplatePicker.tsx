@@ -22,12 +22,29 @@ const THUMBNAILS: Record<string, string> = {
 interface TemplatePickerProps {
   current: string;
   isPro: boolean;
+  /** Base path of the "Go Pro" CTA. Appends ?next&tpl when `upgradeNext` is set. */
+  upgradeHref?: string;
+  /** Return path appended on the upgrade link (e.g. /onboarding). */
+  upgradeNext?: string;
+  /** Called right before the upgrade link navigates (e.g. to persist a draft). */
+  onUpgradeClick?: () => void;
 }
 
-export function TemplatePicker({ current, isPro }: TemplatePickerProps) {
-  const { t } = useI18n();
+export function TemplatePicker({
+  current,
+  isPro,
+  upgradeHref = "/pricing",
+  upgradeNext,
+  onUpgradeClick,
+}: TemplatePickerProps) {
+  const t = useI18n().t;
   const [selected, setSelected] = useState(current);
   const [preview, setPreview] = useState<string | null>(null);
+
+  const lockHref = (id: string) =>
+    upgradeNext
+      ? `${upgradeHref}?next=${encodeURIComponent(upgradeNext)}&tpl=${id}`
+      : upgradeHref;
 
   const previewLocked =
     !!preview && TEMPLATE_CONFIGS.find((c) => c.id === preview)?.tier === "pro" && !isPro;
@@ -43,8 +60,12 @@ export function TemplatePicker({ current, isPro }: TemplatePickerProps) {
               key={cfg.id}
               type="button"
               onClick={() => {
-                setSelected(cfg.id);
-                setPreview(cfg.id);
+                if (locked) {
+                  setPreview(cfg.id);
+                } else {
+                  setSelected(cfg.id);
+                  setPreview(cfg.id);
+                }
               }}
               aria-pressed={active}
               className={cn(
@@ -114,7 +135,8 @@ export function TemplatePicker({ current, isPro }: TemplatePickerProps) {
               </Link>
               {previewLocked ? (
                 <Link
-                  href="/pricing"
+                  href={lockHref(preview)}
+                  onClick={onUpgradeClick}
                   className="inline-flex h-9 items-center justify-center rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
                 >
                   {t("dashboard.upgradeCta")}

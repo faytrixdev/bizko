@@ -5,8 +5,14 @@ import { isValidUsername, USERNAME_PATTERN } from "@/lib/validators";
 
 type Status = "idle" | "checking" | "available" | "unavailable" | "invalid";
 
-export function UsernameField({ onStatusChange }: { onStatusChange?: (status: string) => void }) {
-  const [value, setValue] = useState("");
+interface UsernameFieldProps {
+  onStatusChange?: (status: string) => void;
+  /** Initial value (e.g. restored onboarding draft). */
+  initialValue?: string;
+}
+
+export function UsernameField({ onStatusChange, initialValue = "" }: UsernameFieldProps) {
+  const [value, setValue] = useState(initialValue);
   const [status, setStatus] = useState<Status>("idle");
   const abortRef = useRef<AbortController | null>(null);
 

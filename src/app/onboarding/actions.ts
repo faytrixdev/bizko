@@ -10,6 +10,15 @@ import { canUseTemplate } from "@/lib/template-config";
 import { isValidUsername } from "@/lib/validators";
 import { normalizePhoneE164 } from "@/lib/utils";
 
+// Resolve the current plan for the authenticated user (Pro may be granted
+// before the profile exists, see subscriptions FK on auth.users).
+async function currentPlan(supabase: Awaited<ReturnType<typeof createClient>>): Promise<"free" | "pro"> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return "free";
+  const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
+  return isPro ? "pro" : "free";
+}
+
 export async function completeOnboarding(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -39,7 +48,7 @@ export async function completeOnboarding(formData: FormData) {
   }
 
   // Pro templates are locked for free users server-side (never trust the client).
-  if (!canUseTemplate("free", template)) {
+  if (!canUseTemplate(await currentPlan(supabase), template)) {
     redirect("/onboarding?error=template_locked");
   }
 

@@ -239,9 +239,18 @@ export async function startSubscription(formData: FormData) {
   const interval = (formData.get("interval") as string) ?? "monthly";
   if (!isBillingInterval(interval)) redirect("/dashboard?error=checkout_failed");
 
+  // Optional post-payment return. Only allow known relative paths to avoid
+  // turning the checkout redirect into an open redirect.
+  const next = (formData.get("next") as string) ?? "";
+  const tpl = (formData.get("tpl") as string) ?? "";
+  let redirectUrl: string | undefined;
+  if (next === "/onboarding") {
+    redirectUrl = tpl ? `/onboarding?tpl=${encodeURIComponent(tpl)}` : "/onboarding";
+  }
+
   let purchaseUrl: string;
   try {
-    const { sessionId, purchaseUrl: url } = await createCheckoutConfig(user.id, interval);
+    const { sessionId, purchaseUrl: url } = await createCheckoutConfig(user.id, interval, redirectUrl);
     purchaseUrl = url;
     await supabase.from("pro_checkouts").insert({
       profile_id: user.id,

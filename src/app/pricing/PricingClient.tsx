@@ -10,10 +10,18 @@ export type PricingCtaState = "guest" | "free" | "pro";
 
 interface PricingClientProps {
   ctaState: PricingCtaState;
+  /** Return path after a successful upgrade (e.g. /onboarding). */
+  next?: string;
+  /** Template to preselect after returning (e.g. a locked pro template). */
+  tpl?: string;
 }
 
-export function PricingClient({ ctaState }: PricingClientProps) {
+const RETURN_ALLOWED = new Set(["/onboarding"]);
+
+export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
   const { t } = useI18n();
+  const nextParam = next && RETURN_ALLOWED.has(next) ? next : undefined;
+  const tplParam = tpl && /^[a-z0-9_-]+$/.test(tpl) ? tpl : undefined;
 
   return (
     <main className="max-w-3xl mx-auto px-5 sm:px-8 pb-24">
@@ -52,6 +60,8 @@ export function PricingClient({ ctaState }: PricingClientProps) {
             {ctaState === "free" ? (
               <form action={startSubscription} className="mt-6">
                 <input type="hidden" name="interval" value="monthly" />
+                {nextParam && <input type="hidden" name="next" value={nextParam} />}
+                {tplParam && <input type="hidden" name="tpl" value={tplParam} />}
                 <button
                   type="submit"
                   className="w-full h-10 rounded-xl border border-violet-300 bg-white text-violet-700 text-sm font-semibold hover:bg-violet-100 transition-colors"
@@ -83,6 +93,8 @@ export function PricingClient({ ctaState }: PricingClientProps) {
             {ctaState === "free" ? (
               <form action={startSubscription} className="mt-6">
                 <input type="hidden" name="interval" value="yearly" />
+                {nextParam && <input type="hidden" name="next" value={nextParam} />}
+                {tplParam && <input type="hidden" name="tpl" value={tplParam} />}
                 <button
                   type="submit"
                   className="w-full h-10 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"

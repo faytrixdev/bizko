@@ -22,9 +22,12 @@ type SubRow = {
   status?: string | null;
 };
 
-export default async function PricingPage() {
+export default async function PricingPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const msg = await getServerMessages();
   const supabase = await createClient();
+  const sp = await searchParams;
+  const next = typeof sp.next === "string" ? sp.next : undefined;
+  const tpl = typeof sp.tpl === "string" ? sp.tpl : undefined;
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -52,7 +55,7 @@ export default async function PricingPage() {
   return (
     <div className="min-h-screen bg-white">
       {user ? <DashboardHeader username={username} isPro={ctaState === "pro"} /> : <LandingNavbar msg={msg} />}
-      <PricingClient ctaState={ctaState} />
+      <PricingClient ctaState={ctaState} next={next} tpl={tpl} />
 
       <footer className="border-t border-gray-100 py-10">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">

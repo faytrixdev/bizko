@@ -27,7 +27,7 @@ function Submit() {
     <button
       type="submit"
       disabled={pending}
-      className="h-11 rounded-lg bg-accent text-white font-semibold hover:bg-accent-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+      className="w-full h-11 rounded-lg bg-accent text-white font-semibold hover:bg-accent-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
     >
       {pending ? t("onboarding.publishing") : t("onboarding.publishBtn")}
     </button>

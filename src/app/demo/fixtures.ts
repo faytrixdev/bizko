@@ -107,9 +107,13 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     socials: [
       { id: "so1", profile_id: "demo-minimal", platform: "instagram", url: "https://instagram.com", position: 0 },
       { id: "so2", profile_id: "demo-minimal", platform: "tiktok", url: "https://tiktok.com", position: 1 },
+      { id: "so3", profile_id: "demo-minimal", platform: "whatsapp", url: "https://wa.link/demo", position: 2 },
+      { id: "so4", profile_id: "demo-minimal", platform: "website", url: "https://example.com", position: 3 },
     ],
     testimonials: [
       { id: "t1", authorName: "Mariam", authorRole: "Mariée", content: "Des photos magnifiques, Awa a su capturer chaque émotion.", rating: 5, createdAt: "2026-05-12T00:00:00Z" },
+      { id: "t2", authorName: "Jean-Marc", authorRole: "Époux", content: "Un cadre impeccable, des souvenirs pour la vie.", rating: 5, createdAt: "2026-04-30T00:00:00Z" },
+      { id: "t3", authorName: "Sophie", authorRole: "Célébrant", content: "Gentillesse et professionnalisme du début à la fin.", rating: 4, createdAt: "2026-03-18T00:00:00Z" },
     ],
     msg,
     locale: "fr",
@@ -145,9 +149,13 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     socials: [
       { id: "so1", profile_id: "demo-portfolio", platform: "instagram", url: "https://instagram.com", position: 0 },
       { id: "so2", profile_id: "demo-portfolio", platform: "behance", url: "https://behance.net", position: 1 },
+      { id: "so3", profile_id: "demo-portfolio", platform: "linkedin", url: "https://linkedin.com", position: 2 },
+      { id: "so4", profile_id: "demo-portfolio", platform: "website", url: "https://example.com", position: 3 },
     ],
     testimonials: [
       { id: "t1", authorName: "Fatou", authorRole: "CEO, Yasuka", content: "Mamadou a transformé notre marque. Un vrai professionnel.", rating: 5, createdAt: "2026-04-02T00:00:00Z" },
+      { id: "t2", authorName: "Ibrahima", authorRole: "Restaurateur", content: "Un logo qui nous ressemble enfin, livré dans les temps.", rating: 5, createdAt: "2026-03-22T00:00:00Z" },
+      { id: "t3", authorName: "Laetitia", authorRole: "PME", content: "Rigueur, écoute et sens du détail : rare.", rating: 4, createdAt: "2026-02-14T00:00:00Z" },
     ],
     msg,
     locale: "fr",
@@ -183,9 +191,14 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     ],
     socials: [
       { id: "so1", profile_id: "demo-studio", platform: "instagram", url: "https://instagram.com", position: 0 },
+      { id: "so2", profile_id: "demo-studio", platform: "tiktok", url: "https://tiktok.com", position: 1 },
+      { id: "so3", profile_id: "demo-studio", platform: "linkedin", url: "https://linkedin.com", position: 2 },
+      { id: "so4", profile_id: "demo-studio", platform: "website", url: "https://example.com", position: 3 },
     ],
     testimonials: [
       { id: "t1", authorName: "Bérénice", authorRole: "Entrepreneuse", content: "Un rendu d'une élégance rare. Je recommande vivement.", rating: 5, createdAt: "2026-06-20T00:00:00Z" },
+      { id: "t2", authorName: "Didier", authorRole: "PME Abidjan", content: "Des portraits corporate impeccables, livrés en 48h.", rating: 5, createdAt: "2026-05-30T00:00:00Z" },
+      { id: "t3", authorName: "Nadège", authorRole: "Organisatrice", content: "Yann capte l'essentiel en une fraction de seconde.", rating: 4, createdAt: "2026-04-11T00:00:00Z" },
     ],
     msg,
     locale: "fr",
@@ -222,9 +235,12 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     socials: [
       { id: "so1", profile_id: "demo-edito", platform: "instagram", url: "https://instagram.com", position: 0 },
       { id: "so2", profile_id: "demo-edito", platform: "pinterest", url: "https://pinterest.com", position: 1 },
+      { id: "so3", profile_id: "demo-edito", platform: "website", url: "https://example.com", position: 2 },
     ],
     testimonials: [
       { id: "t1", authorName: "Efua", authorRole: "Propriétaire", content: "Clara a transformé mon appartement en un lieu d'exception.", rating: 5, createdAt: "2026-03-15T00:00:00Z" },
+      { id: "t2", authorName: "Kwame", authorRole: "Architecte", content: "Une vision juste, des matériaux bien choisis, un vrai dialogue.", rating: 5, createdAt: "2026-02-20T00:00:00Z" },
+      { id: "t3", authorName: "Amélie", authorRole: "Locataire", content: "Le résultat dépasse largement mes attentes.", rating: 4, createdAt: "2026-01-27T00:00:00Z" },
     ],
     msg,
     locale: "fr",
@@ -260,9 +276,13 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     socials: [
       { id: "so1", profile_id: "demo-urban", platform: "instagram", url: "https://instagram.com", position: 0 },
       { id: "so2", profile_id: "demo-urban", platform: "tiktok", url: "https://tiktok.com", position: 1 },
+      { id: "so3", profile_id: "demo-urban", platform: "youtube", url: "https://youtube.com", position: 2 },
+      { id: "so4", profile_id: "demo-urban", platform: "x", url: "https://x.com", position: 3 },
     ],
     testimonials: [
       { id: "t1", authorName: "Sékou", authorRole: "Festival Waga", content: "Une fresque incroyable qui a donné vie à notre festival.", rating: 5, createdAt: "2026-07-01T00:00:00Z" },
+      { id: "t2", authorName: "Moussa", authorRole: "DJ, Ouaga", content: "Un visuel street qui claque sur toutes nos affiches.", rating: 5, createdAt: "2026-06-12T00:00:00Z" },
+      { id: "t3", authorName: "Claire", authorRole: "Marque", content: "De l'énergie, des idées, et une exécution carrée.", rating: 4, createdAt: "2026-05-03T00:00:00Z" },
     ],
     msg,
     locale: "fr",
@@ -298,9 +318,14 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     ],
     socials: [
       { id: "so1", profile_id: "demo-obsidienne", platform: "instagram", url: "https://instagram.com", position: 0 },
+      { id: "so2", profile_id: "demo-obsidienne", platform: "tiktok", url: "https://tiktok.com", position: 1 },
+      { id: "so3", profile_id: "demo-obsidienne", platform: "whatsapp", url: "https://wa.link/demo", position: 2 },
+      { id: "so4", profile_id: "demo-obsidienne", platform: "website", url: "https://example.com", position: 3 },
     ],
     testimonials: [
       { id: "t1", authorName: "Aïcha", authorRole: "Cliente", content: "Une robe d'exception, d'une finesse incomparable. Merci Nora.", rating: 5, createdAt: "2026-05-28T00:00:00Z" },
+      { id: "t2", authorName: "Mamadou", authorRole: "Marié", content: "Un costume d'une coupe parfaite, accueil impeccable.", rating: 5, createdAt: "2026-05-02T00:00:00Z" },
+      { id: "t3", authorName: "Rosalie", authorRole: "Styliste", content: "Nora maîtrise les matières comme personne.", rating: 5, createdAt: "2026-03-09T00:00:00Z" },
     ],
     msg,
     locale: "fr",

@@ -21,6 +21,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/demo/preview/:slug",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+        ],
+      },
+      {
         source: "/:path*",
         headers: [
           {

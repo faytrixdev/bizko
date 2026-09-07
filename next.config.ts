@@ -21,15 +21,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/demo/preview/:slug",
-        headers: [
-          {
-            key: "X-Frame-Options",
-            value: "SAMEORIGIN",
-          },
-        ],
-      },
-      {
         source: "/:path*",
         headers: [
           {
@@ -59,7 +50,7 @@ const nextConfig: NextConfig = {
               "worker-src 'self' blob:",
               "font-src 'self' data:",
               "connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.r2.cloudflarestorage.com https://www.google-analytics.com https://www.google.com https://cdn.jsdelivr.net",
-              "frame-src 'self' https://*.supabase.co",
+              "frame-src https://*.supabase.co",
               "base-uri 'self'",
               "form-action 'self'",
             ].join("; "),

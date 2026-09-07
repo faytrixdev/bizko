@@ -6,6 +6,8 @@ import Image from "next/image";
 import { TEMPLATE_CONFIGS } from "@/lib/template-config";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils";
+import { DemoProfileView } from "@/app/demo/DemoProfileView";
+import type { Template } from "@/types/database";
 
 // Local demo avatars used as template thumbnails (public/avatars-demo).
 const THUMBNAILS: Record<string, string> = {
@@ -98,16 +100,12 @@ export function TemplatePicker({ current, isPro }: TemplatePickerProps) {
                 </svg>
               </button>
             </div>
-            <div className="flex-1 overflow-hidden bg-gray-50">
-              <iframe
-                src={`/demo/preview/${preview}`}
-                title={t("dashboard.templatePreview")}
-                className="h-full w-full"
-              />
+            <div className="flex-1 overflow-y-auto bg-gray-50">
+              <DemoProfileView template={preview as Template} />
             </div>
             <div className="flex items-center justify-between gap-3 border-t border-gray-100 px-4 py-3">
               <Link
-                href={`/demo/preview/${preview}`}
+                href="/demo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"

@@ -246,7 +246,13 @@
     "errorUsernameReserved": "This username is reserved. Choose another one.",
     "errorUsernameTaken": "This username is already taken. Choose another one.",
     "errorRequired": "All required fields must be filled.",
-    "errorGeneric": "An error occurred. Please try again."
+    "errorGeneric": "An error occurred. Please try again.",
+    "step1Of": "Step 1/2",
+    "step2Of": "Step 2/2",
+    "templateChoice": "Your template",
+    "continue": "Continue",
+    "back": "Back",
+    "errorTemplateLocked": "This template requires the Pro plan."
   },
   "dashboard": {
     "viewProfile": "View my profile",

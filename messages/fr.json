@@ -246,7 +246,13 @@
     "errorUsernameReserved": "Ce username est réservé. Choisis-en un autre.",
     "errorUsernameTaken": "Ce username est déjà pris. Choisis-en un autre.",
     "errorRequired": "Tous les champs requis doivent être remplis.",
-    "errorGeneric": "Une erreur est survenue. Réessaie."
+    "errorGeneric": "Une erreur est survenue. Réessaie.",
+    "step1Of": "Étape 1/2",
+    "step2Of": "Étape 2/2",
+    "templateChoice": "Ton template",
+    "continue": "Continuer",
+    "back": "Retour",
+    "errorTemplateLocked": "Ce template nécessite l'offre Pro."
   },
   "dashboard": {
     "viewProfile": "Voir mon profil",

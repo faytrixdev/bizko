@@ -140,7 +140,7 @@ export default function Onboarding() {
                   else form.reportValidity();
                 }
               }}
-              className="h-11 rounded-lg bg-accent text-white font-semibold hover:bg-accent-hover transition-colors"
+              className="w-full h-11 rounded-lg bg-accent text-white font-semibold hover:bg-accent-hover transition-colors"
             >
               {t("onboarding.continue")}
             </button>

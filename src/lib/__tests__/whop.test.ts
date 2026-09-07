@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay, findMembershipByCheckout } from "../whop";
+import { resolveProPlanId, isYearlyProPlanConfigured, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay, findMembershipByCheckout } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -87,6 +87,23 @@ describe("resolveProPlanId", () => {
     delete process.env.WHOP_PLAN_ID_PRO;
     delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
     expect(resolveProPlanId("monthly")).toBeUndefined();
+  });
+});
+
+describe("isYearlyProPlanConfigured", () => {
+  it("returns true when the yearly plan id is configured", () => {
+    process.env.WHOP_PLAN_ID_PRO_YEARLY = "plan_yearly";
+    expect(isYearlyProPlanConfigured()).toBe(true);
+  });
+
+  it("returns false when the yearly plan id is missing", () => {
+    delete process.env.WHOP_PLAN_ID_PRO_YEARLY;
+    expect(isYearlyProPlanConfigured()).toBe(false);
+  });
+
+  it("returns false when the yearly plan id is empty", () => {
+    process.env.WHOP_PLAN_ID_PRO_YEARLY = "";
+    expect(isYearlyProPlanConfigured()).toBe(false);
   });
 });
 

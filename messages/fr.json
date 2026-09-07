@@ -637,6 +637,10 @@
     "errorGeneric": "Une erreur est survenue. Réessaie.",
     "retry": "Réessayer",
     "manage": "Gérer l'abonnement",
+    "changeTitle": "Changer de formule",
+    "changeYearlyCta": "Passer à l'annuel",
+    "changeYearlyHint": "Le plan annuel (20 000 FCFA/an) démarre immédiatement. Ton abonnement mensuel reste actif jusqu'à sa prochaine échéance : annule-le depuis le portail Whop après l'achat.",
+    "changeSuccess": "Merci ! Ton passage au plan annuel est en cours de prise en compte.",
     "noMembership": "Nous n'arrivons pas à récupérer les détails de ton abonnement Whop. Contacte le support si le problème persiste."
   },
   "pricing": {

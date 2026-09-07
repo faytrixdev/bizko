@@ -70,6 +70,15 @@ export function resolveProPlanId(interval: BillingInterval): string | undefined 
   return process.env.WHOP_PLAN_ID_PRO;
 }
 
+/**
+ * True when a distinct yearly Pro plan id is configured. Without it, "yearly"
+ * silently falls back to the monthly plan, so offering a plan switch would
+ * create a duplicate monthly subscription instead of a yearly one.
+ */
+export function isYearlyProPlanConfigured(): boolean {
+  return Boolean(process.env.WHOP_PLAN_ID_PRO_YEARLY);
+}
+
 export class WhopApiError extends Error {
   constructor(message: string, readonly status: number) {
     super(message);

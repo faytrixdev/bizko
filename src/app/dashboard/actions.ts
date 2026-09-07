@@ -7,7 +7,7 @@ import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
 import { getLimits, isBillingInterval } from "@/lib/plans";
 import { canUseTemplate } from "@/lib/template-config";
-import { createCheckoutConfig } from "@/lib/whop";
+import { createCheckoutConfig, isYearlyProPlanConfigured } from "@/lib/whop";
 import { isValidTestimonialInput } from "@/lib/testimonials";
 import { getMessages } from "@/lib/i18n/messages";
 import { resolveServerLocale } from "@/lib/i18n/messages-server";
@@ -250,6 +250,43 @@ export async function startSubscription(formData: FormData) {
   } catch (err) {
     console.error("[startSubscription]", err);
     redirect("/dashboard?error=checkout_failed");
+  }
+  redirect(purchaseUrl);
+}
+
+/**
+ * Lets an already-Pro member start the yearly plan. Intentionally NOT guarded
+ * by `is_pro`: a new checkout creates a second Whop membership that bills in
+ * parallel, so the monthly subscription keeps running until its period end and
+ * must be cancelled by the member from the Whop portal. Only offered when a
+ * distinct yearly plan is configured (otherwise "yearly" would silently fall
+ * back to the monthly plan and charge a duplicate monthly).
+ */
+export async function changeSubscription(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const interval = (formData.get("interval") as string) ?? "";
+  if (interval !== "yearly" || !isYearlyProPlanConfigured()) {
+    redirect("/dashboard/subscription?error=checkout_failed");
+  }
+
+  let purchaseUrl: string;
+  try {
+    const { sessionId, purchaseUrl: url } = await createCheckoutConfig(
+      user.id,
+      "yearly",
+      "/dashboard/subscription?success=plan_changed",
+    );
+    purchaseUrl = url;
+    await supabase.from("pro_checkouts").insert({
+      profile_id: user.id,
+      checkout_configuration_id: sessionId,
+    });
+  } catch (err) {
+    console.error("[changeSubscription]", err);
+    redirect("/dashboard/subscription?error=checkout_failed");
   }
   redirect(purchaseUrl);
 }

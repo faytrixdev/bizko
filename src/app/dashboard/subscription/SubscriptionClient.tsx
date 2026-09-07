@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
+import { changeSubscription } from "@/app/dashboard/actions";
 import {
   derivePlanInfo,
   subscriptionDisplay,
@@ -19,6 +20,7 @@ interface SubscriptionClientProps {
   membership: WhopMembership | null;
   payments: WhopPayment[];
   error: string | null;
+  yearlyAvailable: boolean;
   retryHref: string;
 }
 
@@ -51,17 +53,21 @@ export function SubscriptionClient({
   membership,
   payments,
   error,
+  yearlyAvailable,
   retryHref,
 }: SubscriptionClientProps) {
   const { t, locale } = useI18n();
   const searchParams = useSearchParams();
 
   const errorCode = searchParams.get("error");
+  const successCode = searchParams.get("success");
   useCleanUrl();
 
   let errorMsg: string | null = null;
   if (errorCode === "unavailable") errorMsg = t("subscription.errorUnavailable");
   else if (errorCode) errorMsg = t("subscription.errorGeneric");
+
+  const successMsg = successCode === "plan_changed" ? t("subscription.changeSuccess") : null;
 
   const display: SubscriptionDisplay | null = membership
     ? subscriptionDisplay(membership)
@@ -104,6 +110,12 @@ export function SubscriptionClient({
                 {t("subscription.retry")}
               </Link>
             )}
+          </p>
+        )}
+
+        {successMsg && (
+          <p className="mb-4 bg-green-50 border border-green-200 text-green-700 p-3 rounded-xl text-sm">
+            {successMsg}
           </p>
         )}
 
@@ -183,6 +195,24 @@ export function SubscriptionClient({
               {t("subscription.plan")}
             </p>
             <p className="text-sm text-gray-500">{t("subscription.noMembership")}</p>
+          </div>
+        )}
+
+        {isPro && membership && yearlyAvailable && planInfo?.period === "monthly" && (
+          <div className="rounded-2xl border border-gray-200 p-5 mb-6">
+            <p className="text-sm font-semibold text-gray-900 mb-1">
+              {t("subscription.changeTitle")}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">{t("subscription.changeYearlyHint")}</p>
+            <form action={changeSubscription}>
+              <input type="hidden" name="interval" value="yearly" />
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center h-9 px-5 rounded-xl border border-violet-600 text-violet-700 text-sm font-semibold hover:bg-violet-50 transition-colors"
+              >
+                {t("subscription.changeYearlyCta")}
+              </button>
+            </form>
           </div>
         )}
 

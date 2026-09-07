@@ -637,6 +637,10 @@
     "errorGeneric": "An error occurred. Please try again.",
     "retry": "Try again",
     "manage": "Manage subscription",
+    "changeTitle": "Change your plan",
+    "changeYearlyCta": "Switch to yearly",
+    "changeYearlyHint": "The yearly plan (20,000 FCFA/year) starts immediately. Your monthly subscription stays active until its next billing date: cancel it from the Whop portal after the purchase.",
+    "changeSuccess": "Thanks! Your switch to the yearly plan is being processed.",
     "noMembership": "We couldn't fetch your Whop subscription details. Contact support if the problem persists."
   },
   "pricing": {

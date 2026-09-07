@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { isProPlan } from "@/lib/plans";
-import { getMembership, listMembershipPayments, findMembershipByCheckout, type WhopMembership, type WhopPayment } from "@/lib/whop";
+import { getMembership, listMembershipPayments, findMembershipByCheckout, isYearlyProPlanConfigured, type WhopMembership, type WhopPayment } from "@/lib/whop";
 import { SubscriptionClient } from "./SubscriptionClient";
 
 export const dynamic = "force-dynamic";
@@ -91,6 +91,7 @@ export default async function SubscriptionPage() {
       membership={membership}
       payments={payments}
       error={error}
+      yearlyAvailable={isYearlyProPlanConfigured()}
       retryHref="/dashboard/subscription"
     />
   );

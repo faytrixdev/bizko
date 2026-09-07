@@ -59,7 +59,7 @@ const nextConfig: NextConfig = {
               "worker-src 'self' blob:",
               "font-src 'self' data:",
               "connect-src 'self' https://*.supabase.co https://*.googleapis.com https://*.r2.cloudflarestorage.com https://www.google-analytics.com https://www.google.com https://cdn.jsdelivr.net",
-              "frame-src https://*.supabase.co",
+              "frame-src 'self' https://*.supabase.co",
               "base-uri 'self'",
               "form-action 'self'",
             ].join("; "),

@@ -9,33 +9,8 @@ import { SectionReveal } from "@/components/landing/SectionReveal";
 import { ProfileMockup } from "@/components/landing/ProfileMockup";
 import { FaqItem } from "@/components/landing/FaqItem";
 
-/** Mappe une fixture démo vers les props attendues par <ProfileMockup />. */
-function demoToMockup(id: Template) {
-  const f = DEMO_FIXTURES[id];
-  const { profile } = f;
-  return {
-    name: profile.display_name,
-    initials: profile.display_name
-      .split(" ")
-      .map((n) => n[0])
-      .join(""),
-    profession: profile.tagline,
-    bio: profile.bio ?? "",
-    location: `${profile.city}, ${profile.country}`,
-    avatarUrl: profile.avatar_url ?? undefined,
-    services: f.services.map((s) => ({
-      title: s.title,
-      price: s.price != null ? `${s.price.toLocaleString("fr-FR")} ${s.currency}` : "",
-    })),
-    portfolio: f.portfolio.map((p) => ({ image: p.media_url, label: p.title ?? undefined })),
-    socials: f.socials.map((s) => ({ platform: s.platform, url: s.url })),
-  };
-}
-
-const HERO_DEMO = demoToMockup("studio");
-const PRODUCT_DEMO = demoToMockup("minimal");
-const EXAMPLE_DEMO_IDS: Template[] = ["portfolio", "edito", "urban"];
-const IDENTITY_DEMO = demoToMockup("obsidienne");
+const EXAMPLE_DEMOS: Template[] = ["portfolio", "edito", "urban"];
+const IDENTITY_DEMO = DEMO_FIXTURES.obsidienne;
 
 export async function generateMetadata(): Promise<Metadata> {
   const msg = await getServerMessages();
@@ -155,19 +130,7 @@ export default async function Home() {
           {/* Mockup - below everything */}
           <SectionReveal delay={300}>
             <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px] mockup-float transition-transform duration-500">
-              <ProfileMockup
-                name={HERO_DEMO.name}
-                initials={HERO_DEMO.initials}
-                avatarUrl={HERO_DEMO.avatarUrl}
-                profession={HERO_DEMO.profession}
-                bio={HERO_DEMO.bio}
-                location={HERO_DEMO.location}
-                services={HERO_DEMO.services}
-                portfolio={HERO_DEMO.portfolio}
-                socials={HERO_DEMO.socials}
-                variant="detailed"
-                frame
-              />
+              <ProfileMockup demo="studio" height="620px" frame />
             </div>
           </SectionReveal>
         </div>
@@ -207,20 +170,20 @@ export default async function Home() {
                   {/* Mini-mockup identité */}
                   <div className="w-48 shrink-0 rounded-xl border border-gray-100 bg-gray-50/50 p-4 flex flex-col items-center text-center">
                     <Image
-                      src={IDENTITY_DEMO.avatarUrl ?? ""}
-                      alt={IDENTITY_DEMO.name}
+                      src={IDENTITY_DEMO.profile.avatar_url ?? ""}
+                      alt={IDENTITY_DEMO.profile.display_name}
                       width={48}
                       height={48}
                       className="h-12 w-12 rounded-full object-cover shadow-md ring-2 ring-white"
                     />
-                    <p className="mt-2 text-xs font-semibold text-gray-900">{IDENTITY_DEMO.name}</p>
-                    <p className="text-[10px] text-accent font-medium">{IDENTITY_DEMO.profession}</p>
+                    <p className="mt-2 text-xs font-semibold text-gray-900">{IDENTITY_DEMO.profile.display_name}</p>
+                    <p className="text-[10px] text-accent font-medium">{IDENTITY_DEMO.profile.tagline}</p>
                     <div className="mt-1.5 inline-flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5">
                       <svg className="w-2.5 h-2.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                       </svg>
-                      <span className="text-[8px] text-gray-500">{IDENTITY_DEMO.location}</span>
+                      <span className="text-[8px] text-gray-500">{IDENTITY_DEMO.profile.city}, {IDENTITY_DEMO.profile.country}</span>
                     </div>
                   </div>
                 </div>
@@ -456,16 +419,7 @@ export default async function Home() {
             {/* Large Mockup */}
             <SectionReveal delay={150} className="lg:justify-self-end">
               <div className="w-full max-w-[440px] mx-auto lg:mx-0">
-                <ProfileMockup
-                  name={PRODUCT_DEMO.name}
-                  initials={PRODUCT_DEMO.initials}
-                  avatarUrl={PRODUCT_DEMO.avatarUrl}
-                  profession={PRODUCT_DEMO.profession}
-                  bio={PRODUCT_DEMO.bio}
-                  location={PRODUCT_DEMO.location}
-                  services={PRODUCT_DEMO.services}
-                  variant="detailed"
-                />
+                <ProfileMockup demo="minimal" height="700px" />
               </div>
             </SectionReveal>
           </div>
@@ -725,25 +679,13 @@ export default async function Home() {
           </SectionReveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
-            {EXAMPLE_DEMO_IDS.map((id) => {
-              const p = demoToMockup(id);
-              return (
-                <SectionReveal key={id} delay={100}>
-                  <Link href="/demo" className="block group">
-                    <ProfileMockup
-                      name={p.name}
-                      initials={p.initials}
-                      avatarUrl={p.avatarUrl}
-                      profession={p.profession}
-                      bio={p.bio}
-                      location={p.location}
-                      services={p.services}
-                      variant="compact"
-                    />
-                  </Link>
-                </SectionReveal>
-              );
-            })}
+            {EXAMPLE_DEMOS.map((id) => (
+              <SectionReveal key={id} delay={100}>
+                <Link href="/demo" className="block group">
+                  <ProfileMockup demo={id} height="520px" />
+                </Link>
+              </SectionReveal>
+            ))}
           </div>
         </div>
       </section>

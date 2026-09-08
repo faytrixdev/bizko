@@ -8,20 +8,16 @@ import type { Template } from "@/types/database";
 interface ProfileMockupProps {
   /** Fixture démo → rend le vrai composant template (identique à /demo). */
   demo: Template;
-  /** Sections à afficher : full = tout, detailed = header + services, compact = header + services (sans bio). */
-  variant?: "full" | "detailed" | "compact";
+  /** Sections à afficher : full = tout, detailed = header + services. */
+  variant?: "full" | "detailed";
   /** Coque mobile (hero) : status bar + encoche. */
   frame?: boolean;
 }
 
 /** Masque les sections non voulues : le template réel ignore les tableaux vides et la bio absente. */
-function trimFixture(fixture: TemplateProps, variant: "full" | "detailed" | "compact"): TemplateProps {
+function trimFixture(fixture: TemplateProps, variant: "full" | "detailed"): TemplateProps {
   if (variant === "full") return fixture;
-  const head = { ...fixture, portfolio: [], socials: [], testimonials: [] };
-  if (variant === "compact") {
-    return { ...head, profile: { ...head.profile, bio: "" } };
-  }
-  return head;
+  return { ...fixture, portfolio: [], socials: [], testimonials: [] };
 }
 
 function TemplateContent({
@@ -29,7 +25,7 @@ function TemplateContent({
   variant,
 }: {
   demo: Template;
-  variant: "full" | "detailed" | "compact";
+  variant: "full" | "detailed";
 }) {
   const tpl = getTemplate(demo);
   const fixture = trimFixture(DEMO_FIXTURES[demo], variant);

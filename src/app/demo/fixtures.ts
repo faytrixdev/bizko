@@ -139,6 +139,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     services: [
       { id: "s1", profile_id: "demo-portfolio", title: "Logo & identité", description: "Logo + déclinaisons + charte graphique.", price: 120000, currency: "XOF", position: 0 },
       { id: "s2", profile_id: "demo-portfolio", title: "Direction artistique", description: "Pour vos campagnes et réseaux sociaux.", price: 200000, currency: "XOF", position: 1 },
+      { id: "s3", profile_id: "demo-portfolio", title: "Illustrations", description: "Illustrations originales sur mesure.", price: 80000, currency: "XOF", position: 2 },
     ],
     portfolio: [
       { id: "pf1", profile_id: "demo-portfolio", media_url: P.basketWeave, media_type: "image", thumbnail_url: P.basketWeave, title: "Paniers tissés", position: 0 },
@@ -170,9 +171,9 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       display_name: "Yann Kouassi",
       tagline: "Photographe studio, noir & blanc",
       bio: "Un rendu studio intemporel. Éclairage maîtrisé, direction de pose précise, tirages qui traversent le temps.",
-      city: "Abidjan",
-      country: "CI",
-      phone_e164: "+2250700000003",
+      city: "Ouagadougou",
+      country: "BF",
+      phone_e164: "+2260700000003",
       email_public: null,
       template: "studio",
       locale: "fr",
@@ -197,12 +198,12 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     ],
     testimonials: [
       { id: "t1", authorName: "Bérénice", authorRole: "Entrepreneuse", content: "Un rendu d'une élégance rare. Je recommande vivement.", rating: 5, createdAt: "2026-06-20T00:00:00Z" },
-      { id: "t2", authorName: "Didier", authorRole: "PME Abidjan", content: "Des portraits corporate impeccables, livrés en 48h.", rating: 5, createdAt: "2026-05-30T00:00:00Z" },
+      { id: "t2", authorName: "Didier", authorRole: "PME Ouagadougou", content: "Des portraits corporate impeccables, livrés en 48h.", rating: 5, createdAt: "2026-05-30T00:00:00Z" },
       { id: "t3", authorName: "Nadège", authorRole: "Organisatrice", content: "Yann capte l'essentiel en une fraction de seconde.", rating: 4, createdAt: "2026-04-11T00:00:00Z" },
     ],
     msg,
     locale: "fr",
-    links: wa("+2250700000003"),
+    links: wa("+2260700000003"),
     trackClick,
   },
 

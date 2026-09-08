@@ -7,6 +7,7 @@ import type { Template } from "@/types/database";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SectionReveal } from "@/components/landing/SectionReveal";
 import { ProfileMockup } from "@/components/landing/ProfileMockup";
+import { ExampleCard } from "@/components/landing/ExampleCard";
 import { FaqItem } from "@/components/landing/FaqItem";
 
 const EXAMPLE_DEMOS: Template[] = ["portfolio", "edito", "urban"];
@@ -680,9 +681,9 @@ export default async function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {EXAMPLE_DEMOS.map((id) => (
-              <SectionReveal key={id} delay={100}>
-                <Link href="/demo" className="block group">
-                  <ProfileMockup demo={id} variant="compact" />
+              <SectionReveal key={id} delay={100} className="h-full">
+                <Link href="/demo" className="block group h-full">
+                  <ExampleCard demo={id} footerCta={msg.landing.example} />
                 </Link>
               </SectionReveal>
             ))}

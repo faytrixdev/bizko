@@ -1,10 +1,41 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { getServerMessages } from "@/lib/i18n/messages-server";
+import { DEMO_FIXTURES } from "@/app/demo/fixtures";
+import type { Template } from "@/types/database";
 import { LandingNavbar } from "@/components/landing/LandingNavbar";
 import { SectionReveal } from "@/components/landing/SectionReveal";
 import { ProfileMockup } from "@/components/landing/ProfileMockup";
 import { FaqItem } from "@/components/landing/FaqItem";
+
+/** Mappe une fixture démo vers les props attendues par <ProfileMockup />. */
+function demoToMockup(id: Template) {
+  const f = DEMO_FIXTURES[id];
+  const { profile } = f;
+  return {
+    name: profile.display_name,
+    initials: profile.display_name
+      .split(" ")
+      .map((n) => n[0])
+      .join(""),
+    profession: profile.tagline,
+    bio: profile.bio ?? "",
+    location: `${profile.city}, ${profile.country}`,
+    avatarUrl: profile.avatar_url ?? undefined,
+    services: f.services.map((s) => ({
+      title: s.title,
+      price: s.price != null ? `${s.price.toLocaleString("fr-FR")} ${s.currency}` : "",
+    })),
+    portfolio: f.portfolio.map((p) => ({ image: p.media_url, label: p.title ?? undefined })),
+    socials: f.socials.map((s) => ({ platform: s.platform, url: s.url })),
+  };
+}
+
+const HERO_DEMO = demoToMockup("studio");
+const PRODUCT_DEMO = demoToMockup("minimal");
+const EXAMPLE_DEMO_IDS: Template[] = ["portfolio", "edito", "urban"];
+const IDENTITY_DEMO = demoToMockup("obsidienne");
 
 export async function generateMetadata(): Promise<Metadata> {
   const msg = await getServerMessages();
@@ -125,26 +156,15 @@ export default async function Home() {
           <SectionReveal delay={300}>
             <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px] mockup-float transition-transform duration-500">
               <ProfileMockup
-                name={msg.landing.mockupName}
-                initials="AD"
-                avatarUrl="/mockup/photo-profile.jpg"
-                profession={msg.landing.mockupProfession}
-                bio={msg.landing.mockupBio}
-                location={msg.landing.mockupLocation}
-                services={[
-                  { title: msg.landing.mockupService1Title, price: msg.landing.mockupService1Price },
-                  { title: msg.landing.mockupService2Title, price: msg.landing.mockupService2Price },
-                  { title: msg.landing.mockupService3Title, price: msg.landing.mockupService3Price },
-                ]}
-                portfolio={[
-                  { image: "/mockup/realisation1.jpg", label: "Mariage" },
-                  { image: "/mockup/realisation2.jpg", label: "Portrait" },
-                ]}
-                socials={[
-                  { platform: "instagram", url: "#" },
-                  { platform: "tiktok", url: "#" },
-                  { platform: "facebook", url: "#" },
-                ]}
+                name={HERO_DEMO.name}
+                initials={HERO_DEMO.initials}
+                avatarUrl={HERO_DEMO.avatarUrl}
+                profession={HERO_DEMO.profession}
+                bio={HERO_DEMO.bio}
+                location={HERO_DEMO.location}
+                services={HERO_DEMO.services}
+                portfolio={HERO_DEMO.portfolio}
+                socials={HERO_DEMO.socials}
                 variant="detailed"
                 frame
               />
@@ -186,17 +206,21 @@ export default async function Home() {
                   </div>
                   {/* Mini-mockup identité */}
                   <div className="w-48 shrink-0 rounded-xl border border-gray-100 bg-gray-50/50 p-4 flex flex-col items-center text-center">
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white font-bold text-[10px] shadow-md ring-2 ring-white">
-                      AD
-                    </div>
-                    <p className="mt-2 text-xs font-semibold text-gray-900">Aminata Diallo</p>
-                    <p className="text-[10px] text-accent font-medium">Photographe</p>
+                    <Image
+                      src={IDENTITY_DEMO.avatarUrl ?? ""}
+                      alt={IDENTITY_DEMO.name}
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full object-cover shadow-md ring-2 ring-white"
+                    />
+                    <p className="mt-2 text-xs font-semibold text-gray-900">{IDENTITY_DEMO.name}</p>
+                    <p className="text-[10px] text-accent font-medium">{IDENTITY_DEMO.profession}</p>
                     <div className="mt-1.5 inline-flex items-center gap-1 bg-gray-100 rounded-full px-2 py-0.5">
                       <svg className="w-2.5 h-2.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                       </svg>
-                      <span className="text-[8px] text-gray-500">Ouagadougou</span>
+                      <span className="text-[8px] text-gray-500">{IDENTITY_DEMO.location}</span>
                     </div>
                   </div>
                 </div>
@@ -433,17 +457,13 @@ export default async function Home() {
             <SectionReveal delay={150} className="lg:justify-self-end">
               <div className="w-full max-w-[440px] mx-auto lg:mx-0">
                 <ProfileMockup
-                  name={msg.landing.productMockupName}
-                  initials="KT"
-                  avatarUrl="/mockup/photo-profile.jpg"
-                  profession={msg.landing.productMockupProfession}
-                  bio={msg.landing.productMockupBio}
-                  location={msg.landing.productMockupLocation}
-                  services={[
-                    { title: msg.landing.productMockupService1Title, price: msg.landing.productMockupService1Price },
-                    { title: msg.landing.productMockupService2Title, price: msg.landing.productMockupService2Price },
-                    { title: msg.landing.productMockupService3Title, price: msg.landing.productMockupService3Price },
-                  ]}
+                  name={PRODUCT_DEMO.name}
+                  initials={PRODUCT_DEMO.initials}
+                  avatarUrl={PRODUCT_DEMO.avatarUrl}
+                  profession={PRODUCT_DEMO.profession}
+                  bio={PRODUCT_DEMO.bio}
+                  location={PRODUCT_DEMO.location}
+                  services={PRODUCT_DEMO.services}
                   variant="detailed"
                 />
               </div>
@@ -705,55 +725,25 @@ export default async function Home() {
           </SectionReveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
-            {[
-              {
-                name: msg.landing.example1Name,
-                fullname: msg.landing.example1Fullname,
-                profession: msg.landing.example1Profession,
-                bio: msg.landing.example1Bio,
-                location: msg.landing.example1Location,
-                services: [
-                  { title: msg.landing.example1Service1Title, price: msg.landing.example1Service1Price },
-                  { title: msg.landing.example1Service2Title, price: msg.landing.example1Service2Price },
-                ],
-              },
-              {
-                name: msg.landing.example2Name,
-                fullname: msg.landing.example2Fullname,
-                profession: msg.landing.example2Profession,
-                bio: msg.landing.example2Bio,
-                location: msg.landing.example2Location,
-                services: [
-                  { title: msg.landing.example2Service1Title, price: msg.landing.example2Service1Price },
-                  { title: msg.landing.example2Service2Title, price: msg.landing.example2Service2Price },
-                ],
-              },
-              {
-                name: msg.landing.example3Name,
-                fullname: msg.landing.example3Fullname,
-                profession: msg.landing.example3Profession,
-                bio: msg.landing.example3Bio,
-                location: msg.landing.example3Location,
-                services: [
-                  { title: msg.landing.example3Service1Title, price: msg.landing.example3Service1Price },
-                  { title: msg.landing.example3Service2Title, price: msg.landing.example3Service2Price },
-                ],
-              },
-            ].map((profile) => (
-              <SectionReveal key={profile.name} delay={100}>
-                <Link href={`/${profile.name}`} className="block group">
-                  <ProfileMockup
-                    name={profile.fullname}
-                    initials={profile.fullname.split(" ").map((n) => n[0]).join("")}
-                    profession={profile.profession}
-                    bio={profile.bio}
-                    location={profile.location}
-                    services={profile.services}
-                    variant="compact"
-                  />
-                </Link>
-              </SectionReveal>
-            ))}
+            {EXAMPLE_DEMO_IDS.map((id) => {
+              const p = demoToMockup(id);
+              return (
+                <SectionReveal key={id} delay={100}>
+                  <Link href="/demo" className="block group">
+                    <ProfileMockup
+                      name={p.name}
+                      initials={p.initials}
+                      avatarUrl={p.avatarUrl}
+                      profession={p.profession}
+                      bio={p.bio}
+                      location={p.location}
+                      services={p.services}
+                      variant="compact"
+                    />
+                  </Link>
+                </SectionReveal>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -130,7 +130,7 @@ export default async function Home() {
           {/* Mockup - below everything */}
           <SectionReveal delay={300}>
             <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px] mockup-float transition-transform duration-500">
-              <ProfileMockup demo="studio" height="620px" frame />
+              <ProfileMockup demo="studio" frame />
             </div>
           </SectionReveal>
         </div>
@@ -419,7 +419,7 @@ export default async function Home() {
             {/* Large Mockup */}
             <SectionReveal delay={150} className="lg:justify-self-end">
               <div className="w-full max-w-[440px] mx-auto lg:mx-0">
-                <ProfileMockup demo="minimal" height="700px" variant="detailed" />
+                <ProfileMockup demo="minimal" variant="detailed" />
               </div>
             </SectionReveal>
           </div>
@@ -682,7 +682,7 @@ export default async function Home() {
             {EXAMPLE_DEMOS.map((id) => (
               <SectionReveal key={id} delay={100}>
                 <Link href="/demo" className="block group">
-                  <ProfileMockup demo={id} height="520px" variant="compact" />
+                  <ProfileMockup demo={id} variant="compact" />
                 </Link>
               </SectionReveal>
             ))}

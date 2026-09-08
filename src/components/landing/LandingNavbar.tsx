@@ -54,12 +54,12 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
       >
         <div
           className={cn(
-            "mx-auto mt-2 max-w-6xl px-6 border border-transparent transition-[max-width,padding,background,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:px-12",
+            "mx-auto mt-2 max-w-7xl px-6 border border-transparent transition-[max-width,padding,background,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:px-8",
             isScrolled &&
               "bg-white/60 max-w-4xl rounded-2xl border-gray-200/60 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.04)] lg:px-5"
           )}
         >
-          <div className="relative items-center py-2 hidden lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+          <div className="relative items-center py-2 hidden lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-10">
             {/* Logo */}
             <div className="flex items-center shrink-0 justify-start">
               <Link href="/" aria-label="Bizko" className="flex items-center">
@@ -68,7 +68,7 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
             </div>
 
             {/* Desktop nav links - centered */}
-            <div className="flex items-center justify-center gap-8">
+            <div className="flex items-center justify-center gap-6 px-8 xl:px-0">
               {menuItems.map((item, index) => (
                 <a
                   key={index}

@@ -2,20 +2,41 @@
 
 import { getTemplate } from "@/lib/templates";
 import { DEMO_FIXTURES } from "@/app/demo/fixtures";
+import type { TemplateProps } from "@/components/templates/types";
 import type { Template } from "@/types/database";
 
 interface ProfileMockupProps {
   /** Fixture démo → rend le vrai composant template (identique à /demo). */
   demo: Template;
+  /** Sections à afficher : full = tout, detailed = header + services, compact = header + services (sans bio). */
+  variant?: "full" | "detailed" | "compact";
   /** Coque mobile (hero) : status bar + encoche. */
   frame?: boolean;
   /** Hauteur (px) de la fenêtre de rendu ; le surplus est masqué. */
   height?: string;
 }
 
-function TemplateContent({ demo, height }: { demo: Template; height: string }) {
+/** Masque les sections non voulues : le template réel ignore les tableaux vides et la bio absente. */
+function trimFixture(fixture: TemplateProps, variant: "full" | "detailed" | "compact"): TemplateProps {
+  if (variant === "full") return fixture;
+  const head = { ...fixture, portfolio: [], socials: [], testimonials: [] };
+  if (variant === "compact") {
+    return { ...head, profile: { ...head.profile, bio: "" } };
+  }
+  return head;
+}
+
+function TemplateContent({
+  demo,
+  height,
+  variant,
+}: {
+  demo: Template;
+  height: string;
+  variant: "full" | "detailed" | "compact";
+}) {
   const tpl = getTemplate(demo);
-  const fixture = DEMO_FIXTURES[demo];
+  const fixture = trimFixture(DEMO_FIXTURES[demo], variant);
   return (
     <div className="relative w-full overflow-hidden" style={{ height }}>
       <div className={`w-full h-full ${tpl.bgClass}`}>
@@ -30,6 +51,7 @@ function TemplateContent({ demo, height }: { demo: Template; height: string }) {
 
 export function ProfileMockup({
   demo,
+  variant = "full",
   frame = false,
   height = "560px",
 }: ProfileMockupProps) {
@@ -59,7 +81,7 @@ export function ProfileMockup({
               </div>
             </div>
 
-            <TemplateContent demo={demo} height={height} />
+            <TemplateContent demo={demo} height={height} variant={variant} />
           </div>
         </div>
       </div>
@@ -68,7 +90,7 @@ export function ProfileMockup({
 
   return (
     <div className="w-full rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-shadow duration-300">
-      <TemplateContent demo={demo} height={height} />
+      <TemplateContent demo={demo} height={height} variant={variant} />
     </div>
   );
 }

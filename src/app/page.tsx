@@ -419,7 +419,7 @@ export default async function Home() {
             {/* Large Mockup */}
             <SectionReveal delay={150} className="lg:justify-self-end">
               <div className="w-full max-w-[440px] mx-auto lg:mx-0">
-                <ProfileMockup demo="minimal" height="700px" />
+                <ProfileMockup demo="minimal" height="700px" variant="detailed" />
               </div>
             </SectionReveal>
           </div>
@@ -682,7 +682,7 @@ export default async function Home() {
             {EXAMPLE_DEMOS.map((id) => (
               <SectionReveal key={id} delay={100}>
                 <Link href="/demo" className="block group">
-                  <ProfileMockup demo={id} height="520px" />
+                  <ProfileMockup demo={id} height="520px" variant="compact" />
                 </Link>
               </SectionReveal>
             ))}

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { SwitchReminder } from "@/components/SwitchReminder";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings, TabTestimonials } from "@/components/dashboard";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
@@ -26,6 +27,9 @@ interface DashboardClientProps {
   clicks7d: number;
   publicUrl: string;
   isPro: boolean;
+  pendingInterval: "monthly" | "yearly" | null;
+  graceActive: boolean;
+  graceEnd: string | null;
 }
 
 const ERROR_KEYS: Record<string, string> = {
@@ -65,6 +69,9 @@ export function DashboardClient({
   clicks7d,
   publicUrl,
   isPro,
+  pendingInterval,
+  graceActive,
+  graceEnd,
 }: DashboardClientProps) {
   const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("apercu");
@@ -86,6 +93,11 @@ export function DashboardClient({
 
   return (
     <div className="min-h-screen bg-white">
+      <SwitchReminder
+        pendingInterval={pendingInterval}
+        graceActive={graceActive}
+        graceEnd={graceEnd}
+      />
       {/* Header */}
       <DashboardHeader username={profile.username} isPro={isPro} />
 

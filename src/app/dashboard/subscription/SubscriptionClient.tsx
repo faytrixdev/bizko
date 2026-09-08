@@ -1,18 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
-import { changeSubscription } from "@/app/dashboard/actions";
-import {
-  derivePlanInfo,
-  subscriptionDisplay,
-  type SubscriptionDisplay,
-  type WhopMembership,
-  type WhopPayment,
-} from "@/lib/whop";
+import { changeSubscription, cancelPendingSwitch, finalizePendingSwitch } from "@/app/dashboard/actions";
+import { derivePlanInfo, subscriptionDisplay, type SubscriptionDisplay, type WhopMembership, type WhopPayment } from "@/lib/whop";
+import { SWITCH_GRACE_DAYS } from "@/lib/plans";
+import { SwitchReminder } from "@/components/SwitchReminder";
 
 interface SubscriptionClientProps {
   isPro: boolean;
@@ -22,6 +18,9 @@ interface SubscriptionClientProps {
   error: string | null;
   yearlyAvailable: boolean;
   retryHref: string;
+  pendingInterval: string | null;
+  pendingEffectiveAt: string | null;
+  graceActive: boolean;
 }
 
 function formatDate(iso: string | null | undefined, locale: string): string {
@@ -55,9 +54,13 @@ export function SubscriptionClient({
   error,
   yearlyAvailable,
   retryHref,
+  pendingInterval,
+  pendingEffectiveAt,
+  graceActive,
 }: SubscriptionClientProps) {
   const { t, locale } = useI18n();
   const searchParams = useSearchParams();
+  const [confirmTarget, setConfirmTarget] = useState<"monthly" | "yearly" | null>(null);
 
   const errorCode = searchParams.get("error");
   const successCode = searchParams.get("success");
@@ -65,9 +68,15 @@ export function SubscriptionClient({
 
   let errorMsg: string | null = null;
   if (errorCode === "unavailable") errorMsg = t("subscription.errorUnavailable");
+  else if (errorCode === "switch_failed") errorMsg = t("subscription.errorSwitch");
+  else if (errorCode === "switch_cancel_failed") errorMsg = t("subscription.errorSwitchCancel");
   else if (errorCode) errorMsg = t("subscription.errorGeneric");
 
-  const successMsg = successCode === "plan_changed" ? t("subscription.changeSuccess") : null;
+  const successMsg =
+    successCode === "plan_changed" ? t("subscription.changeSuccess")
+      : successCode === "switch_scheduled" ? t("subscription.switchScheduled")
+        : successCode === "switch_cancelled" ? t("subscription.switchCancelled")
+          : null;
 
   const display: SubscriptionDisplay | null = membership
     ? subscriptionDisplay(membership)
@@ -84,6 +93,14 @@ export function SubscriptionClient({
     t(planInfo?.period === "yearly" ? "pricing.yearlyAmount" : "pricing.monthlyAmount");
 
   const endDate = formatDate(membership?.current_period_end, locale);
+  const pendingDate = formatDate(pendingEffectiveAt, locale);
+
+  const graceEnd = pendingEffectiveAt
+    ? new Date(new Date(pendingEffectiveAt).getTime() + SWITCH_GRACE_DAYS * 86_400_000).toISOString()
+    : null;
+
+  const switchTargetWord = () =>
+    confirmTarget === "yearly" ? t("subscription.targetYearly") : t("subscription.targetMonthly");
 
   function formatAmount(p: WhopPayment): string {
     if (p.total != null) {
@@ -94,6 +111,13 @@ export function SubscriptionClient({
 
   return (
     <div className="min-h-screen bg-white">
+      <SwitchReminder
+        pendingInterval={
+          pendingInterval === "monthly" || pendingInterval === "yearly" ? pendingInterval : null
+        }
+        graceActive={graceActive}
+        graceEnd={graceEnd}
+      />
       <div className="max-w-[640px] mx-auto px-4 py-6">
         <Link
           href="/dashboard"
@@ -198,21 +222,90 @@ export function SubscriptionClient({
           </div>
         )}
 
-        {isPro && membership && yearlyAvailable && planInfo?.period === "monthly" && (
+        {/* Scheduled deferred switch: current period still running */}
+        {pendingInterval && !graceActive && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 mb-6">
+            <p className="text-sm font-semibold text-gray-900 mb-1">
+              {t("subscription.switchScheduledTitle")}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">
+              {t("subscription.switchScheduledBody")
+                .replace("{target}", pendingInterval === "yearly" ? t("subscription.targetYearly") : t("subscription.targetMonthly"))
+                .replace("{date}", pendingDate || t("subscription.periodEnd"))}
+            </p>
+            <form action={cancelPendingSwitch}>
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center h-9 px-5 rounded-xl border border-amber-300 text-amber-800 text-sm font-semibold hover:bg-amber-100 transition-colors"
+              >
+                {t("subscription.cancelSwitchCta")}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Grace window: old period ended, awaits the new checkout */}
+        {pendingInterval && graceActive && (
+          <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 mb-6">
+            <p className="text-sm font-semibold text-gray-900 mb-1">
+              {t("subscription.switchGraceTitle")}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">
+              {t("subscription.switchGraceBody")
+                .replace("{target}", pendingInterval === "yearly" ? t("subscription.targetYearly") : t("subscription.targetMonthly"))
+                .replace("{date}", pendingDate || t("subscription.periodEnd"))}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <form action={finalizePendingSwitch}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
+                >
+                  {t("subscription.finalizeCta")}
+                </button>
+              </form>
+              <form action={cancelPendingSwitch}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center h-9 px-5 rounded-xl border border-amber-300 text-amber-800 text-sm font-semibold hover:bg-amber-100 transition-colors"
+                >
+                  {t("subscription.cancelSwitchCta")}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Change plan card (only when no switch is pending) */}
+        {isPro && membership && !pendingInterval && yearlyAvailable && planInfo?.period === "monthly" && (
           <div className="rounded-2xl border border-gray-200 p-5 mb-6">
             <p className="text-sm font-semibold text-gray-900 mb-1">
               {t("subscription.changeTitle")}
             </p>
             <p className="text-sm text-gray-500 mb-4">{t("subscription.changeYearlyHint")}</p>
-            <form action={changeSubscription}>
-              <input type="hidden" name="interval" value="yearly" />
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center h-9 px-5 rounded-xl border border-violet-600 text-violet-700 text-sm font-semibold hover:bg-violet-50 transition-colors"
-              >
-                {t("subscription.changeYearlyCta")}
-              </button>
-            </form>
+            <button
+              type="button"
+              onClick={() => setConfirmTarget("yearly")}
+              className="inline-flex items-center justify-center h-9 px-5 rounded-xl border border-violet-600 text-violet-700 text-sm font-semibold hover:bg-violet-50 transition-colors"
+            >
+              {t("subscription.changeYearlyCta")}
+            </button>
+          </div>
+        )}
+
+        {isPro && membership && !pendingInterval && planInfo?.period === "yearly" && (
+          <div className="rounded-2xl border border-gray-200 p-5 mb-6">
+            <p className="text-sm font-semibold text-gray-900 mb-1">
+              {t("subscription.changeTitle")}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">{t("subscription.changeMonthlyHint")}</p>
+            <button
+              type="button"
+              onClick={() => setConfirmTarget("monthly")}
+              className="inline-flex items-center justify-center h-9 px-5 rounded-xl border border-violet-600 text-violet-700 text-sm font-semibold hover:bg-violet-50 transition-colors"
+            >
+              {t("subscription.changeMonthlyCta")}
+            </button>
           </div>
         )}
 
@@ -227,6 +320,46 @@ export function SubscriptionClient({
             >
               {t("subscription.upgradeBtn")}
             </Link>
+          </div>
+        )}
+
+        {/* Switch confirmation popup */}
+        {confirmTarget && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4"
+            onClick={() => setConfirmTarget(null)}
+          >
+            <div
+              className="w-full max-w-md rounded-2xl bg-white p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                {t("subscription.switchConfirmTitle")}
+              </h3>
+              <p className="text-sm text-gray-600 mb-6">
+                {t("subscription.switchConfirmBody")
+                  .replace("{target}", switchTargetWord())
+                  .replace("{date}", endDate || t("subscription.periodEnd"))}
+              </p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setConfirmTarget(null)}
+                  className="flex-1 inline-flex items-center justify-center h-9 px-5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  {t("subscription.notNow")}
+                </button>
+                <form action={changeSubscription} className="flex-1">
+                  <input type="hidden" name="interval" value={confirmTarget} />
+                  <button
+                    type="submit"
+                    className="w-full inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
+                  >
+                    {t("subscription.scheduleCta")}
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         )}
 

@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
-import { isProPlan } from "@/lib/plans";
+import { isProPlan, getSwitchGraceInfo } from "@/lib/plans";
 import { getMembership, listMembershipPayments, findMembershipByCheckout, isYearlyProPlanConfigured, type WhopMembership, type WhopPayment } from "@/lib/whop";
 import { SubscriptionClient } from "./SubscriptionClient";
 
@@ -44,15 +44,18 @@ export default async function SubscriptionPage() {
 
   const { data: subRes } = await supabase
     .from("subscriptions")
-    .select("whop_membership_id, plan, status")
+    .select("whop_membership_id, plan, status, pending_interval, pending_effective_at")
     .eq("profile_id", user.id)
     .maybeSingle();
 
   const sub = subRes && !Array.isArray(subRes)
-    ? subRes as { whop_membership_id?: string | null; plan: string; status: string }
+    ? subRes as { whop_membership_id?: string | null; plan: string; status: string; pending_interval?: string | null; pending_effective_at?: string | null }
     : null;
 
-  const isPro = isProPlan(sub?.plan, sub?.status);
+  // During a deferred switch grace window the old membership has lapsed
+  // (status canceled) but access is retained, so keep the Pro UI alive.
+  const grace = getSwitchGraceInfo(sub?.pending_interval, sub?.pending_effective_at);
+  const isPro = isProPlan(sub?.plan, sub?.status) || grace.active;
 
   let membership: WhopMembership | null = null;
   let payments: WhopPayment[] = [];
@@ -93,6 +96,9 @@ export default async function SubscriptionPage() {
       error={error}
       yearlyAvailable={isYearlyProPlanConfigured()}
       retryHref="/dashboard/subscription"
+      pendingInterval={sub?.pending_interval ?? null}
+      pendingEffectiveAt={sub?.pending_effective_at ?? null}
+      graceActive={grace.active}
     />
   );
 }

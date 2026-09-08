@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { isProPlan } from "@/lib/plans";
+import { isProPlan, getSwitchGraceInfo } from "@/lib/plans";
 import { DashboardClient } from "./DashboardClient";
 import type { DailyEvent, ClickBucket } from "@/types/analytics";
 
@@ -42,9 +42,13 @@ export default async function Dashboard() {
   const clicks7d = daily.reduce((sum, d) => sum + d.clicks, 0);
 
   const sub = subRes.data && !Array.isArray(subRes.data)
-    ? subRes.data as { plan: string; status: string } | null
+    ? subRes.data as { plan: string; status: string; pending_interval?: string | null; pending_effective_at?: string | null } | null
     : null;
   const isPro = isProPlan(sub?.plan, sub?.status);
+
+  const grace = getSwitchGraceInfo(sub?.pending_interval, sub?.pending_effective_at);
+  const pendingInterval: "monthly" | "yearly" | null =
+    sub?.pending_interval === "monthly" || sub?.pending_interval === "yearly" ? sub.pending_interval : null;
 
   return (
     <DashboardClient
@@ -61,6 +65,9 @@ export default async function Dashboard() {
       clicks7d={clicks7d}
       publicUrl={publicUrl}
       isPro={isPro}
+      pendingInterval={pendingInterval}
+      graceActive={grace.active}
+      graceEnd={grace.end}
     />
   );
 }

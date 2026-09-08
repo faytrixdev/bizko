@@ -7,7 +7,13 @@ import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
 import { getLimits, isBillingInterval } from "@/lib/plans";
 import { canUseTemplate } from "@/lib/template-config";
-import { createCheckoutConfig, isYearlyProPlanConfigured } from "@/lib/whop";
+import {
+  createCheckoutConfig,
+  cancelMembership,
+  uncancelMembership,
+  getMembership,
+  isYearlyProPlanConfigured,
+} from "@/lib/whop";
 import { isValidTestimonialInput } from "@/lib/testimonials";
 import { getMessages } from "@/lib/i18n/messages";
 import { resolveServerLocale } from "@/lib/i18n/messages-server";
@@ -264,12 +270,15 @@ export async function startSubscription(formData: FormData) {
 }
 
 /**
- * Lets an already-Pro member start the yearly plan. Intentionally NOT guarded
- * by `is_pro`: a new checkout creates a second Whop membership that bills in
- * parallel, so the monthly subscription keeps running until its period end and
- * must be cancelled by the member from the Whop portal. Only offered when a
- * distinct yearly plan is configured (otherwise "yearly" would silently fall
- * back to the monthly plan and charge a duplicate monthly).
+ * Schedules a deferred billing interval switch for an already-Pro member
+ * (monthly -> yearly or yearly -> monthly). No checkout and no charge today:
+ * the switch takes effect at the end of the current period. The current Whop
+ * membership is cancelled at period end so it stops renewing, and a grace
+ * window lets the member complete the new plan's checkout without losing Pro.
+ *
+ * Guarded by the active membership, not by `is_pro` (which already returns
+ * true here anyway). Yearly targets require a distinct yearly plan id;
+ * switching back to monthly always lands on the (mandatory) monthly plan.
  */
 export async function changeSubscription(formData: FormData) {
   const supabase = await createClient();
@@ -277,15 +286,141 @@ export async function changeSubscription(formData: FormData) {
   if (!user) redirect("/login");
 
   const interval = (formData.get("interval") as string) ?? "";
-  if (interval !== "yearly" || !isYearlyProPlanConfigured()) {
+  if (!isBillingInterval(interval)) {
+    redirect("/dashboard/subscription?error=switch_failed");
+  }
+  if (interval === "yearly" && !isYearlyProPlanConfigured()) {
     redirect("/dashboard/subscription?error=checkout_failed");
+  }
+
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("whop_membership_id, plan, status, current_period_end, pending_interval")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+
+  if (!sub || sub.plan !== "pro" || sub.status !== "active" || !sub.whop_membership_id) {
+    redirect("/dashboard/subscription?error=switch_failed");
+  }
+
+  // Already scheduled for the requested target -> nothing to do.
+  if (sub.pending_interval === interval) {
+    redirect("/dashboard/subscription?success=switch_scheduled");
+  }
+  // A different switch is pending -> refuse to overwrite it.
+  if (sub.pending_interval) {
+    redirect("/dashboard/subscription?error=switch_pending");
+  }
+
+  if (!sub.current_period_end) {
+    redirect("/dashboard/subscription?error=switch_failed");
+  }
+
+  const pending = {
+    pending_interval: interval,
+    pending_effective_at: sub.current_period_end,
+  };
+  const { error: dbErr } = await supabase
+    .from("subscriptions")
+    .update(pending)
+    .eq("profile_id", user.id);
+  if (dbErr) redirect("/dashboard/subscription?error=switch_failed");
+
+  try {
+    await cancelMembership(sub.whop_membership_id, "at_period_end");
+  } catch (err) {
+    console.error("[changeSubscription] failed to cancel old membership:", err);
+    await supabase
+      .from("subscriptions")
+      .update({ pending_interval: null, pending_effective_at: null })
+      .eq("profile_id", user.id);
+    redirect("/dashboard/subscription?error=switch_failed");
+  }
+
+  revalidatePath("/dashboard/subscription");
+  redirect("/dashboard/subscription?success=switch_scheduled");
+}
+
+/**
+ * Cancels a scheduled deferred switch before it lands. Re-enables renewal on
+ * the current Whop membership (reverse the at-period-end cancel), then clears
+ * the local pending state. If the old membership already expired (grace
+ * window), there is nothing to reverse and only the pending state is cleared.
+ */
+export async function cancelPendingSwitch() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("whop_membership_id, pending_interval")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+
+  if (!sub?.pending_interval) {
+    redirect("/dashboard/subscription?error=switch_none");
+  }
+
+  if (sub.whop_membership_id) {
+    try {
+      await uncancelMembership(sub.whop_membership_id);
+    } catch (err) {
+      console.warn("[cancelPendingSwitch] uncancel failed:", err);
+      // Only clear local pending when we can positively confirm the membership
+      // already expired (period end landed) and nothing is left to reverse.
+      try {
+        const membership = await getMembership(sub.whop_membership_id);
+        if (membership.status !== "expired") {
+          redirect("/dashboard/subscription?error=switch_cancel_failed");
+        }
+      } catch {
+        redirect("/dashboard/subscription?error=switch_cancel_failed");
+      }
+    }
+  }
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .update({ pending_interval: null, pending_effective_at: null })
+    .eq("profile_id", user.id);
+  if (error) redirect("/dashboard/subscription?error=switch_failed");
+
+  revalidatePath("/dashboard/subscription");
+  redirect("/dashboard/subscription?success=switch_cancelled");
+}
+
+/**
+ * Complete a scheduled deferred switch by starting the new interval's checkout.
+ * Only available during the grace window (old period ended), so the new plan
+ * never bills in parallel with the old one.
+ */
+export async function finalizePendingSwitch() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("status, pending_interval")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+
+  const interval = sub?.pending_interval;
+  if (!interval || !isBillingInterval(interval)) {
+    redirect("/dashboard/subscription?error=switch_none");
+  }
+  // The old membership must have lapsed (grace window). Prevent a parallel
+  // checkout while the current period is still active.
+  if (sub.status !== "canceled" && sub.status !== "expired") {
+    redirect("/dashboard/subscription?error=switch_pending");
   }
 
   let purchaseUrl: string;
   try {
     const { sessionId, purchaseUrl: url } = await createCheckoutConfig(
       user.id,
-      "yearly",
+      interval,
       "/dashboard/subscription?success=plan_changed",
     );
     purchaseUrl = url;
@@ -294,7 +429,7 @@ export async function changeSubscription(formData: FormData) {
       checkout_configuration_id: sessionId,
     });
   } catch (err) {
-    console.error("[changeSubscription]", err);
+    console.error("[finalizePendingSwitch]", err);
     redirect("/dashboard/subscription?error=checkout_failed");
   }
   redirect(purchaseUrl);

@@ -10,6 +10,8 @@ import {
   PLAN_COMPARISON,
   isUnlimited,
   isProPlan,
+  getSwitchGraceInfo,
+  SWITCH_GRACE_DAYS,
 } from "../plans";
 
 describe("getLimits", () => {
@@ -148,5 +150,33 @@ describe("isProPlan", () => {
     expect(isProPlan("pro", "past_due")).toBe(false);
     expect(isProPlan(null, null)).toBe(false);
     expect(isProPlan(undefined, "active")).toBe(false);
+  });
+});
+
+describe("getSwitchGraceInfo", () => {
+  const now = Date.now();
+  const DAY = 86_400_000;
+  const recent = new Date(now - 1000).toISOString();
+  const past = new Date(now - SWITCH_GRACE_DAYS * DAY - DAY).toISOString();
+
+  it("is inactive without a pending switch", () => {
+    expect(getSwitchGraceInfo(null, null)).toEqual({ active: false, end: null });
+    expect(getSwitchGraceInfo("monthly", null)).toEqual({ active: false, end: null });
+  });
+
+  it("is active while inside the 7-day grace window", () => {
+    const info = getSwitchGraceInfo("yearly", recent);
+    expect(info.active).toBe(true);
+    expect(info.end).toBeTruthy();
+  });
+
+  it("is inactive once the grace window has passed", () => {
+    expect(getSwitchGraceInfo("yearly", past).active).toBe(false);
+  });
+
+  it("ignores malformed pending intervals", () => {
+    const info = getSwitchGraceInfo("weekly" as string | null, recent);
+    expect(info.active).toBe(false);
+    expect(info.end).toBeNull();
   });
 });

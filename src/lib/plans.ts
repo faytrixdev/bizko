@@ -4,6 +4,10 @@ export type BillingInterval = "monthly" | "yearly";
 
 export const BILLING_INTERVALS: BillingInterval[] = ["monthly", "yearly"];
 
+// Days of access retained after a period end while a deferred plan switch
+// (monthly <-> yearly) is pending but the new checkout isn't completed yet.
+export const SWITCH_GRACE_DAYS = 7;
+
 export function isBillingInterval(value: string | null | undefined): value is BillingInterval {
   return value === "monthly" || value === "yearly";
 }
@@ -116,4 +120,24 @@ export function isProPlan(
   status: string | null | undefined,
 ): boolean {
   return plan === "pro" && (status === "active" || status === "trialing");
+}
+
+export interface SwitchGraceInfo {
+  active: boolean;
+  end: string | null;
+}
+
+/**
+ * State of a deferred plan switch (monthly <-> yearly). `active` is true while
+ * the 7-day grace window is running: the old period ended, the new checkout is
+ * still to be completed, and access is retained via the grace.
+ */
+export function getSwitchGraceInfo(
+  pendingInterval: string | null | undefined,
+  pendingEffectiveAt: string | null | undefined,
+): SwitchGraceInfo {
+  const interval = pendingInterval === "monthly" || pendingInterval === "yearly" ? pendingInterval : null;
+  if (!interval || !pendingEffectiveAt) return { active: false, end: null };
+  const endMillis = new Date(pendingEffectiveAt).getTime() + SWITCH_GRACE_DAYS * 86_400_000;
+  return { active: endMillis >= Date.now(), end: new Date(endMillis).toISOString() };
 }

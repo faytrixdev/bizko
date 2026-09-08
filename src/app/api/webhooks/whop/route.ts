@@ -34,6 +34,8 @@ type SubRow = {
   whop_membership_id?: string | null;
   current_period_end?: string | null;
   cancel_at_period_end?: boolean | null;
+  pending_interval?: string | null;
+  pending_effective_at?: string | null;
 };
 
 const supabase = () => createAdminClient();
@@ -93,6 +95,10 @@ async function upsertActive(profileId: string, event: WhopEvent): Promise<void> 
     whop_membership_id: typeof data.membership_id === "string" ? data.membership_id : undefined,
     whop_user_id: userId,
     current_period_end: currentPeriodEnd(data),
+    // Paying for the new plan completes a scheduled deferred switch: the
+    // pending_* fields are no longer needed.
+    pending_interval: null,
+    pending_effective_at: null,
   };
   await supabase().from("subscriptions").upsert(row, { onConflict: "profile_id" });
 }

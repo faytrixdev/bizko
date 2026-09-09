@@ -1,0 +1,183 @@
+{
+  "date": "2026-09-09",
+  "domaines": [
+    {
+      "domaine": "https://bizko.pro",
+      "erreurs": [],
+      "robots_status": 200,
+      "bots_ia_bloques": [],
+      "sitemap_declare": "https://bizko.pro/sitemap.xml",
+      "llms_txt": true,
+      "llms_full_txt": true,
+      "sitemap": "https://bizko.pro/sitemap.xml",
+      "entrees": 20,
+      "uniques": 20,
+      "audites": 20,
+      "statuts": {
+        "200": 20
+      },
+      "html": 20,
+      "problemes": {
+        "non_200": [],
+        "rediriges": [],
+        "noindex_dans_sitemap": [],
+        "sans_titre": [],
+        "sans_h1": [
+          "https://bizko.pro/demo",
+          "https://bizko.pro/login",
+          "https://bizko.pro",
+          "https://bizko.pro/signup",
+          "https://bizko.pro/legal/terms",
+          "https://bizko.pro/legal/privacy",
+          "https://bizko.pro/explore",
+          "https://bizko.pro/johngraphics",
+          "https://bizko.pro/bkshoot",
+          "https://bizko.pro/lohodjan",
+          "https://bizko.pro/faytrix",
+          "https://bizko.pro/faytrixdev",
+          "https://bizko.pro/gs0904",
+          "https://bizko.pro/chriscut",
+          "https://bizko.pro/med",
+          "https://bizko.pro/djesfresy",
+          "https://bizko.pro/faytrixdev1",
+          "https://bizko.pro/kambirecesarhonore",
+          "https://bizko.pro/franck",
+          "https://bizko.pro/passing_engineer"
+        ],
+        "sans_canonical": [
+          "https://bizko.pro/demo",
+          "https://bizko.pro/login",
+          "https://bizko.pro/signup",
+          "https://bizko.pro/legal/terms",
+          "https://bizko.pro/legal/privacy"
+        ],
+        "canonical_different": [],
+        "minces_moins_de_300_mots": [
+          {
+            "url": "https://bizko.pro/demo",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/login",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/signup",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/legal/terms",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/legal/privacy",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/explore",
+            "mots": 3
+          },
+          {
+            "url": "https://bizko.pro/johngraphics",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/bkshoot",
+            "mots": 6
+          },
+          {
+            "url": "https://bizko.pro/lohodjan",
+            "mots": 12
+          },
+          {
+            "url": "https://bizko.pro/faytrix",
+            "mots": 4
+          },
+          {
+            "url": "https://bizko.pro/faytrixdev",
+            "mots": 4
+          },
+          {
+            "url": "https://bizko.pro/gs0904",
+            "mots": 3
+          },
+          {
+            "url": "https://bizko.pro/chriscut",
+            "mots": 7
+          },
+          {
+            "url": "https://bizko.pro/med",
+            "mots": 7
+          },
+          {
+            "url": "https://bizko.pro/djesfresy",
+            "mots": 8
+          },
+          {
+            "url": "https://bizko.pro/faytrixdev1",
+            "mots": 4
+          },
+          {
+            "url": "https://bizko.pro/kambirecesarhonore",
+            "mots": 8
+          },
+          {
+            "url": "https://bizko.pro/franck",
+            "mots": 4
+          },
+          {
+            "url": "https://bizko.pro/passing_engineer",
+            "mots": 9
+          }
+        ],
+        "titres_dupliques": [
+          {
+            "titre": "Bizko - Ton business en un lien",
+            "urls": [
+              "https://bizko.pro/demo",
+              "https://bizko.pro/login",
+              "https://bizko.pro",
+              "https://bizko.pro/signup",
+              "https://bizko.pro/legal/terms",
+              "https://bizko.pro/legal/privacy"
+            ]
+          },
+          {
+            "titre": "Faïssal Diabaté - Développeur | Bizko",
+            "urls": [
+              "https://bizko.pro/faytrixdev",
+              "https://bizko.pro/faytrixdev1"
+            ]
+          }
+        ],
+        "hreflang_dupliques": [],
+        "doublons_sitemap": [],
+        "contenus_futurs_exposes": []
+      },
+      "compte_problemes": {
+        "non_200": 0,
+        "rediriges": 0,
+        "noindex_dans_sitemap": 0,
+        "sans_titre": 0,
+        "sans_h1": 20,
+        "sans_canonical": 5,
+        "canonical_different": 0,
+        "minces_moins_de_300_mots": 20,
+        "titres_dupliques": 2,
+        "hreflang_dupliques": 0,
+        "doublons_sitemap": 0,
+        "contenus_futurs_exposes": 0
+      },
+      "contenus_futurs": 0
+    }
+  ],
+  "verdicts": [
+    "https://bizko.pro : 5 page(s) sans canonical",
+    "https://bizko.pro : 2 titre(s) dupliqué(s)",
+    "https://bizko.pro : 20 page(s) sous 300 mots"
+  ]
+}

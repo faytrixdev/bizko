@@ -1,0 +1,73 @@
+{
+  "date": "2026-09-09",
+  "sources": [
+    {
+      "source": "Search Console",
+      "configuree": true,
+      "authentifiee": false,
+      "cutoff": "",
+      "couverture": "0/1 propriété(s)",
+      "cout": "gratuit",
+      "mode": "lecture",
+      "fiable": false,
+      "note": "non connectée à treg"
+    },
+    {
+      "source": "Visibilité IA (Perplexity par treg)",
+      "configuree": true,
+      "authentifiee": true,
+      "cutoff": "2026-09-09",
+      "couverture": "4 prompt(s)",
+      "cout": "0,006 $ par prompt",
+      "mode": "lecture",
+      "fiable": true,
+      "note": ""
+    },
+    {
+      "source": "Runtime public (robots, sitemap, pages)",
+      "configuree": true,
+      "authentifiee": true,
+      "cutoff": "",
+      "couverture": "1 domaine(s)",
+      "cout": "gratuit",
+      "mode": "lecture",
+      "fiable": false,
+      "note": "audit_site.py pas encore lancé"
+    },
+    {
+      "source": "Réserve éditoriale (ref distante)",
+      "configuree": true,
+      "authentifiee": false,
+      "cutoff": "2026-09-09",
+      "couverture": "origin/master content/blog",
+      "cout": "gratuit",
+      "mode": "lecture",
+      "fiable": false,
+      "note": "Réserve éditoriale non lisible : fatal: pathspec 'content/blog' did not match an"
+    },
+    {
+      "source": "Analytics (export posthog.json)",
+      "configuree": false,
+      "authentifiee": false,
+      "cutoff": "",
+      "couverture": "",
+      "cout": "gratuit",
+      "mode": "lecture",
+      "fiable": false,
+      "note": "dépose seo/exports/posthog.json pour la conversion par page"
+    },
+    {
+      "source": "geo-engine (profil et file)",
+      "configuree": true,
+      "authentifiee": true,
+      "cutoff": "2026-09-09",
+      "couverture": "2 lot(s)",
+      "cout": "gratuit",
+      "mode": "lecture",
+      "fiable": true,
+      "note": ""
+    }
+  ],
+  "fiables": 2,
+  "cout_usd": 0.0
+}

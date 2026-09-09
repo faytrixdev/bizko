@@ -1,0 +1,38 @@
+---
+title: "Socle de démonstration du blog Bizko"
+description: "Article de démonstration qui valide le rendu MDX, le frontmatter, les questions fréquentes et les sources. Retiré avant la mise en production des contenus."
+date: "2026-09-09"
+dateModified: "2026-09-09"
+authorName: "À confirmer"
+type: "foundational"
+tags: ["socle", "démonstration"]
+published: false
+canonical: "https://bizko.pro/blog/exemple-mdx"
+related: []
+faq:
+  - q: "Cet article sera-t-il publié ?"
+    a: "Non. Il est marqué published: false : il ne figure ni dans l'index du blog, ni dans le sitemap. Il sert uniquement à vérifier le rendu."
+  - q: "Ce frontmatter est-il le bon format ?"
+    a: "Oui. C'est le contrat exact attendu par l'adaptateur next-mdx du moteur SEO/GEO."
+sources:
+  - label: "Next.js — guide MDX (v16)"
+    url: "https://nextjs.org/docs/app/guides/mdx"
+---
+
+Le socle du blog est en place : les articles vivent dans `content/blog`, un article par fichier au format `<slug>.fr.mdx`, avec le frontmatter ci-dessus, un corps sans H1 et un bloc « En bref ».
+
+## En bref
+
+Ce fichier valide le pipeline complet : compilation MDX, métadonnées, JSON-LD (article, FAQ, fil d'Ariane), version markdown brute et intégration au sitemap. C'est un brouillon non publié.
+
+## Ce que vérifie ce fichier
+
+- Page `https://bizko.pro/blog/exemple-mdx` rendue côté serveur avec le H1 issu du frontmatter.
+- Section Questions fréquentes rendue depuis le champ `faq`.
+- Section Sources rendue depuis le champ `sources`.
+- Version brute disponible en `https://bizko.pro/blog/exemple-mdx/index.md`.
+- Absence totale de l'article dans le sitemap tant que `published` reste `false`.
+
+## Prochaine étape
+
+Le premier vrai article sera produit par l'agent SEO/GEO : un sujet du cluster prioritaire, marqué `published: false` tant qu'il n'est pas relu, puis passé à `true` pour la mise en ligne.

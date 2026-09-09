@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function ViewTracker({ profileId }: { profileId: string }) {
   const tracked = useRef<Record<string, boolean>>({});
@@ -11,6 +11,8 @@ export function ViewTracker({ profileId }: { profileId: string }) {
     tracked.current[profileId] = true;
 
     console.log("[ViewTracker] tracking profile_viewed for", profileId);
+
+    if (!isSupabaseConfigured()) return;
 
     const supabase = createClient();
 

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
 export function SessionHeartbeat() {
   useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
     const supabase = createClient();
 
     let cancelled = false;

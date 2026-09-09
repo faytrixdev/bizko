@@ -29,6 +29,7 @@ export async function updateSession(request: NextRequest) {
     "/verify-email",
     "/auth/callback",
     "/explore",
+    "/blog",
   ];
   const publicApiRoutes = [
     "/api/check-username",
@@ -56,6 +57,7 @@ export async function updateSession(request: NextRequest) {
     "/demo",
     "/admin",
     "/explore",
+    "/blog",
   ];
   // Un profil public est servi à la racine sur un seul segment : /<username>
   const isRootPublicProfile =
@@ -77,6 +79,13 @@ export async function updateSession(request: NextRequest) {
     .some((c) => c.name.startsWith("sb-") && c.name.endsWith("-auth-token"));
 
   if (isRootPublicProfile && !hasSessionCookie) {
+    return supabaseResponse;
+  }
+
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
     return supabaseResponse;
   }
 

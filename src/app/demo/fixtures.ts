@@ -85,7 +85,7 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
       username: "awa.photo",
       display_name: "Awa Diallo",
       tagline: "Photographe de moments qui comptent",
-      bio: "Je capture l'essence de vos plus beaux moments : mariages, portraits et évènements à Abidjan. Approche naturelle, livraison rapide et photos que vous voudrez encadrer.",
+      bio: "Je capture l'essence de vos plus beaux moments : mariages, portraits et événements à Abidjan. Approche naturelle, livraison rapide et photos que vous voudrez encadrer.",
       city: "Abidjan",
       country: "CI",
       phone_e164: "+2250700000001",
@@ -96,8 +96,8 @@ export const DEMO_FIXTURES: Record<Template, TemplateProps> = {
     },
     services: [
       { id: "s1", profile_id: "demo-minimal", title: "Séance portrait", description: "1h de shooting en extérieur ou studio.", price: 25000, currency: "XOF", position: 0 },
-      { id: "s2", profile_id: "demo-minimal", title: "Mariage (journée)", description: "Couverture complète, 8h, livreur 300 photos retouchées.", price: 150000, currency: "XOF", position: 1 },
-      { id: "s3", profile_id: "demo-minimal", title: "Pack évènement", description: "Baptême, anniversaire, remise de diplôme — 3h.", price: 75000, currency: "XOF", position: 2 },
+      { id: "s2", profile_id: "demo-minimal", title: "Mariage (journée)", description: "Couverture complète, 8h, livraison de 300 photos retouchées.", price: 150000, currency: "XOF", position: 1 },
+      { id: "s3", profile_id: "demo-minimal", title: "Pack événement", description: "Baptême, anniversaire, remise de diplôme — 3h.", price: 75000, currency: "XOF", position: 2 },
     ],
     portfolio: [
       { id: "pf1", profile_id: "demo-minimal", media_url: P.minimalWedding, media_type: "image", thumbnail_url: P.minimalWedding, title: "Mariage Koffi", position: 0 },

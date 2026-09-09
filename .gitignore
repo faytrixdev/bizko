@@ -49,3 +49,6 @@ tsconfig.tsbuildinfo
 # git worktrees
 /.worktrees/
 .vercel
+
+# progression locale d'installation (jamais commitée)
+INSTALLATION-AGENTS.local.md

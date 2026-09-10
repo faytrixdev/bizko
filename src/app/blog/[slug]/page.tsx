@@ -333,7 +333,15 @@ export default async function BlogPost({ params }: Props) {
             </div>
           </div>
 
-          <p className="mt-10 text-xs text-gray-400">{frontmatter.canonical || articleUrl(post)}</p>
+          <footer className="mt-12 flex items-center justify-between border-t border-border pt-6 text-xs text-gray-400">
+            <span>Publié par L&apos;équipe Bizko</span>
+            <a
+              href={articleMarkdownUrl(post)}
+              className="transition-colors hover:text-accent"
+            >
+              Version markdown
+            </a>
+          </footer>
         </div>
 
         {related.length > 0 && (

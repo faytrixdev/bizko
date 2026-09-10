@@ -10,6 +10,22 @@
     "pricingDescription": "Compare Bizko Free et Bizko Pro. Services, réseaux, portfolio, vidéos et templates - choisis le plan qui te fait grandir.",
     "pricingTitle": "Bizko - Tarifs"
   },
+  "comparison": {
+    "title": "Bizko vs Linktree vs Beacons : Quel outil pour les indépendants africains ?",
+    "description": "Découvrez pourquoi Bizko est la meilleure alternative à Linktree pour les professionnels africains souhaitant un lien professionnel qui convertit en WhatsApp."
+  },
+  "pricingAfrica": {
+    "title": "Prix du lien professionnel pour indépendants africains : Forfait gratuit vs Pro",
+    "description": "Découvrez nos tarifs adaptés au marché africain avec un forfait gratuit généreux et des options Pro en monnaie locale (XOF/XAF)."
+  },
+  "whatsappConversion": {
+    "title": "Pourquoi un lien professionnel WhatsApp-first convertit mieux en Afrique de l'Ouest",
+    "description": "Découvrez comment l'approche WhatsApp-first de Bizko augmente considérablement les taux de conversion pour les indépendants africains par rapport aux liens génériques."
+  },
+  "statsMarketAfrica2026": {
+    "title": "État du marché du lien en bio en Afrique 2026 : Adoption et tendances",
+    "description": "Analyse détaillée de l'adoption des outils de lien en bio en Afrique en 2026, avec données sur l'utilisation, les préférences et les tendances de croissance."
+  },
   "landing": {
     "title": "Ton business",
     "titleAccent": "en un lien.",

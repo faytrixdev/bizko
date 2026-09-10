@@ -9,21 +9,13 @@ export function BlogMasthead() {
         <Link href="/" aria-label="Bizko" className="flex items-center">
           <Logo size="lg" />
         </Link>
-        <nav aria-label="Navigation du blog" className="flex items-center gap-3">
-          <Link
-            href="/blog"
-            className="rounded-full bg-orange-50 px-3.5 py-1.5 text-sm font-medium text-accent transition-colors hover:bg-orange-100"
-          >
-            Blog
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-          >
-            Créer ma page
-            <ArrowUpRight className="size-4" />
-          </Link>
-        </nav>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+        >
+          Créer ma page
+          <ArrowUpRight className="size-4" />
+        </Link>
       </div>
     </header>
   );

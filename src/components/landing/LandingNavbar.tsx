@@ -10,7 +10,7 @@ import { Logo } from "@/components/Logo";
 
 interface LandingNavbarProps {
   msg: {
-    landing: { login: string; heroCta: string; navFeatures: string; navHowItWorks: string; navExamples: string; navFaq: string; navPricing: string; navExplore: string };
+    landing: { login: string; heroCta: string; navFeatures: string; navHowItWorks: string; navExamples: string; navPricing: string; navBlog: string; navExplore: string };
   };
 }
 
@@ -22,8 +22,8 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
     { name: msg.landing.navFeatures, href: "#fonctionnalites" },
     { name: msg.landing.navHowItWorks, href: "#comment-ca-marche" },
     { name: msg.landing.navExamples, href: "#exemples" },
-    { name: msg.landing.navFaq, href: "#faq" },
     { name: msg.landing.navPricing, href: "/pricing" },
+    { name: msg.landing.navBlog, href: "/blog" },
     { name: msg.landing.navExplore, href: "/explore" },
   ];
 

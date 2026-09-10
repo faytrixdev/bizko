@@ -60,7 +60,11 @@ export default async function BlogIndex() {
       ) : (
         <>
           {featured && (
-            <section className="mx-auto max-w-6xl px-6 pt-12">
+            <section
+              className={`mx-auto max-w-6xl px-6 pt-12 ${
+                rest.length > 0 ? "" : "pb-16 md:pb-20"
+              }`}
+            >
               <Link
                 href={`/blog/${featured.slug}`}
                 className="group grid overflow-hidden rounded-3xl border border-border bg-white transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent/40 hover:shadow-[0_32px_64px_-32px_rgba(17,24,39,0.35)] md:grid-cols-2"

@@ -13,7 +13,7 @@ import {
   type Post,
   type PostFrontmatter,
 } from "@/lib/blog/posts";
-import { extractToc, readingTime } from "@/lib/blog/text";
+import { extractToc, readingTime, type TocEntry } from "@/lib/blog/text";
 import { BlogBanner } from "@/components/blog/BlogBanner";
 import { BlogMasthead } from "@/components/blog/BlogMasthead";
 import { PostCard } from "@/components/blog/PostCard";
@@ -163,6 +163,17 @@ export default async function BlogPost({ params }: Props) {
   };
   const PostContent = mod.default;
   const toc = extractToc(post.content);
+  const tocGroups = toc.reduce<{ entry: TocEntry; children: TocEntry[] }[]>(
+    (groups, entry) => {
+      if (entry.depth === 2) {
+        groups.push({ entry, children: [] });
+      } else if (groups.length > 0) {
+        groups[groups.length - 1].children.push(entry);
+      }
+      return groups;
+    },
+    []
+  );
   const related = relatedPosts(post);
   const authorName = frontmatter.authorName || "L'équipe Bizko";
   const typeLabel = POST_TYPE_LABEL[frontmatter.type];
@@ -244,7 +255,7 @@ export default async function BlogPost({ params }: Props) {
             </div>
           </header>
 
-          {toc.length > 0 && (
+          {tocGroups.length > 0 && (
             <nav
               aria-label="Sommaire"
               className="mt-10 rounded-2xl border border-border bg-muted/60 p-6"
@@ -252,20 +263,32 @@ export default async function BlogPost({ params }: Props) {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
                 Sommaire
               </p>
-              <ul className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">
-                {toc.map((entry) => (
-                  <li key={entry.id}>
+              <div className="mt-5 grid gap-x-10 gap-y-7 sm:grid-cols-2">
+                {tocGroups.map(({ entry, children }) => (
+                  <div key={entry.id}>
                     <a
                       href={`#${entry.id}`}
-                      className={`text-sm text-gray-700 transition-colors hover:text-accent ${
-                        entry.depth === 3 ? "pl-4 text-gray-500" : ""
-                      }`}
+                      className="text-sm font-semibold text-gray-900 transition-colors hover:text-accent"
                     >
                       {entry.text}
                     </a>
-                  </li>
+                    {children.length > 0 && (
+                      <ul className="mt-2.5 space-y-2 border-l border-border pl-4">
+                        {children.map((child) => (
+                          <li key={child.id}>
+                            <a
+                              href={`#${child.id}`}
+                              className="text-sm leading-snug text-gray-500 transition-colors hover:text-accent"
+                            >
+                              {child.text}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 ))}
-              </ul>
+              </div>
             </nav>
           )}
 

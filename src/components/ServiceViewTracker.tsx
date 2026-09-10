@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function ServiceViewTracker({ serviceIds }: { serviceIds: string[] }) {
   const tracked = useRef(false);
@@ -11,6 +11,8 @@ export function ServiceViewTracker({ serviceIds }: { serviceIds: string[] }) {
     tracked.current = true;
 
     console.log("[ServiceViewTracker] tracking service_viewed for", serviceIds);
+
+    if (!isSupabaseConfigured()) return;
 
     const supabase = createClient();
     void supabase

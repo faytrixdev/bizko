@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-09",
+  "item": {
+    "lot": "lot-comparison",
+    "fichier": "lot-comparison.md",
+    "skill": "comparison-page",
+    "produit": "Bizko",
+    "langue": "fr",
+    "id": "comp-001",
+    "etat": "ouvert",
+    "titre": "meilleurs-outils-page-de-vente-en-un-lien",
+    "requete": "meilleurs outils pour créer une page de vente en un lien",
+    "cluster": "page de vente en un lien",
+    "livrable": "content/blog/meilleurs-outils-page-de-vente-en-un-lien.fr.mdx"
+  },
+  "file": {
+    "lots": 4,
+    "ouverts": 16,
+    "faits": 1,
+    "echecs": 0,
+    "par_lot": [
+      {
+        "lot": "lot-comparison",
+        "skill": "comparison-page",
+        "langue": "fr",
+        "ouverts": 6
+      },
+      {
+        "lot": "lot-foundational",
+        "skill": "foundational-article",
+        "langue": "fr",
+        "ouverts": 7
+      },
+      {
+        "lot": "lot-free-tool",
+        "skill": "free-tool",
+        "langue": "fr",
+        "ouverts": 2
+      },
+      {
+        "lot": "lot-stats",
+        "skill": "statistics-article",
+        "langue": "fr",
+        "ouverts": 1
+      }
+    ]
+  }
+}

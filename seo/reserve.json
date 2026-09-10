@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-09",
+  "jours": null,
+  "derniere_date": null,
+  "futures": 0,
+  "fichiers": 0,
+  "incompletes": [],
+  "niveau": "erreur",
+  "message": "Réserve éditoriale non lisible : fatal: pathspec 'content/blog' did not match any files"
+}

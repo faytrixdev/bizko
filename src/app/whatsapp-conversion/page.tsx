@@ -187,6 +187,7 @@ export default async function WhatsAppConversionPage() {
 
       <CtaSection
         title="Prêt à convertir plus de visiteurs en conversations WhatsApp ?"
+        subtitle="Ne perdez plus de prospects à cause de liens génériques. Offrez à vos clients une expérience fluide de la découverte à la conversation."
         primary={{ href: "/signup", label: "Commencer gratuitement" }}
         secondary={{ href: "/demo", label: "Voir la démo" }}
       />

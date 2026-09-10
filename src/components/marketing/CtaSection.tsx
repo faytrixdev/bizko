@@ -2,15 +2,17 @@ import Link from "next/link";
 
 type CtaSectionProps = {
   title: string;
+  subtitle?: string;
   primary: { href: string; label: string };
   secondary?: { href: string; label: string };
 };
 
-export function CtaSection({ title, primary, secondary }: CtaSectionProps) {
+export function CtaSection({ title, subtitle, primary, secondary }: CtaSectionProps) {
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <div className="overflow-hidden rounded-3xl bg-primary px-6 py-14 text-center md:py-16">
         <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">{title}</h2>
+        {subtitle && <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-300">{subtitle}</p>}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href={primary.href}

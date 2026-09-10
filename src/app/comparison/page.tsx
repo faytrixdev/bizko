@@ -228,6 +228,7 @@ export default async function ComparisonPage() {
 
       <CtaSection
         title="Prêt à créer votre lien professionnel qui convertit ?"
+        subtitle="Rejoignez des centaines d'indépendants africains qui ont déjà choisi Bizko pour développer leur activité en ligne."
         primary={{ href: "/signup", label: "Commencer gratuitement" }}
         secondary={{ href: "/demo", label: "Voir la démo" }}
       />

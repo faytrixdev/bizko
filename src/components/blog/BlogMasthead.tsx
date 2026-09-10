@@ -6,7 +6,7 @@ export function BlogMasthead() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-6">
-        <Link href="/" aria-label="Bizko" className="-ml-2 flex items-center">
+        <Link href="/" aria-label="Bizko" className="-ml-3 flex items-center">
           <Logo size="lg" />
         </Link>
         <Link

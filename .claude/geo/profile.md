@@ -113,9 +113,13 @@ Chaque skill vérifie cette section et se dégrade proprement si l'outil manque.
 
 ## 12. Auteur (E-E-A-T)
 
-- **Nom** : `[À CONFIRMER]`
-- **Bio en deux lignes** : `[À CONFIRMER]`
-- **Page auteur** : à créer
+> Décision du membre (2026-09-09) : pas de signature personne visible ; les contenus sont
+> signés « L'équipe Bizko » (publisher = Organisation dans le JSON-LD). Une page auteur
+> individuelle pourra être ajoutée plus tard si un contributeur nommé arrive.
+
+- **Nom** : L'équipe Bizko
+- **Bio en deux lignes** : Bizko aide les indépendants à présenter services, prix et portfolio en un lien.
+- **Page auteur** : à créer (optionnelle)
 - **Profils publics à lier (sameAs)** : `[À CONFIRMER]`
 
 ## 13. Multi-produits (optionnel)

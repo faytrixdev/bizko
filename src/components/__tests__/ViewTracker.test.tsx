@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 
 vi.mock("@/lib/supabase/client", () => ({
   createClient: vi.fn(),
+  isSupabaseConfigured: () => true,
 }));
 
 afterEach(() => {

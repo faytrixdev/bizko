@@ -5,6 +5,7 @@ import type { Messages } from "@/lib/i18n/messages";
 
 vi.mock("@/lib/supabase/client", () => ({
   createClient: () => ({ rpc: () => Promise.resolve({ error: null }) }),
+  isSupabaseConfigured: () => true,
 }));
 
 afterEach(() => cleanup());

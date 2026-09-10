@@ -14,6 +14,10 @@
 | **mobile money / encaisser** | se faire payer en mobile money (Orange Money, MTN MoMo, Wave) ; encaisser ses clients sans carte bancaire ; recevoir des virements clients free | how-to / commercial | foundational-article | **haute (marché central)** | /blog/encaisser-mobile-money | à faire |
 | data (stats à confirmer) | combien de freelances utilisent un lien bio ; taux de conversion d'un lien bio vers message | data | statistics-article | basse (sans data first-party confirmée) | /blog/stats | à faire |
 
+> Attention : le cluster « mobile money / encaisser » = guide sur LA FAÇON de se faire
+> payer quand on est indépendant (hors produit). Bizko ne traite AUCUN paiement : ne
+> jamais le présenter comme une fonctionnalité (cf. doctrine produit dans `profile.md`).
+
 ## Rejetés (et pourquoi)
 
 Garder la trace des sujets écartés pour ne pas les réévaluer à chaque vague.

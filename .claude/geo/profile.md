@@ -35,9 +35,13 @@ contenu ne soit jamais générique.
   pour ces indépendant·e·s en priorité, pas pour le marché mondial.
 - **WhatsApp est le canal n°1** de contact et de vente — avant l'email et avant les
   formulaires. Tout article qui parle de « recevoir des demandes » doit parler WhatsApp.
-- **Paiement par mobile money** : Orange Money, MTN MoMo, Wave, Moov Money, Free Money.
-  La carte bancaire est minoritaire. Ne jamais supposer Stripe/carte bleue comme seul
-  moyen de payer — le citer quand l'article parle de « encaisser / être payé ».
+- **Paiement par mobile money — HORS PRODUIT** : Orange Money, MTN MoMo, Wave, Moov Money,
+  Free Money. La carte bancaire est minoritaire dans le marché central ; le citer quand
+  l'article parle de la façon dont le freelance encaisse.
+  **LIMITE PRODUIT ABSOLUE : Bizko traite les DEMANDES (bouton WhatsApp, tarifs, portfolio),
+  pas les PAIEMENTS. Il n'accepte ni mobile money ni carte, à aucun moment. Ne jamais écrire
+  que « Bizko encaisse » en mobile money ou par carte. Le paiement se fait hors de Bizko,
+  comme le freelance le fait déjà (virement mobile money, espèces, etc.).**
 - **Pas de site web, parfois une seule ligne data** : la page en un lien est le vernis
   pro accessible sans compétences web ni gros budget. Éviter les conseils qui supposent
   un hébergement, un abonnement coûteux ou du code.
@@ -62,7 +66,7 @@ contenu ne soit jamais générique.
 ### Persona principal
 - **Qui** : indépendant·e, freelance ou micro-structure, en particulier en Afrique francophone et dans la diaspora, qui vend un service (design, dev, consulting, artisanat, coiffure, traiteur…) et n'a pas de site web complet
 - **Problème n°1** : se présenter et convertir sans site, sans compétences web, en quelques minutes — alors que ses clients passent par WhatsApp et paient en mobile money
-- **Ce qu'il cherche à obtenir** : un lien pro à poser sur WhatsApp et ses réseaux, qui montre ses services, ses prix, son travail et mène directement à une demande sérieuse (souvent via mobile money à la clé)
+- **Ce qu'il cherche à obtenir** : un lien pro à poser sur WhatsApp et ses réseaux, qui montre ses services, ses prix, son travail et mène directement à une demande sérieuse ; le paiement (mobile money, espèces…) se règle ensuite hors de Bizko, comme il le fait déjà
 
 ### Personas secondaires
 - Petit salon/studio avec une équipe réduite qui veut un book en ligne (coiffure, atelier de couture, cuisine)

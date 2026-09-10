@@ -187,7 +187,11 @@ export default async function BlogPost({ params }: Props) {
       <BlogMasthead />
 
       <main>
-        <div className="mx-auto max-w-4xl px-6">
+        <div
+          className={`mx-auto max-w-4xl px-6 ${
+            related.length > 0 ? "" : "pb-16 md:pb-20"
+          }`}
+        >
           <nav
             aria-label="Fil d'ariane"
             className="flex items-center gap-2 py-8 text-sm text-gray-500"

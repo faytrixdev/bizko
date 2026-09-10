@@ -1,6 +1,7 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { defaultLocale, type Locale } from "./config";
+import { getMessages } from "./messages";
 
 type Messages = Record<string, unknown>;
 type Ctx = { locale: Locale; setLocale: (l: Locale) => void; t: (path: string) => string };
@@ -34,18 +35,29 @@ export function I18nProvider({
     return defaultLocale;
   });
 
+  const [messages, setMessages] = useState<Messages>(
+    () =>
+      initialMessages ??
+      (getMessages(initialLocale ?? defaultLocale) as unknown as Messages)
+  );
+
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
-  const setLocale = (l: Locale) => {
+  const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
-    localStorage.setItem("bizko-locale", l);
-    document.cookie = `bizko-locale=${l}; path=/; max-age=31536000`;
+    setMessages(getMessages(l) as unknown as Messages);
     document.documentElement.lang = l;
-  };
+    try {
+      window.localStorage.setItem("bizko-locale", l);
+    } catch {
+      // localStorage indisponible (navigation privée etc.) : le cookie suffit.
+    }
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `bizko-locale=${l}; path=/; max-age=31536000; SameSite=Lax${secure}`;
+  }, []);
 
-  const messages = useMemo(() => initialMessages ?? ({} as Messages), [initialMessages]);
   const t = useCallback((path: string) => getNested(messages, path), [messages]);
 
   return <I18nCtx.Provider value={{ locale, setLocale, t }}>{children}</I18nCtx.Provider>;

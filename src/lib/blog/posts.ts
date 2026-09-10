@@ -18,6 +18,7 @@ export type PostFrontmatter = {
   tags: string[];
   published: boolean;
   canonical?: string;
+  cover?: string;
   related: string[];
   faq?: PostFaq[];
   sources?: PostSource[];
@@ -62,6 +63,7 @@ function normalizeFrontmatter(data: Record<string, unknown>): PostFrontmatter {
     tags: Array.isArray(data.tags) ? data.tags.map((t) => String(t)) : [],
     published: data.published === true,
     canonical: typeof data.canonical === "string" ? data.canonical : undefined,
+    cover: typeof data.cover === "string" ? data.cover : undefined,
     related: Array.isArray(data.related) ? data.related.map((r) => String(r)) : [],
     faq: Array.isArray(data.faq)
       ? data.faq.map((item) => {

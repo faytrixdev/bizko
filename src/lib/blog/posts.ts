@@ -107,7 +107,7 @@ export function articleUrl(post: Pick<Post, "slug">): string {
 }
 
 export function articleMarkdownUrl(post: Pick<Post, "slug">): string {
-  return `https://bizko.pro/blog/${post.slug}/index.md`;
+  return `https://bizko.pro/blog/${post.slug}/markdown.md`;
 }
 
 export function formatDate(date: string): string {

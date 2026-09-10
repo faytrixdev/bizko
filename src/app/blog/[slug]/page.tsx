@@ -5,7 +5,6 @@ import type { ComponentType } from "react";
 import { Clock, ExternalLink, ArrowRight } from "lucide-react";
 import {
   getPost,
-  listPostFiles,
   listPosts,
   articleUrl,
   articleMarkdownUrl,
@@ -24,7 +23,7 @@ import { POST_TYPE_LABEL } from "@/components/blog/labels";
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return listPostFiles("fr").map(({ slug }) => ({ slug }));
+  return listPosts("fr", true).map(({ slug }) => ({ slug }));
 }
 
 export const dynamicParams = false;
@@ -155,7 +154,7 @@ function relatedPosts(post: Post): Post[] {
 export default async function BlogPost({ params }: Props) {
   const { slug } = await params;
   const post = getPost(slug, "fr");
-  if (!post) notFound();
+  if (!post || !post.frontmatter.published) notFound();
 
   const { frontmatter } = post;
   const mod = (await import(`@content/blog/${post.file}`)) as {

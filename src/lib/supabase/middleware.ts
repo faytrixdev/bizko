@@ -36,7 +36,8 @@ export async function updateSession(request: NextRequest) {
     "/api/track-click",
     "/api/supabase-health",
   ];
-  const isPublicRoute = publicRoutes.includes(pathname);
+  const isBlogRoute = pathname === "/blog" || pathname.startsWith("/blog/");
+  const isPublicRoute = publicRoutes.includes(pathname) || isBlogRoute;
   const isPublicApi = publicApiRoutes.some((route) =>
     pathname.startsWith(route)
   );
@@ -115,7 +116,10 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (user) {
-    if (isPublicRoute || pathname === "/" || pathname === "/demo") {
+    if (
+      (isPublicRoute || pathname === "/" || pathname === "/demo") &&
+      !isBlogRoute
+    ) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 

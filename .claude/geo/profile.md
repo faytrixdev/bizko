@@ -25,23 +25,48 @@
 - **Sous-titre réel** : Présente tes services, tes prix, ton portfolio et ton WhatsApp dans un profil professionnel que tu peux partager partout.
 - **Meta description réelle** : Crée ton profil pro en 3 minutes. Services, prix, portfolio et WhatsApp dans un seul lien à partager partout.
 
+### Réalités du marché central (à injecter dans chaque article)
+
+Ce bloc est la doctrine que chaque skill de production doit respecter pour que le
+contenu ne soit jamais générique.
+
+- **Marché central** : Afrique francophone (Sénégal, Côte d'Ivoire, Cameroun, Bénin,
+  Togo, Burkina Faso, Mali, Guinée, RDC) + diaspora africaine. Le produit est pensé
+  pour ces indépendant·e·s en priorité, pas pour le marché mondial.
+- **WhatsApp est le canal n°1** de contact et de vente — avant l'email et avant les
+  formulaires. Tout article qui parle de « recevoir des demandes » doit parler WhatsApp.
+- **Paiement par mobile money** : Orange Money, MTN MoMo, Wave, Moov Money, Free Money.
+  La carte bancaire est minoritaire. Ne jamais supposer Stripe/carte bleue comme seul
+  moyen de payer — le citer quand l'article parle de « encaisser / être payé ».
+- **Pas de site web, parfois une seule ligne data** : la page en un lien est le vernis
+  pro accessible sans compétences web ni gros budget. Éviter les conseils qui supposent
+  un hébergement, un abonnement coûteux ou du code.
+- **Preuve et confiance** : portfolio, photos du travail réel, avis clients, photo du
+  pro, numéro visible. Plus importants que le design pour convertir.
+- **Exemples réels** : citer des villes africaines réelles (Dakar, Abidjan, Cotonou,
+  Douala, Ouagadougou, Bamako, Kinshasa…) et des métiers réels du marché (artisan,
+  coiffeuse/coiffeur, consultant dev, traiteur, créatrice de mode, community manager,
+  formateur, photographe).
+- **Interdits renforcés** : pas de promesses de revenus, pas de clichés, pas de
+  supposition marché occidental (email/Stripe/site web/carte bancaire par défaut).
+
 ## 3. Niche et vocabulaire
 
 - **Le domaine en deux mots** : profil pro en un lien
-- **Les termes que le marché tape ou demande** : page de vente en un lien ; lien bio pour indépendant ; page profil freelance ; présenter ses services en un lien ; lien whatsapp pour freelance ; profil pro en un lien `[À CONFIRMER : mots exacts du marché]`
-- **Les questions que les gens posent à une IA avant d'acheter ce type de produit (3 à 5 prompts réels)** : Comment créer une page de vente en un lien pour un indépendant ? Quel outil pour présenter son service de freelance et convertir en un lien ? Comment transformer mon lien WhatsApp en page professionnelle ? Outil lien bio avec prix et portfolio `[À CONFIRMER : les prompts réels des acheteurs]`
+- **Les termes que le marché tape ou demande** : page de vente en un lien ; lien bio pour indépendant ; page profil freelance ; présenter ses services en un lien ; lien whatsapp pour freelance ; profil pro en un lien ; page pro sans site web ; profil pro en un lien whatsapp ; lien whatsapp pour vendre (Afrique) `[À CONFIRMER : mots exacts du marché]`
+- **Les questions que les gens posent à une IA avant d'acheter ce type de produit (3 à 5 prompts réels)** : Comment créer une page de vente en un lien pour un indépendant ? Quel outil pour présenter son service de freelance et convertir en un lien ? Comment transformer mon lien WhatsApp en page professionnelle ? Comment vendre mes services sur WhatsApp sans site web (mobile money) ? Comment me faire payer par un client en Afrique sans carte bancaire ? `[À CONFIRMER : les prompts réels des acheteurs]`
 - **Concepts que toutes les IA connaissent déjà** (à NE PAS traiter en article générique) : lien bio, Linktree, page de vente, portfolio en ligne, bouton WhatsApp
 
 ## 4. Cibles
 
 ### Persona principal
-- **Qui** : indépendant·e, freelance ou micro-structure, en particulier en Afrique francophone et dans la diaspora, qui vend un service (design, dev, consulting, artisanat…) et n'a pas de site web complet
-- **Problème n°1** : se présenter et convertir sans site, sans compétences web, en quelques minutes
-- **Ce qu'il cherche à obtenir** : un lien pro à poser sur WhatsApp et ses réseaux, qui montre ses services, ses prix, son travail et mène directement à une demande
+- **Qui** : indépendant·e, freelance ou micro-structure, en particulier en Afrique francophone et dans la diaspora, qui vend un service (design, dev, consulting, artisanat, coiffure, traiteur…) et n'a pas de site web complet
+- **Problème n°1** : se présenter et convertir sans site, sans compétences web, en quelques minutes — alors que ses clients passent par WhatsApp et paient en mobile money
+- **Ce qu'il cherche à obtenir** : un lien pro à poser sur WhatsApp et ses réseaux, qui montre ses services, ses prix, son travail et mène directement à une demande sérieuse (souvent via mobile money à la clé)
 
 ### Personas secondaires
-- Petit salon/studio avec une équipe réduite qui veut un book en ligne
-- Vendeur de services en ligne qui veut encaisser des demandes sérieuses au lieu de questions répétées
+- Petit salon/studio avec une équipe réduite qui veut un book en ligne (coiffure, atelier de couture, cuisine)
+- Vendeur de services en ligne qui veut encaisser des demandes sérieuses au lieu de questions répétées (« tu as des tarifs ? »)
 
 ## 5. Jobs-to-be-done
 

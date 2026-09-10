@@ -18,6 +18,19 @@
 - Livraison : branche `geo/semaine-2026-09-07`, PR en brouillon via `livrer.py`. Jamais de merge automatique.
 - Bento.me est fermé depuis février 2026 (acquisition Linktree) : ne plus proposer de page « vs Bento » ; le mentionner uniquement comme concurrent historique dans les listicles.
 
+## 2026-09-09 — Orientation marché Afrique (décision membre)
+
+- Constat : les fichiers source étaient génériques → contenu générique, alors que Bizko est
+  orienté Afrique francophone + diaspora. La doctrine de positionnement est maintenant dans
+  `profile.md` (section « Réalités du marché central », §2) et est OBLIGATOIRE pour chaque
+  article : WhatsApp canal n°1, paiement mobile money (Orange Money, MTN MoMo, Wave, Moov,
+  Free Money), pas de site web ni carte bancaire supposés, exemples de villes/métiers réels.
+- `keywords.md` : 2 clusters ajoutés en priorité haute (« profil pro sans site web (Afrique) »,
+  « mobile money / encaisser »).
+- File : `lot-foundational.md` enrichi — 2 nouveaux items Afrique en tête
+  (`fond-001a`, `fond-001b`) pour que les prochains guides soient orientés marché central.
+- Les hubs piliers restent conformes (`internal-linking` relié aux spokes Afrique).
+
 ## Entrées (brutes)
 
 - (premier lancement : file construite le 2026-09-09)

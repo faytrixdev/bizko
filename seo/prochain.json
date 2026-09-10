@@ -15,8 +15,8 @@
   },
   "file": {
     "lots": 4,
-    "ouverts": 14,
-    "faits": 0,
+    "ouverts": 16,
+    "faits": 1,
     "echecs": 0,
     "par_lot": [
       {
@@ -29,7 +29,7 @@
         "lot": "lot-foundational",
         "skill": "foundational-article",
         "langue": "fr",
-        "ouverts": 5
+        "ouverts": 7
       },
       {
         "lot": "lot-free-tool",

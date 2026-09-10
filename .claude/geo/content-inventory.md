@@ -22,6 +22,7 @@
 | Hub | Cluster | Spokes rattachés | Spokes manquants |
 |---|---|---|---|
 | /blog/meilleurs-outils-page-de-vente-en-un-lien (hub comparison, PR draft 2026-09-09) | page de vente en un lien | aucun encore | bizko-vs-beacon, bizko-vs-carrd, alternatives à Linktree (item comp-002 à comp-006 de la file) |
+| /blog/profil-sans-site-web-afrique (hub foundational, A FAIRE — marché central) | profil pro sans site web (Afrique) | rien encore | fond-001a, + spokes WhatsApp/paiement mobile money (voir keywords.md) |
 
 ## Pages orphelines (0 lien entrant)
 

@@ -54,7 +54,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="min-h-screen bg-white">
-      {user ? <DashboardHeader username={username} isPro={ctaState === "pro"} /> : <LandingNavbar msg={msg} />}
+      {user ? <DashboardHeader username={username} isPro={ctaState === "pro"} /> : <LandingNavbar />}
       <PricingClient ctaState={ctaState} next={next} tpl={tpl} />
 
       <footer className="border-t border-gray-100 py-10">

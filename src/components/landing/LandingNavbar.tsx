@@ -7,24 +7,21 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
+import { useI18n } from "@/lib/i18n/provider";
 
-interface LandingNavbarProps {
-  msg: {
-    landing: { login: string; heroCta: string; navFeatures: string; navHowItWorks: string; navExamples: string; navPricing: string; navBlog: string; navExplore: string };
-  };
-}
+export const LandingNavbar = () => {
+  const { t } = useI18n();
 
-export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
   const [menuState, setMenuState] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   const menuItems = [
-    { name: msg.landing.navFeatures, href: "#fonctionnalites" },
-    { name: msg.landing.navHowItWorks, href: "#comment-ca-marche" },
-    { name: msg.landing.navExamples, href: "#exemples" },
-    { name: msg.landing.navPricing, href: "/pricing" },
-    { name: msg.landing.navBlog, href: "/blog" },
-    { name: msg.landing.navExplore, href: "/explore" },
+    { name: t("landing.navFeatures"), href: "#fonctionnalites" },
+    { name: t("landing.navHowItWorks"), href: "#comment-ca-marche" },
+    { name: t("landing.navExamples"), href: "#exemples" },
+    { name: t("landing.navPricing"), href: "/pricing" },
+    { name: t("landing.navBlog"), href: "/blog" },
+    { name: t("landing.navExplore"), href: "/explore" },
   ];
 
   React.useEffect(() => {
@@ -90,13 +87,13 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               <LocaleSwitch />
               <div className="w-px h-5 bg-gray-200" />
               <Button asChild variant="outline" size="sm" className={cn(isScrolled && "lg:hidden")}>
-                <Link href="/login"><span>{msg.landing.login}</span></Link>
+                <Link href="/login"><span>{t("landing.login")}</span></Link>
               </Button>
               <Button asChild size="sm" className={cn("bg-accent hover:bg-accent-hover text-white", isScrolled && "lg:hidden")}>
-                <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
+                <Link href="/signup"><span>{t("landing.heroCta")}</span></Link>
               </Button>
               <Button asChild size="sm" className={cn("bg-accent hover:bg-accent-hover text-white", isScrolled ? "lg:inline-flex" : "hidden")}>
-                <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
+                <Link href="/signup"><span>{t("landing.heroCta")}</span></Link>
               </Button>
             </div>
           </div>
@@ -137,10 +134,10 @@ export const LandingNavbar = ({ msg }: LandingNavbarProps) => {
               </ul>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-2 sm:space-y-0">
                 <Button asChild variant="outline" size="sm">
-                  <Link href="/login"><span>{msg.landing.login}</span></Link>
+                  <Link href="/login"><span>{t("landing.login")}</span></Link>
                 </Button>
                 <Button asChild size="sm" className="bg-accent hover:bg-accent-hover text-white">
-                  <Link href="/signup"><span>{msg.landing.heroCta}</span></Link>
+                  <Link href="/signup"><span>{t("landing.heroCta")}</span></Link>
                 </Button>
               </div>
             </div>

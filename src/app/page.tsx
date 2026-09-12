@@ -29,7 +29,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <LandingNavbar msg={msg} />
+      <LandingNavbar />
 
       {/* ─── HERO ─── */}
       <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden">

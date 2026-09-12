@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { isProPlan, getSwitchGraceInfo } from "@/lib/plans";
 import { DashboardClient } from "./DashboardClient";
-import type { DailyEvent, ClickBucket } from "@/types/analytics";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -17,29 +16,16 @@ export default async function Dashboard() {
     { data: portfolio },
     { data: socials },
     { data: testimonials },
-    statsRes,
-    dailyRes,
-    breakdownRes,
     subRes,
   ] = await Promise.all([
     supabase.from("services").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("portfolio_items").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("social_links").select("*").eq("profile_id", profile.id).order("position"),
     supabase.from("testimonials").select("*").eq("profile_id", profile.id).order("created_at", { ascending: false }),
-    supabase.from("profile_stats").select("views, clicks").eq("profile_id", profile.id).maybeSingle(),
-    supabase.rpc("get_daily_events", { p_profile_id: profile.id, p_days: 7 }),
-    supabase.rpc("get_profile_clicks_breakdown", { p_profile_id: profile.id, p_days: 7 }),
     supabase.from("subscriptions").select("*").eq("profile_id", profile.id).maybeSingle(),
   ]);
 
   const publicUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/${profile.username}`;
-  const views = statsRes.data?.views ?? 0;
-  const waClicks = statsRes.data?.clicks ?? 0;
-
-  const daily: DailyEvent[] = (dailyRes.data ?? []) as DailyEvent[];
-  const breakdown: ClickBucket[] = (breakdownRes.data ?? []) as ClickBucket[];
-  const views7d = daily.reduce((sum, d) => sum + d.views, 0);
-  const clicks7d = daily.reduce((sum, d) => sum + d.clicks, 0);
 
   const sub = subRes.data && !Array.isArray(subRes.data)
     ? subRes.data as { plan: string; status: string; pending_interval?: string | null; pending_effective_at?: string | null } | null
@@ -57,12 +43,6 @@ export default async function Dashboard() {
       portfolio={portfolio || []}
       socials={socials || []}
       testimonials={testimonials || []}
-      views={views}
-      waClicks={waClicks}
-      daily={daily}
-      breakdown={breakdown}
-      views7d={views7d}
-      clicks7d={clicks7d}
       publicUrl={publicUrl}
       isPro={isPro}
       pendingInterval={pendingInterval}

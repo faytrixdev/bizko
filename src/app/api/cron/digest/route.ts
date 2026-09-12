@@ -68,6 +68,14 @@ export async function GET(req: NextRequest) {
     const messages = getMessages(profile.locale as "fr" | "en");
     const d = messages.digest;
 
+    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(profileId);
+    const email = authUser?.user?.email;
+    if (authError || !email) {
+      console.error(`[cron-digest] No email for ${profileId}:`, authError?.message ?? "missing email");
+      errors++;
+      continue;
+    }
+
     const unsubUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/digest/unsubscribe?profile=${profileId}&sig=${""}`;
 
     const emailInput: DigestEmailInput = {
@@ -99,7 +107,7 @@ export async function GET(req: NextRequest) {
       },
       body: JSON.stringify({
         from: RESEND_FROM,
-        to: [profileId],
+        to: [email],
         subject,
         html,
       }),
@@ -116,7 +124,7 @@ export async function GET(req: NextRequest) {
       profile_id: profileId,
       week,
       sent_at: new Date().toISOString(),
-      email: profileId,
+      email,
     });
 
     if (insertError) {

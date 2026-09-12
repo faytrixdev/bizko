@@ -185,3 +185,18 @@ export interface ClickBucket {
   bucket: string;
   count: number;
 }
+
+// ─── Dashboard (freelance) analytics state ────────────────────
+
+export type DashboardAnalytics =
+  | { status: "loading" }
+  | { status: "error" }
+  | {
+      status: "success";
+      views: number;
+      waClicks: number;
+      daily: DailyEvent[];
+      breakdown: ClickBucket[];
+      views7d: number;
+      clicks7d: number;
+    };

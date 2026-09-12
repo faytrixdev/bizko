@@ -19,7 +19,11 @@ export function OverviewCharts() {
   useEffect(() => {
     let cancelled = false;
     const supabase = createClient();
-    supabase.rpc("get_admin_daily_stats", { p_start: start, p_end: end }).then(({ data: rows, error }) => {
+    supabase.rpc("get_admin_daily_stats", {
+      p_start: start,
+      p_end: end,
+      p_tz_offset: new Date().getTimezoneOffset(),
+    }).then(({ data: rows, error }) => {
       if (cancelled) return;
       if (error) {
         console.error("get_admin_daily_stats error:", error.message);
@@ -35,7 +39,7 @@ export function OverviewCharts() {
 
   const chartData = data.map((d) => ({
     ...d,
-    label: format(new Date(d.day), "dd MMM", { locale: fr }),
+    label: format(new Date(`${d.day}T00:00:00`), "dd MMM", { locale: fr }),
   }));
 
   return (

@@ -59,12 +59,25 @@ export function AnalyticsTracker() {
     const browser = detectBrowser();
     const os = detectOS();
 
+    // Same-origin navigation is not acquisition: only attribute a referrer
+    // when the visitor actually came from another site.
+    const referrer = (() => {
+      try {
+        const ref = document.referrer;
+        if (!ref) return null;
+        if (new URL(ref).origin === window.location.origin) return null;
+        return ref;
+      } catch {
+        return null;
+      }
+    })();
+
     const track = (eventName: string, extra: Record<string, string | null> = {}) => {
       supabase
         .rpc("track_analytics_event", {
           p_event_name: eventName,
           p_page_path: pathname,
-          p_referrer: document.referrer || null,
+          p_referrer: referrer,
           p_device_type: device,
           p_browser: browser,
           p_os: os,

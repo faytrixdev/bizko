@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { SwitchReminder } from "@/components/SwitchReminder";
 import { TabOverview, TabServices, TabPortfolio, TabSocials, TabSettings, TabTestimonials } from "@/components/dashboard";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
 import type { Profile, Service, PortfolioItem, SocialLink, Testimonial } from "@/types/database";
-import type { DailyEvent, ClickBucket } from "@/types/analytics";
+import type { DailyEvent, ClickBucket, DashboardAnalytics } from "@/types/analytics";
 
 type Tab = "apercu" | "services" | "portfolio" | "temoignages" | "reseaux" | "reglages";
 
@@ -19,12 +20,6 @@ interface DashboardClientProps {
   portfolio: PortfolioItem[];
   socials: SocialLink[];
   testimonials: Testimonial[];
-  views: number;
-  waClicks: number;
-  daily: DailyEvent[];
-  breakdown: ClickBucket[];
-  views7d: number;
-  clicks7d: number;
   publicUrl: string;
   isPro: boolean;
   pendingInterval: "monthly" | "yearly" | null;
@@ -61,12 +56,6 @@ export function DashboardClient({
   portfolio,
   socials,
   testimonials,
-  views,
-  waClicks,
-  daily,
-  breakdown,
-  views7d,
-  clicks7d,
   publicUrl,
   isPro,
   pendingInterval,
@@ -81,6 +70,44 @@ export function DashboardClient({
   const errorMsg = errorCode ? t(ERROR_KEYS_FULL[errorCode] ?? "dashboard.errorGeneric") : null;
   const successMsg = successCode ? t(SUCCESS_KEYS[successCode] ?? "dashboard.successSaved") : null;
   useCleanUrl();
+
+  const [analytics, setAnalytics] = useState<DashboardAnalytics>(() =>
+    isSupabaseConfigured() ? { status: "loading" } : { status: "error" }
+  );
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    let cancelled = false;
+    const supabase = createClient();
+    const tzOffset = new Date().getTimezoneOffset();
+    Promise.all([
+      supabase.from("profile_stats").select("views, clicks").eq("profile_id", profile.id).maybeSingle(),
+      supabase.rpc("get_daily_events", { p_profile_id: profile.id, p_days: 7, p_tz_offset: tzOffset }),
+      supabase.rpc("get_profile_clicks_breakdown", { p_profile_id: profile.id, p_days: 7, p_tz_offset: tzOffset }),
+    ]).then(([statsRes, dailyRes, breakdownRes]) => {
+      if (cancelled) return;
+      if (statsRes.error || dailyRes.error || breakdownRes.error) {
+        setAnalytics({ status: "error" });
+        return;
+      }
+      const daily = (dailyRes.data ?? []) as DailyEvent[];
+      const breakdown = (breakdownRes.data ?? []) as ClickBucket[];
+      const views7d = daily.reduce((sum, d) => sum + d.views, 0);
+      const clicks7d = daily.reduce((sum, d) => sum + d.clicks, 0);
+      setAnalytics({
+        status: "success",
+        views: statsRes.data?.views ?? 0,
+        waClicks: statsRes.data?.clicks ?? 0,
+        daily,
+        breakdown,
+        views7d,
+        clicks7d,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile.id]);
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "apercu", label: t("dashboard.tabs.apercu"), icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
@@ -154,7 +181,7 @@ export function DashboardClient({
         </nav>
 
         {/* Tab content */}
-        {tab === "apercu" && <TabOverview publicUrl={publicUrl} username={profile.username} views={views} waClicks={waClicks} daily={daily} breakdown={breakdown} views7d={views7d} clicks7d={clicks7d} />}
+        {tab === "apercu" && <TabOverview publicUrl={publicUrl} username={profile.username} analytics={analytics} />}
         {tab === "services" && <TabServices services={services} />}
         {tab === "portfolio" && <TabPortfolio portfolio={portfolio} profileId={profile.id} isPro={isPro} />}
         {tab === "temoignages" && <TabTestimonials testimonials={testimonials} isPro={isPro} />}

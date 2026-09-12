@@ -27,20 +27,20 @@ export function TechnologyContent() {
         if (!raw) { setStats([]); setLoading(false); return; }
 
         const all: DeviceStat[] = [];
-        const totalSessions = [
-          ...(raw.devices ?? []),
-          ...(raw.browsers ?? []),
-          ...(raw.os_list ?? []),
-        ].reduce((sum, item) => sum + (item.cnt ?? 0), 0) || 1;
+        const dimTotal = (items: { cnt?: number }[]) =>
+          items.reduce((sum, item) => sum + (item.cnt ?? 0), 0) || 1;
+        const deviceTotal = dimTotal(raw.devices ?? []);
+        const browserTotal = dimTotal(raw.browsers ?? []);
+        const osTotal = dimTotal(raw.os_list ?? []);
 
         for (const d of raw.devices ?? []) {
-          all.push({ dimension: "device_type", value: d.device_type, sessions: d.cnt, percentage: (d.cnt / totalSessions) * 100 });
+          all.push({ dimension: "device_type", value: d.device_type, sessions: d.cnt, percentage: (d.cnt / deviceTotal) * 100 });
         }
         for (const b of raw.browsers ?? []) {
-          all.push({ dimension: "browser", value: b.browser, sessions: b.cnt, percentage: (b.cnt / totalSessions) * 100 });
+          all.push({ dimension: "browser", value: b.browser, sessions: b.cnt, percentage: (b.cnt / browserTotal) * 100 });
         }
         for (const o of raw.os_list ?? []) {
-          all.push({ dimension: "os", value: o.os, sessions: o.cnt, percentage: (o.cnt / totalSessions) * 100 });
+          all.push({ dimension: "os", value: o.os, sessions: o.cnt, percentage: (o.cnt / osTotal) * 100 });
         }
         setStats(all);
         setLoading(false);

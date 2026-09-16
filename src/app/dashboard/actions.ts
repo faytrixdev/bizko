@@ -310,8 +310,8 @@ async function startChariowCheckout(
     .select("display_name, phone_e164, country")
     .eq("id", profileId)
     .maybeSingle();
-  const p = profile && !Array.isArray(profile) ? profile : null;
-  if (!p?.display_name || !p?.phone_e164) throw new ChariowApiError("Incomplete profile", 400);
+  const p = profile;
+  if (!p?.display_name?.trim() || !p?.phone_e164) throw new ChariowApiError("Incomplete profile", 400);
 
   const { first_name, last_name } = splitFullName(p.display_name);
   const phone = localizePhone(p.phone_e164, p.country ?? "");

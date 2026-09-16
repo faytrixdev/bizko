@@ -40,7 +40,7 @@ type PulseArgs = {
   rawBody: string;
 };
 
-export async function applyPulse({ deliveryId, event, payload, rawBody }: PulseArgs): Promise<void> {
+export async function applyPulse({ deliveryId, event, payload }: PulseArgs): Promise<void> {
   const admin = createAdminClient();
 
   if (deliveryId) {
@@ -61,7 +61,7 @@ export async function applyPulse({ deliveryId, event, payload, rawBody }: PulseA
       return;
     }
     const saleId = typeof sale.id === "string" ? sale.id : undefined;
-    await admin.from("subscriptions").upsert(
+    const { error: subError } = await admin.from("subscriptions").upsert(
       {
         profile_id: profileId,
         plan: "pro",
@@ -72,6 +72,7 @@ export async function applyPulse({ deliveryId, event, payload, rawBody }: PulseA
       },
       { onConflict: "profile_id" },
     );
+    if (subError) throw subError;
     if (deliveryId) {
       await admin.from("chariow_pulse_deliveries").insert({
         delivery_id: deliveryId,

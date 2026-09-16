@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { keyFromPublicUrl, deleteR2Object } from "@/lib/r2";
-import { getLimits, isBillingInterval } from "@/lib/plans";
+import { getLimits, isBillingInterval, type BillingInterval } from "@/lib/plans";
 import { canUseTemplate } from "@/lib/template-config";
 import {
   createCheckoutConfig,
@@ -14,6 +14,7 @@ import {
   getMembership,
   isYearlyProPlanConfigured,
 } from "@/lib/whop";
+import { createCheckout, localizePhone, ChariowApiError } from "@/lib/chariow";
 import { isValidTestimonialInput } from "@/lib/testimonials";
 import { getMessages } from "@/lib/i18n/messages";
 import { resolveServerLocale } from "@/lib/i18n/messages-server";
@@ -34,6 +35,22 @@ function dashboardError(err: { code?: string; message?: string } | null): string
   // 23505 = unique_violation
   if (err.code === "23505") return "duplicate";
   return "generic";
+}
+
+// Post-checkout return path for a Pro upgrade, called by both providers.
+function upgradeRedirectUrl(next: string | undefined, tpl: string | undefined): string | undefined {
+  if (next === "/onboarding") {
+    return tpl ? `/onboarding?tpl=${encodeURIComponent(tpl)}` : "/onboarding";
+  }
+  return undefined;
+}
+
+// Best-effort split of "Nom complet" into first/last name for Chariow.
+function splitFullName(full: string): { first_name: string; last_name: string } {
+  const trimmed = full.trim();
+  const idx = trimmed.indexOf(" ");
+  if (idx === -1) return { first_name: trimmed, last_name: trimmed };
+  return { first_name: trimmed.slice(0, idx), last_name: trimmed.slice(idx + 1).trim() || trimmed };
 }
 
 // Resolve the current plan for the authenticated user.
@@ -245,28 +262,80 @@ export async function startSubscription(formData: FormData) {
   const interval = (formData.get("interval") as string) ?? "monthly";
   if (!isBillingInterval(interval)) redirect("/dashboard?error=checkout_failed");
 
+  const provider = (formData.get("provider") as string) ?? "whop";
+  if (provider !== "whop" && provider !== "chariow") redirect("/dashboard?error=checkout_failed");
+
   // Optional post-payment return. Only allow known relative paths to avoid
   // turning the checkout redirect into an open redirect.
   const next = (formData.get("next") as string) ?? "";
   const tpl = (formData.get("tpl") as string) ?? "";
-  let redirectUrl: string | undefined;
-  if (next === "/onboarding") {
-    redirectUrl = tpl ? `/onboarding?tpl=${encodeURIComponent(tpl)}` : "/onboarding";
-  }
+  const redirectUrl = upgradeRedirectUrl(next || undefined, tpl || undefined);
 
   let purchaseUrl: string;
-  try {
-    const { sessionId, purchaseUrl: url } = await createCheckoutConfig(user.id, interval, redirectUrl);
-    purchaseUrl = url;
-    await supabase.from("pro_checkouts").insert({
-      profile_id: user.id,
-      checkout_configuration_id: sessionId,
-    });
-  } catch (err) {
-    console.error("[startSubscription]", err);
-    redirect("/dashboard?error=checkout_failed");
+  if (provider === "chariow") {
+    try {
+      purchaseUrl = await startChariowCheckout(supabase, user.id, user.email, interval, redirectUrl);
+    } catch (err) {
+      console.error("[startSubscription] Chariow checkout failed:", err);
+      redirect("/dashboard?error=checkout_failed");
+    }
+  } else {
+    try {
+      const { sessionId, purchaseUrl: url } = await createCheckoutConfig(user.id, interval, redirectUrl);
+      purchaseUrl = url;
+      await supabase.from("pro_checkouts").insert({
+        profile_id: user.id,
+        checkout_configuration_id: sessionId,
+        provider: "whop",
+      });
+    } catch (err) {
+      console.error("[startSubscription] Whop checkout failed:", err);
+      redirect("/dashboard?error=checkout_failed");
+    }
   }
   redirect(purchaseUrl);
+}
+
+async function startChariowCheckout(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  profileId: string,
+  email: string | undefined,
+  interval: BillingInterval,
+  redirectUrl: string | undefined,
+): Promise<string> {
+  if (!email) throw new ChariowApiError("User has no email", 400);
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, phone_e164, country")
+    .eq("id", profileId)
+    .maybeSingle();
+  const p = profile && !Array.isArray(profile) ? profile : null;
+  if (!p?.display_name || !p?.phone_e164) throw new ChariowApiError("Incomplete profile", 400);
+
+  const { first_name, last_name } = splitFullName(p.display_name);
+  const phone = localizePhone(p.phone_e164, p.country ?? "");
+
+  const { saleId, checkoutUrl } = await createCheckout({
+    profileId,
+    interval,
+    redirectUrl,
+    customer: {
+      email,
+      first_name,
+      last_name,
+      phone_number: phone.number,
+      phone_country_code: phone.countryCode,
+    },
+  });
+  if (checkoutUrl) {
+    await supabase.from("pro_checkouts").insert({
+      profile_id: profileId,
+      checkout_configuration_id: saleId,
+      provider: "chariow",
+    });
+  }
+  return checkoutUrl ?? "";
 }
 
 /**

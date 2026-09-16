@@ -45,7 +45,11 @@ export function resolveChariowProductId(interval: BillingInterval): string | und
   return process.env.CHARIOW_PRODUCT_ID_PRO;
 }
 
-/** True when a distinct yearly Chariow product id is configured. */
+/**
+ * True when a distinct yearly Chariow product id is configured. Without it,
+ * "yearly" silently falls back to the monthly product, so the UI can use this
+ * to avoid offering a yearly checkout that would actually bill monthly.
+ */
 export function isYearlyChariowProductConfigured(): boolean {
   return Boolean(process.env.CHARIOW_PRODUCT_ID_PRO_YEARLY);
 }
@@ -91,8 +95,8 @@ export async function createCheckout(opts: {
     body: JSON.stringify({
       product_id: productId,
       email: opts.customer.email,
-      first_name: opts.customer.first_name?.slice(0, 50),
-      last_name: opts.customer.last_name?.slice(0, 50),
+      first_name: opts.customer.first_name.slice(0, 50),
+      last_name: opts.customer.last_name.slice(0, 50),
       phone: {
         number: opts.customer.phone_number,
         country_code: opts.customer.phone_country_code,

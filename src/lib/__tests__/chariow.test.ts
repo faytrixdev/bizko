@@ -62,6 +62,10 @@ describe("localizePhone", () => {
   it("falls back to the full digits when the dial code is unknown", () => {
     expect(localizePhone("+155512345678", "US")).toEqual({ number: "155512345678", countryCode: "US" });
   });
+
+  it("accepts a lowercase country code", () => {
+    expect(localizePhone("+22670000000", "bf")).toEqual({ number: "70000000", countryCode: "BF" });
+  });
 });
 
 describe("createCheckout", () => {
@@ -165,6 +169,19 @@ describe("createCheckout", () => {
     process.env.CHARIOW_PRODUCT_ID_PRO = "";
     await expect(createCheckout({ profileId: "p1", interval: "monthly", customer: CUSTOMER })).rejects.toThrow();
   });
+
+  it("throws with the HTTP status when Chariow returns a non-2xx response", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({ ok: false, status: 402, json: async () => ({}) }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.CHARIOW_API_KEY = "sk_test";
+    process.env.CHARIOW_PRODUCT_ID_PRO = "prd_monthly";
+
+    await expect(createCheckout({ profileId: "p1", interval: "monthly", customer: CUSTOMER })).rejects.toThrow(
+      "Chariow checkout creation failed (402)"
+    );
+  });
 });
 
 describe("verifyPulse", () => {
@@ -185,5 +202,10 @@ describe("verifyPulse", () => {
     const body = JSON.stringify({ event: "successful.sale" });
     expect(() => verifyPulse(headers(body, { secret: "whsec_wrong" }), body, SECRET)).toThrow();
     expect(() => verifyPulse({}, body, SECRET)).toThrow();
+  });
+
+  it("throws when the pulse secret is not configured", () => {
+    const body = JSON.stringify({ event: "successful.sale" });
+    expect(() => verifyPulse({}, body, "")).toThrow("CHARIOW_PULSE_SECRET is not configured");
   });
 });

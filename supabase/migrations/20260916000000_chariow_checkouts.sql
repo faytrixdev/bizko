@@ -11,10 +11,12 @@ create table if not exists public.chariow_pulse_deliveries (
   delivery_id text primary key,
   event text not null,
   sale_id text,
-  profile_id uuid references public.profiles(id) on delete set null,
+  profile_id uuid references auth.users(id) on delete cascade,
   processed_at timestamptz not null default now()
 );
 
 alter table public.chariow_pulse_deliveries enable row level security;
 
--- No user-facing rows: only the service role (bypasses RLS) writes/reads.
+-- Delivery rows may land before the profile exists (profiles.id = user.id, like
+-- subscriptions). No user-facing rows: only the service role (bypasses RLS).
+-- Cascading via auth.users keeps account deletion clean.

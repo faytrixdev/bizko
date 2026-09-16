@@ -710,7 +710,13 @@
     "cardMonthlyCta": "Go Pro - Monthly",
     "cardYearlyCta": "Go Pro - Yearly",
     "guestCta": "Create account",
-    "manageCta": "Manage subscription"
+    "manageCta": "Manage subscription",
+    "paymentTitle": "Choose your payment method",
+    "paymentSubtitle": "Select how you want to pay to go Pro.",
+    "payByCard": "Credit card",
+    "payByCardDesc": "Secure card payment via Whop.",
+    "payByMobileMoney": "Mobile Money",
+    "payByMobileMoneyDesc": "Pay with Mobile Money (Orange Money, MTN, Moov…) via Chariow."
   },
   "categories": {
     "photo": "Photographer",

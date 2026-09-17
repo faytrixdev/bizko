@@ -12,6 +12,7 @@ async function latestCheckoutId(supabase: Awaited<ReturnType<typeof createClient
     .from("pro_checkouts")
     .select("checkout_configuration_id")
     .eq("profile_id", profileId)
+    .eq("provider", "whop")
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();

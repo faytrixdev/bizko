@@ -710,7 +710,13 @@
     "cardMonthlyCta": "Passer à Pro - Mensuel",
     "cardYearlyCta": "Passer à Pro - Annuel",
     "guestCta": "Créer mon compte",
-    "manageCta": "Gérer mon abonnement"
+    "manageCta": "Gérer mon abonnement",
+    "paymentTitle": "Choisis ton moyen de paiement",
+    "paymentSubtitle": "Sélectionne comment tu veux payer pour passer à Bizko Pro.",
+    "payByCard": "Carte bancaire",
+    "payByCardDesc": "Paiement sécurisé par carte via Whop.",
+    "payByMobileMoney": "Mobile Money",
+    "payByMobileMoneyDesc": "Paiement par Mobile Money (Orange Money, MTN, Moov…) via Chariow."
   },
   "categories": {
     "photo": "Photographe",

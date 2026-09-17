@@ -62,7 +62,7 @@ export function PaymentMethodModal({ open, interval, next, tpl, onClose }: Payme
               </span>
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold text-gray-900">{t("pricing.payByCard")}</span>
-                <span className="block mt-0.5 text-xs text-gray-500 leading-5">{t("pricing.payByCardDesc")}</span>
+                <span className="block mt-0.5 text-xs text-gray-500 leading-5 line-clamp-2">{t("pricing.payByCardDesc")}</span>
               </span>
               <span className="text-gray-300">›</span>
             </button>
@@ -85,7 +85,7 @@ export function PaymentMethodModal({ open, interval, next, tpl, onClose }: Payme
               </span>
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold text-gray-900">{t("pricing.payByMobileMoney")}</span>
-                <span className="block mt-0.5 text-xs text-gray-500 leading-5">{t("pricing.payByMobileMoneyDesc")}</span>
+                <span className="block mt-0.5 text-xs text-gray-500 leading-5 line-clamp-2">{t("pricing.payByMobileMoneyDesc")}</span>
               </span>
               <span className="text-gray-300">›</span>
             </button>

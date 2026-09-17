@@ -4,5 +4,13 @@
       "path": "/api/cron/digest",
       "schedule": "0 7 * * 1"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://bizko.pro/$1",
+      "permanent": true,
+      "has": [{ "type": "host", "value": "www.bizko.pro" }]
+    }
   ]
 }

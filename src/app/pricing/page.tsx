@@ -28,12 +28,16 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
   const sp = await searchParams;
   const next = typeof sp.next === "string" ? sp.next : undefined;
   const tpl = typeof sp.tpl === "string" ? sp.tpl : undefined;
+  const error = typeof sp.error === "string" ? sp.error : undefined;
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   let ctaState: PricingCtaState = "guest";
   let username: string | undefined;
+  // During onboarding the profile row does not exist yet, so Charow (which
+  // needs the profile's display_name / phone) cannot be offered.
+  let hasProfile = false;
   if (user) {
     const { data: sub } = await supabase
       .from("subscriptions")
@@ -50,12 +54,13 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
       .maybeSingle();
     const p = profile && !Array.isArray(profile) ? profile : null;
     username = p?.username ?? undefined;
+    hasProfile = Boolean(p);
   }
 
   return (
     <div className="min-h-screen bg-white">
       {user ? <DashboardHeader username={username} isPro={ctaState === "pro"} /> : <LandingNavbar />}
-      <PricingClient ctaState={ctaState} next={next} tpl={tpl} />
+      <PricingClient ctaState={ctaState} next={next} tpl={tpl} error={error} hasProfile={hasProfile} />
 
       <footer className="border-t border-gray-100 py-10">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">

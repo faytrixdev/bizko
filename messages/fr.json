@@ -716,7 +716,9 @@
     "payByCard": "Carte bancaire",
     "payByCardDesc": "Paiement sécurisé par carte via Whop.",
     "payByMobileMoney": "Mobile Money",
-    "payByMobileMoneyDesc": "Paiement par Mobile Money (Orange Money, MTN, Moov…) via Chariow."
+    "payByMobileMoneyDesc": "Paiement par Mobile Money (Orange Money, MTN, Moov…) via Chariow.",
+    "mobileMoneyUnavailable": "Disponible après la publication de ton profil.",
+    "checkoutFailed": "Le paiement a échoué. Réessaye ou termine d'abord ton profil."
   },
   "categories": {
     "photo": "Photographe",

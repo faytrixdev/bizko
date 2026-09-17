@@ -9,10 +9,14 @@ interface PaymentMethodModalProps {
   interval: BillingInterval;
   next?: string;
   tpl?: string;
+  /** False while the user is still in onboarding (no profile row yet).
+   *  Chariow requires the profile's display_name + phone, so the Mobile Money
+   *  option is disabled until it exists. */
+  hasProfile?: boolean;
   onClose: () => void;
 }
 
-export function PaymentMethodModal({ open, interval, next, tpl, onClose }: PaymentMethodModalProps) {
+export function PaymentMethodModal({ open, interval, next, tpl, hasProfile = true, onClose }: PaymentMethodModalProps) {
   const { t } = useI18n();
   if (!open) return null;
 
@@ -68,14 +72,33 @@ export function PaymentMethodModal({ open, interval, next, tpl, onClose }: Payme
             </button>
           </form>
 
-          <form action={startSubscription}>
-            <input type="hidden" name="provider" value="chariow" />
-            <input type="hidden" name="interval" value={interval} />
-            {next && <input type="hidden" name="next" value={next} />}
-            {tpl && <input type="hidden" name="tpl" value={tpl} />}
-            <button
-              type="submit"
-              className="w-full flex items-center gap-4 rounded-xl border border-gray-200 p-4 text-left hover:border-violet-300 hover:bg-violet-50/50 transition-colors"
+          {hasProfile ? (
+            <form action={startSubscription}>
+              <input type="hidden" name="provider" value="chariow" />
+              <input type="hidden" name="interval" value={interval} />
+              {next && <input type="hidden" name="next" value={next} />}
+              {tpl && <input type="hidden" name="tpl" value={tpl} />}
+              <button
+                type="submit"
+                className="w-full flex items-center gap-4 rounded-xl border border-gray-200 p-4 text-left hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="7" y="2" width="10" height="20" rx="2" />
+                    <path d="M11 18h2" />
+                  </svg>
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="block text-sm font-semibold text-gray-900">{t("pricing.payByMobileMoney")}</span>
+                  <span className="block mt-0.5 text-xs text-gray-500 leading-5 line-clamp-2">{t("pricing.payByMobileMoneyDesc")}</span>
+                </span>
+                <span className="text-gray-300">›</span>
+              </button>
+            </form>
+          ) : (
+            <div
+              aria-disabled="true"
+              className="w-full flex items-center gap-4 rounded-xl border border-gray-200 bg-gray-50 p-4 text-left opacity-60"
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -85,11 +108,11 @@ export function PaymentMethodModal({ open, interval, next, tpl, onClose }: Payme
               </span>
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold text-gray-900">{t("pricing.payByMobileMoney")}</span>
-                <span className="block mt-0.5 text-xs text-gray-500 leading-5 line-clamp-2">{t("pricing.payByMobileMoneyDesc")}</span>
+                <span className="block mt-0.5 text-xs text-gray-500 leading-5 line-clamp-2">{t("pricing.mobileMoneyUnavailable")}</span>
               </span>
               <span className="text-gray-300">›</span>
-            </button>
-          </form>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex items-center justify-end gap-3">

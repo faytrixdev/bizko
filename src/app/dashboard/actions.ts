@@ -45,6 +45,17 @@ function upgradeRedirectUrl(next: string | undefined, tpl: string | undefined): 
   return undefined;
 }
 
+// Failed-upgrade return path: back to /pricing (where the checkout was
+// launched) with a visible error, keeping the post-payment context so the
+// user can retry in place. Never bounce through /dashboard, which would send
+// mid-onboarding users (no profile row yet) straight back to /onboarding.
+function checkoutFailedRedirect(next: string | undefined, tpl: string | undefined): string {
+  const params = new URLSearchParams({ error: "checkout_failed" });
+  if (next === "/onboarding") params.set("next", next);
+  if (tpl && /^[a-z0-9_-]+$/.test(tpl)) params.set("tpl", tpl);
+  return `/pricing?${params.toString()}`;
+}
+
 // Best-effort split of "Nom complet" into first/last name for Chariow.
 function splitFullName(full: string): { first_name: string; last_name: string } {
   const trimmed = full.trim();
@@ -260,10 +271,10 @@ export async function startSubscription(formData: FormData) {
   if (isPro) redirect("/dashboard?success=already_pro");
 
   const interval = (formData.get("interval") as string) ?? "monthly";
-  if (!isBillingInterval(interval)) redirect("/dashboard?error=checkout_failed");
+  if (!isBillingInterval(interval)) redirect(checkoutFailedRedirect(undefined, undefined));
 
   const provider = (formData.get("provider") as string) ?? "whop";
-  if (provider !== "whop" && provider !== "chariow") redirect("/dashboard?error=checkout_failed");
+  if (provider !== "whop" && provider !== "chariow") redirect(checkoutFailedRedirect(undefined, undefined));
 
   // Optional post-payment return. Only allow known relative paths to avoid
   // turning the checkout redirect into an open redirect.
@@ -271,13 +282,17 @@ export async function startSubscription(formData: FormData) {
   const tpl = (formData.get("tpl") as string) ?? "";
   const redirectUrl = upgradeRedirectUrl(next || undefined, tpl || undefined);
 
+  // On failure the user must land back on /pricing with a visible error,
+  // never on /dashboard (no profile during onboarding -> bounces to /onboarding).
+  const failureUrl = checkoutFailedRedirect(next || undefined, tpl || undefined);
+
   let purchaseUrl: string;
   if (provider === "chariow") {
     try {
       purchaseUrl = await startChariowCheckout(supabase, user.id, user.email, interval, redirectUrl);
     } catch (err) {
       console.error("[startSubscription] Chariow checkout failed:", err);
-      redirect("/dashboard?error=checkout_failed");
+      redirect(failureUrl);
     }
   } else {
     try {
@@ -290,7 +305,7 @@ export async function startSubscription(formData: FormData) {
       });
     } catch (err) {
       console.error("[startSubscription] Whop checkout failed:", err);
-      redirect("/dashboard?error=checkout_failed");
+      redirect(failureUrl);
     }
   }
   redirect(purchaseUrl);

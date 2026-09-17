@@ -15,15 +15,24 @@ interface PricingClientProps {
   next?: string;
   /** Template to preselect after returning (e.g. a locked pro template). */
   tpl?: string;
+  /** Error code from a failed checkout attempt (e.g. checkout_failed). */
+  error?: string;
+  /** False while the user is still in onboarding (no profile row yet). */
+  hasProfile?: boolean;
 }
 
 const RETURN_ALLOWED = new Set(["/onboarding"]);
 
-export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
+const PRICING_ERRORS: Record<string, string> = {
+  checkout_failed: "pricing.checkoutFailed",
+};
+
+export function PricingClient({ ctaState, next, tpl, error, hasProfile = true }: PricingClientProps) {
   const { t } = useI18n();
   const [paymentOpen, setPaymentOpen] = useState<BillingInterval | null>(null);
   const nextParam = next && RETURN_ALLOWED.has(next) ? next : undefined;
   const tplParam = tpl && /^[a-z0-9_-]+$/.test(tpl) ? tpl : undefined;
+  const errorMsg = error ? t(PRICING_ERRORS[error] ?? "pricing.checkoutFailed") : null;
 
   return (
     <>
@@ -43,6 +52,11 @@ export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
           >
             {t("pricing.guestCta")}
           </Link>
+        )}
+        {errorMsg && (
+          <div className="mt-6 mx-auto max-w-xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700" role="alert">
+            {errorMsg}
+          </div>
         )}
       </section>
 
@@ -121,6 +135,7 @@ export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
         interval={paymentOpen ?? "monthly"}
         next={nextParam}
         tpl={tplParam}
+        hasProfile={hasProfile}
         onClose={() => setPaymentOpen(null)}
       />
     </>

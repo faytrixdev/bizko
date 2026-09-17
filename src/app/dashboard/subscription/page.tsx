@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
-import { isProPlan, getSwitchGraceInfo } from "@/lib/plans";
+import { isProSubscription, getSwitchGraceInfo, type BillingInterval } from "@/lib/plans";
+import { resolveChariowInterval } from "@/lib/chariow";
 import { getMembership, listMembershipPayments, findMembershipByCheckout, isYearlyProPlanConfigured, type WhopMembership, type WhopPayment } from "@/lib/whop";
 import { SubscriptionClient } from "./SubscriptionClient";
 
@@ -45,28 +46,36 @@ export default async function SubscriptionPage() {
 
   const { data: subRes } = await supabase
     .from("subscriptions")
-    .select("whop_membership_id, plan, status, pending_interval, pending_effective_at")
+    .select("whop_membership_id, plan, status, provider, current_period_end, chariow_product_id, pending_interval, pending_effective_at")
     .eq("profile_id", user.id)
     .maybeSingle();
 
   const sub = subRes && !Array.isArray(subRes)
-    ? subRes as { whop_membership_id?: string | null; plan: string; status: string; pending_interval?: string | null; pending_effective_at?: string | null }
+    ? subRes as { whop_membership_id?: string | null; plan: string; status: string; provider?: string | null; current_period_end?: string | null; chariow_product_id?: string | null; pending_interval?: string | null; pending_effective_at?: string | null }
     : null;
+
+  // Chariow rows are time-limited licenses: Pro access only holds while the
+  // locally-computed period is in the future (mirrors the is_pro RPC).
+  const provider = sub?.provider === "chariow" ? "chariow" : "whop";
+  const chariowInterval: BillingInterval | null =
+    provider === "chariow" ? resolveChariowInterval(sub?.chariow_product_id ?? null) : null;
 
   // During a deferred switch grace window the old membership has lapsed
   // (status canceled) but access is retained, so keep the Pro UI alive.
   const grace = getSwitchGraceInfo(sub?.pending_interval, sub?.pending_effective_at);
-  const isPro = isProPlan(sub?.plan, sub?.status) || grace.active;
+  const isPro = grace.active || isProSubscription(sub);
 
   let membership: WhopMembership | null = null;
   let payments: WhopPayment[] = [];
   let error: string | null = null;
 
   try {
-    if (isPro && sub?.whop_membership_id) {
+    // The Whop API only tracks Whop memberships; a Chariow license has no
+    // membership row to fetch (and no payment history to list).
+    if (provider === "whop" && isPro && sub?.whop_membership_id) {
       membership = await getMembership(sub.whop_membership_id);
       payments = await listMembershipPayments(sub.whop_membership_id);
-    } else if (isPro) {
+    } else if (provider === "whop" && isPro) {
       // Self-heal: the webhook may not have recorded the membership id yet.
       // Resolve it from the checkout configuration we stored at checkout start.
       const checkoutId = await latestCheckoutId(supabase, user.id);
@@ -86,13 +95,18 @@ export default async function SubscriptionPage() {
     error = "unavailable";
   }
 
-  const missingMembership = isPro && !membership;
+  // "Missing membership" is a Whop-only failure mode. A Chariow row that
+  // passes isProSubscription always has its license data on the row itself.
+  const missingMembership = provider === "whop" && isPro && !membership;
 
   return (
     <SubscriptionClient
       isPro={isPro}
+      provider={provider}
       missingMembership={missingMembership}
       membership={membership}
+      chariowInterval={chariowInterval}
+      chariowPeriodEnd={sub?.current_period_end ?? null}
       payments={payments}
       error={error}
       yearlyAvailable={isYearlyProPlanConfigured()}

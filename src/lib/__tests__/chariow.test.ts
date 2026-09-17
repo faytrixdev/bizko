@@ -4,6 +4,9 @@ import {
   createCheckout,
   verifyPulse,
   resolveChariowProductId,
+  resolveChariowInterval,
+  chariowPeriodEnd,
+  CHARIOW_LICENSE_DAYS,
   isYearlyChariowProductConfigured,
   localizePhone,
 } from "../chariow";
@@ -50,6 +53,37 @@ describe("isYearlyChariowProductConfigured", () => {
     expect(isYearlyChariowProductConfigured()).toBe(true);
     delete process.env.CHARIOW_PRODUCT_ID_PRO_YEARLY;
     expect(isYearlyChariowProductConfigured()).toBe(false);
+  });
+});
+
+describe("resolveChariowInterval", () => {
+  it("resolves monthly except for the configured yearly product id", () => {
+    process.env.CHARIOW_PRODUCT_ID_PRO_YEARLY = "prd_yearly";
+    expect(resolveChariowInterval("prd_yearly")).toBe("yearly");
+    expect(resolveChariowInterval("prd_monthly")).toBe("monthly");
+    expect(resolveChariowInterval(undefined)).toBe("monthly");
+    expect(resolveChariowInterval(null)).toBe("monthly");
+  });
+
+  it("resolves monthly when no yearly product is configured", () => {
+    delete process.env.CHARIOW_PRODUCT_ID_PRO_YEARLY;
+    expect(resolveChariowInterval("prd_yearly")).toBe("monthly");
+  });
+});
+
+describe("chariowPeriodEnd", () => {
+  it("adds the license duration for the interval to the sale date", () => {
+    const created = "2026-09-01T10:00:00.000Z";
+    const monthly = new Date(chariowPeriodEnd(created, "monthly")).getTime();
+    expect(monthly).toBe(new Date(created).getTime() + CHARIOW_LICENSE_DAYS.monthly * 86_400_000);
+    const yearly = new Date(chariowPeriodEnd(created, "yearly")).getTime();
+    expect(yearly).toBe(new Date(created).getTime() + CHARIOW_LICENSE_DAYS.yearly * 86_400_000);
+  });
+
+  it("accepts a Date input and returns ISO", () => {
+    const out = chariowPeriodEnd(new Date("2026-09-01T00:00:00.000Z"), "monthly");
+    expect(out.endsWith("Z")).toBe(true);
+    expect(new Date(out).toISOString()).toBe(out);
   });
 });
 

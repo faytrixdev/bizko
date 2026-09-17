@@ -122,6 +122,26 @@ export function isProPlan(
   return plan === "pro" && (status === "active" || status === "trialing");
 }
 
+export interface SubscriptionRow {
+  plan?: string | null;
+  status?: string | null;
+  provider?: string | null;
+  current_period_end?: string | null;
+}
+
+/**
+ * True when a subscription row still grants Pro access. Mirrors the `is_pro`
+ * RPC: for Chariow rows (time-limited licenses, no auto-renewal) access only
+ * holds while the locally-computed period is in the future.
+ */
+export function isProSubscription(row: SubscriptionRow | null | undefined): boolean {
+  if (!row || !isProPlan(row.plan, row.status)) return false;
+  if (row.provider === "chariow" && row.current_period_end) {
+    return new Date(row.current_period_end).getTime() > Date.now();
+  }
+  return true;
+}
+
 export interface SwitchGraceInfo {
   active: boolean;
   end: string | null;

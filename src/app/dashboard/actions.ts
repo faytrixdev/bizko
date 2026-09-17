@@ -42,18 +42,25 @@ function upgradeRedirectUrl(next: string | undefined, tpl: string | undefined): 
   if (next === "/onboarding") {
     return tpl ? `/onboarding?tpl=${encodeURIComponent(tpl)}` : "/onboarding";
   }
+  if (next === "/dashboard/subscription") {
+    return "/dashboard/subscription";
+  }
   return undefined;
 }
 
-// Failed-upgrade return path: back to /pricing (where the checkout was
-// launched) with a visible error, keeping the post-payment context so the
-// user can retry in place. Never bounce through /dashboard, which would send
-// mid-onboarding users (no profile row yet) straight back to /onboarding.
+// Failed-upgrade return path: back to the page where the checkout was launched
+// with a visible error, keeping the post-payment context so the user can retry
+// in place. Onboarding upgrades crash back to /pricing (which hosts the CTA);
+// Chariow renewals crash back to /dashboard/subscription. Never bounce through
+// /dashboard, which would send mid-onboarding users (no profile row yet)
+// straight back to /onboarding.
 function checkoutFailedRedirect(next: string | undefined, tpl: string | undefined): string {
   const params = new URLSearchParams({ error: "checkout_failed" });
-  if (next === "/onboarding") params.set("next", next);
+  if (next === "/onboarding" || next === "/dashboard/subscription") params.set("next", next);
   if (tpl && /^[a-z0-9_-]+$/.test(tpl)) params.set("tpl", tpl);
-  return `/pricing?${params.toString()}`;
+  return next === "/dashboard/subscription"
+    ? `/dashboard/subscription?${params.toString()}`
+    : `/pricing?${params.toString()}`;
 }
 
 // Best-effort split of "Nom complet" into first/last name for Chariow.
@@ -268,7 +275,14 @@ export async function startSubscription(formData: FormData) {
   if (!user) redirect("/login");
 
   const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
-  if (isPro) redirect("/dashboard?success=already_pro");
+  // A Chariow license never auto-renews, so its holder is allowed to buy the
+  // next period even while still Pro. Whop plans auto-renew: block those.
+  const { data: existingSub } = await supabase
+    .from("subscriptions")
+    .select("provider")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+  if (isPro && existingSub?.provider !== "chariow") redirect("/dashboard?success=already_pro");
 
   const interval = (formData.get("interval") as string) ?? "monthly";
   if (!isBillingInterval(interval)) redirect(checkoutFailedRedirect(undefined, undefined));
@@ -379,11 +393,13 @@ export async function changeSubscription(formData: FormData) {
 
   const { data: sub } = await supabase
     .from("subscriptions")
-    .select("whop_membership_id, plan, status, current_period_end, pending_interval")
+    .select("whop_membership_id, plan, status, current_period_end, pending_interval, provider")
     .eq("profile_id", user.id)
     .maybeSingle();
 
-  if (!sub || sub.plan !== "pro" || sub.status !== "active" || !sub.whop_membership_id) {
+  // Plan switches are a Whop feature (deferred billing change on the
+  // recurring membership). Chariow licenses just expire; renew instead.
+  if (!sub || sub.plan !== "pro" || sub.status !== "active" || sub.provider === "chariow" || !sub.whop_membership_id) {
     redirect("/dashboard/subscription?error=switch_failed");
   }
 

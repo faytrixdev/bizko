@@ -54,6 +54,31 @@ export function isYearlyChariowProductConfigured(): boolean {
   return Boolean(process.env.CHARIOW_PRODUCT_ID_PRO_YEARLY);
 }
 
+/** License duration in days per billing interval. Chariow has no recurring
+ *  billing; a paid sale grants a fixed-length license that must be renewed
+ *  manually. */
+export const CHARIOW_LICENSE_DAYS: Record<BillingInterval, number> = {
+  monthly: 30,
+  yearly: 365,
+};
+
+/**
+ * Resolves the billing interval from the Chariow product that was actually
+ * purchased. Matched against the configured yearly product id; anything else
+ * (including the mandatory monthly product) resolves to monthly.
+ */
+export function resolveChariowInterval(productId?: string | null): BillingInterval {
+  if (productId && productId === process.env.CHARIOW_PRODUCT_ID_PRO_YEARLY) return "yearly";
+  return "monthly";
+}
+
+/** Chariow license expiry: `created` + the license duration for the interval. */
+export function chariowPeriodEnd(created: string | Date, interval: BillingInterval): string {
+  const base = typeof created === "string" ? new Date(created) : created;
+  const ms = CHARIOW_LICENSE_DAYS[interval] * 86_400_000;
+  return new Date(base.getTime() + ms).toISOString();
+}
+
 export class ChariowApiError extends Error {
   constructor(message: string, readonly status: number) {
     super(message);

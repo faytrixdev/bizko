@@ -7,13 +7,17 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
 import { changeSubscription, cancelPendingSwitch, finalizePendingSwitch } from "@/app/dashboard/actions";
 import { derivePlanInfo, subscriptionDisplay, type SubscriptionDisplay, type WhopMembership, type WhopPayment } from "@/lib/whop";
-import { SWITCH_GRACE_DAYS } from "@/lib/plans";
+import { PaymentMethodModal } from "@/components/payment/PaymentMethodModal";
+import { SWITCH_GRACE_DAYS, type BillingInterval } from "@/lib/plans";
 import { SwitchReminder } from "@/components/SwitchReminder";
 
 interface SubscriptionClientProps {
   isPro: boolean;
+  provider: "whop" | "chariow";
   missingMembership: boolean;
   membership: WhopMembership | null;
+  chariowInterval: BillingInterval | null;
+  chariowPeriodEnd: string | null;
   payments: WhopPayment[];
   error: string | null;
   yearlyAvailable: boolean;
@@ -48,8 +52,11 @@ const BADGE_KEYS: Record<SubscriptionDisplay, string> = {
 
 export function SubscriptionClient({
   isPro,
+  provider,
   missingMembership,
   membership,
+  chariowInterval,
+  chariowPeriodEnd,
   payments,
   error,
   yearlyAvailable,
@@ -61,6 +68,7 @@ export function SubscriptionClient({
   const { t, locale } = useI18n();
   const searchParams = useSearchParams();
   const [confirmTarget, setConfirmTarget] = useState<"monthly" | "yearly" | null>(null);
+  const [paymentOpen, setPaymentOpen] = useState(false);
 
   const errorCode = searchParams.get("error");
   const successCode = searchParams.get("success");
@@ -209,6 +217,59 @@ export function SubscriptionClient({
                   {t("subscription.subscribeBtn")}
                 </Link>
               )}
+            </div>
+          </div>
+        )}
+
+        {isPro && provider === "chariow" && chariowInterval && (
+          <div className="rounded-2xl border border-gray-200 p-5 mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${BADGE_STYLES.active}`}
+              >
+                {t("subscription.badgeActive")}
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm font-semibold text-gray-900">
+                  {t("subscription.plan")}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {chariowInterval === "yearly" ? t("subscription.periodYearly") : t("subscription.periodMonthly")}
+                </p>
+              </div>
+
+              <div className="text-2xl font-bold text-gray-900">
+                {t(chariowInterval === "yearly" ? "pricing.yearlyAmount" : "pricing.monthlyAmount")}
+              </div>
+
+              {chariowPeriodEnd && (
+                <div>
+                  <p className="text-xs text-gray-400 uppercase tracking-wide">
+                    {t("subscription.validUntil")}
+                  </p>
+                  <p className="text-sm text-gray-700 font-medium">{formatDate(chariowPeriodEnd, locale)}</p>
+                </div>
+              )}
+
+              <div>
+                <p className="text-xs text-gray-400 uppercase tracking-wide">
+                  {t("subscription.renews")}
+                </p>
+                <p className="text-sm text-gray-700 font-medium">{t("subscription.renewHint")}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-4 border-t border-gray-100">
+              <button
+                type="button"
+                onClick={() => setPaymentOpen(true)}
+                className="inline-flex items-center justify-center h-9 px-5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
+              >
+                {t("subscription.renewCta")}
+              </button>
             </div>
           </div>
         )}
@@ -363,8 +424,9 @@ export function SubscriptionClient({
           </div>
         )}
 
-        {/* Payment history */}
-        <div className="rounded-2xl border border-gray-200 p-5">
+        {/* Payment history (Whop only; Chariow records no per-payment rows) */}
+        {provider === "whop" && (
+          <div className="rounded-2xl border border-gray-200 p-5">
           <h2 className="text-sm font-semibold text-gray-900 mb-4">
             {t("subscription.history")}
           </h2>
@@ -419,7 +481,14 @@ export function SubscriptionClient({
             </div>
           )}
         </div>
+        )}
       </div>
+      <PaymentMethodModal
+        open={paymentOpen}
+        interval={chariowInterval ?? "monthly"}
+        next="/dashboard/subscription"
+        onClose={() => setPaymentOpen(false)}
+      />
     </div>
   );
 }

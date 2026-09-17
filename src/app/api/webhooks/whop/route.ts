@@ -30,6 +30,7 @@ type SubRow = {
   profile_id: string;
   plan: string;
   status: string;
+  provider?: string | null;
   whop_user_id?: string | null;
   whop_membership_id?: string | null;
   current_period_end?: string | null;
@@ -92,6 +93,9 @@ async function upsertActive(profileId: string, event: WhopEvent): Promise<void> 
     profile_id: profileId,
     plan: "pro",
     status: "active",
+    // Whop member.ends.com auto-renews, unlike a Chariow license: the row must
+    // leave the `chariow` expiry logic so the user keeps Pro after period end.
+    provider: "whop",
     whop_membership_id: typeof data.membership_id === "string" ? data.membership_id : undefined,
     whop_user_id: userId,
     current_period_end: currentPeriodEnd(data),

@@ -10,6 +10,7 @@ import {
   PLAN_COMPARISON,
   isUnlimited,
   isProPlan,
+  isProSubscription,
   getSwitchGraceInfo,
   SWITCH_GRACE_DAYS,
 } from "../plans";
@@ -150,6 +151,32 @@ describe("isProPlan", () => {
     expect(isProPlan("pro", "past_due")).toBe(false);
     expect(isProPlan(null, null)).toBe(false);
     expect(isProPlan(undefined, "active")).toBe(false);
+  });
+});
+
+describe("isProSubscription", () => {
+  const DAY = 86_400_000;
+  const future = new Date(Date.now() + DAY).toISOString();
+  const past = new Date(Date.now() - DAY).toISOString();
+
+  it("delegates plan/status checks like isProPlan", () => {
+    expect(isProSubscription({ plan: "pro", status: "active" })).toBe(true);
+    expect(isProSubscription({ plan: "free", status: "active" })).toBe(false);
+    expect(isProSubscription({ plan: "pro", status: "canceled" })).toBe(false);
+    expect(isProSubscription(null)).toBe(false);
+  });
+
+  it("treats a whop row as pro regardless of period", () => {
+    expect(isProSubscription({ plan: "pro", status: "active", provider: "whop", current_period_end: past })).toBe(true);
+  });
+
+  it("expires a chariow row once its locally-computed period has passed", () => {
+    expect(isProSubscription({ plan: "pro", status: "active", provider: "chariow", current_period_end: future })).toBe(true);
+    expect(isProSubscription({ plan: "pro", status: "active", provider: "chariow", current_period_end: past })).toBe(false);
+  });
+
+  it("keeps a chariow row pro when the period is unknown", () => {
+    expect(isProSubscription({ plan: "pro", status: "active", provider: "chariow", current_period_end: null })).toBe(true);
   });
 });
 

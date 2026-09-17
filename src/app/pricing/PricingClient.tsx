@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { PaymentMethodModal } from "@/components/payment/PaymentMethodModal";
 import { useI18n } from "@/lib/i18n/provider";
 import { PricingTable } from "./PricingTable";
-import { startSubscription } from "@/app/dashboard/actions";
+import type { BillingInterval } from "@/lib/plans";
 
 export type PricingCtaState = "guest" | "free" | "pro";
 
@@ -20,11 +21,13 @@ const RETURN_ALLOWED = new Set(["/onboarding"]);
 
 export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
   const { t } = useI18n();
+  const [paymentOpen, setPaymentOpen] = useState<BillingInterval | null>(null);
   const nextParam = next && RETURN_ALLOWED.has(next) ? next : undefined;
   const tplParam = tpl && /^[a-z0-9_-]+$/.test(tpl) ? tpl : undefined;
 
   return (
-    <main className="max-w-3xl mx-auto px-5 sm:px-8 pb-24">
+    <>
+      <main className="max-w-3xl mx-auto px-5 sm:px-8 pb-24">
       {/* Hero */}
       <section className="pt-28 pb-10 text-center sm:pt-36">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-display text-gray-900">
@@ -58,17 +61,13 @@ export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
             <p className="text-sm font-semibold text-gray-900">{t("pricing.cardMonthlyLabel")}</p>
             <p className="mt-2 text-2xl font-bold text-gray-900">{t("pricing.cardMonthlyPrice")}</p>
             {ctaState === "free" ? (
-              <form action={startSubscription} className="mt-6">
-                <input type="hidden" name="interval" value="monthly" />
-                {nextParam && <input type="hidden" name="next" value={nextParam} />}
-                {tplParam && <input type="hidden" name="tpl" value={tplParam} />}
-                <button
-                  type="submit"
-                  className="w-full h-10 rounded-xl border border-violet-300 bg-white text-violet-700 text-sm font-semibold hover:bg-violet-100 transition-colors"
-                >
-                  {t("pricing.cardMonthlyCta")}
-                </button>
-              </form>
+              <button
+                type="button"
+                onClick={() => setPaymentOpen("monthly")}
+                className="w-full h-10 rounded-xl border border-violet-300 bg-white text-violet-700 text-sm font-semibold hover:bg-violet-100 transition-colors"
+              >
+                {t("pricing.cardMonthlyCta")}
+              </button>
             ) : ctaState === "guest" ? (
               <Link
                 href="/signup?next=/pricing"
@@ -91,17 +90,13 @@ export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
             <p className="text-sm font-semibold text-gray-900">{t("pricing.cardYearlyLabel")}</p>
             <p className="mt-2 text-2xl font-bold text-gray-900">{t("pricing.cardYearlyPrice")}</p>
             {ctaState === "free" ? (
-              <form action={startSubscription} className="mt-6">
-                <input type="hidden" name="interval" value="yearly" />
-                {nextParam && <input type="hidden" name="next" value={nextParam} />}
-                {tplParam && <input type="hidden" name="tpl" value={tplParam} />}
-                <button
-                  type="submit"
-                  className="w-full h-10 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
-                >
-                  {t("pricing.cardYearlyCta")}
-                </button>
-              </form>
+              <button
+                type="button"
+                onClick={() => setPaymentOpen("yearly")}
+                className="w-full h-10 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors"
+              >
+                {t("pricing.cardYearlyCta")}
+              </button>
             ) : ctaState === "guest" ? (
               <Link
                 href="/signup?next=/pricing"
@@ -120,6 +115,14 @@ export function PricingClient({ ctaState, next, tpl }: PricingClientProps) {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+      <PaymentMethodModal
+        open={paymentOpen !== null}
+        interval={paymentOpen ?? "monthly"}
+        next={nextParam}
+        tpl={tplParam}
+        onClose={() => setPaymentOpen(null)}
+      />
+    </>
   );
 }

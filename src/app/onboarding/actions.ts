@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PUBLIC_PROFILES_TAG } from "@/lib/supabase/queries";
 import { RESERVED_USERNAMES } from "@/lib/reservedUsernames";
 import { trackEvent } from "@/lib/analytics";
+import { clearRefCookie, readRefCookie, recordReferral } from "@/lib/partner/attribution";
 import { canUseTemplate } from "@/lib/template-config";
 import { isValidUsername } from "@/lib/validators";
 import { normalizePhoneE164 } from "@/lib/utils";
@@ -78,6 +79,13 @@ export async function completeOnboarding(formData: FormData) {
     }
 
     await trackEvent("profile_completed", { pagePath: "/onboarding" });
+
+    // Partner referral attribution: lock the partner once, attributes are final.
+    const refCookie = await readRefCookie();
+    if (refCookie) {
+      await recordReferral({ client: supabase, userId: user.id, ref: refCookie.ref, source: refCookie.source });
+      await clearRefCookie();
+    }
 
     if (service_title) {
       const { error: serviceError } = await supabase.from("services").insert({

@@ -24,7 +24,7 @@ export async function readRefCookie(): Promise<{ ref: string; source: ReferralSo
 /** Clears the referral cookie. */
 export async function clearRefCookie(): Promise<void> {
   const store = await cookies();
-  store.set({ name: REF_COOKIE_NAME, value: "", maxAge: 0 });
+  store.set({ name: REF_COOKIE_NAME, value: "", maxAge: 0, path: "/" });
 }
 
 /**
@@ -48,7 +48,8 @@ export async function recordReferral(args: {
       source: args.source,
     });
     return { recorded: !error };
-  } catch {
+  } catch (err) {
+    console.error("partner referral attribution failed:", err);
     return { recorded: false };
   }
 }

@@ -81,10 +81,15 @@ export async function completeOnboarding(formData: FormData) {
     await trackEvent("profile_completed", { pagePath: "/onboarding" });
 
     // Partner referral attribution: lock the partner once, attributes are final.
-    const refCookie = await readRefCookie();
-    if (refCookie) {
-      await recordReferral({ client: supabase, userId: user.id, ref: refCookie.ref, source: refCookie.source });
-      await clearRefCookie();
+    // Best-effort — must never prevent the onboarding redirect.
+    try {
+      const refCookie = await readRefCookie();
+      if (refCookie) {
+        await recordReferral({ client: supabase, userId: user.id, ref: refCookie.ref, source: refCookie.source });
+        await clearRefCookie();
+      }
+    } catch (err) {
+      console.error("onboarding referral attribution failed:", err);
     }
 
     if (service_title) {

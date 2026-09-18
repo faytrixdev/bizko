@@ -38,8 +38,19 @@ describe("recordReferral", () => {
   });
 
   it("never throws (attribution is best-effort)", async () => {
-    const broken = { rpc: vi.fn(async () => ({ data: null, error: new Error("db") })) } as never;
+    const broken = { rpc: vi.fn(async () => { throw new Error("db") }) } as never;
     const result = await recordReferral({ client: broken, userId: "u1", ref: "x_y", source: "partner_link" });
     expect(result).toEqual({ recorded: false });
+  });
+
+  it("reports not recorded when the insert rejects (concurrent duplicate)", async () => {
+    const insert = vi.fn(async () => ({ error: new Error("duplicate") }));
+    const client = {
+      rpc: vi.fn(async () => ({ data: "p1", error: null })),
+      from: (table: string) => ({ insert: table === "referrals" ? insert : null }),
+    } as unknown as StubClient;
+    const result = await recordReferral({ client, userId: "u1", ref: "x_y", source: "partner_link" });
+    expect(result).toEqual({ recorded: false });
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ partner_id: "p1" }));
   });
 });

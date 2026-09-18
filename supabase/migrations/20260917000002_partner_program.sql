@@ -44,6 +44,23 @@ $$;
 
 grant execute on function public.is_active_partner(uuid) to anon, authenticated;
 
+-- get_active_partner_by_code: security-definer lookup by partner_code so the
+-- onboarding attribution works even for partners hidden by the profiles SELECT
+-- policy (is_public = false). Returns the partner id, or null when inactive.
+create or replace function public.get_active_partner_by_code(p_code text)
+returns uuid
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select id from public.profiles
+  where partner_code = p_code and is_partner
+  limit 1;
+$$;
+
+grant execute on function public.get_active_partner_by_code(text) to anon, authenticated;
+
 create policy "Partner can view their referrals"
   on public.referrals for select
   using (partner_id = auth.uid());

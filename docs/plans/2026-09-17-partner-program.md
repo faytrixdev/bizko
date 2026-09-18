@@ -52,7 +52,7 @@ describe("partner tracking utils", () => {
 
   it("builds a referral link with optional source", () => {
     expect(buildReferralLink("faytrix_x8k2")).toContain("ref=faytrix_x8k2");
-    expect(buildReferralLink("faytrix_x8k2", "profile")).toContain("source=profile");
+    expect(buildReferralLink("faytrix_x8k2", "partner_profile")).toContain("source=profile");
   });
 
   it("serializes and parses the ref cookie value", () => {
@@ -101,10 +101,12 @@ export function generatePartnerCode(username: string): string {
 }
 
 export function buildReferralLink(code: string, source?: ReferralSource): string {
-  const url = new URL("/", process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
-  url.searchParams.set("ref", code);
-  if (source) url.searchParams.set("source", source);
-  return url.toString();
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+  const params = new URLSearchParams({ ref: code });
+  if (source === "partner_profile") {
+    params.set("source", "profile");
+  }
+  return `${base}/?${params.toString()}`;
 }
 
 export function serializeRefCookieValue(v: RefCookieValue): string {
@@ -257,6 +259,11 @@ export function pickCommissionsFifo(
 
 Note: `pickCommissionsFifo` requires the sum to match exactly (the partner requests their exact available balance). If it returns `[]`, the caller must not mark the payout paid.
 
+> **FLOW GUARDS (read before Tasks 10 & 13):** the partial-cover branch pushes a covering commission but only banks `remain`, so the returned list's `reduce(sum)` can exceed the requested `amount` (e.g. amount 1000 → `[c1]` with c1=1500). Nothing can detect that overshoot from inside the helper, so the flows MUST guard:
+> 1. **Task 10 payout request action:** compute `pickCommissionsFifo(approved, requested)`; reject the request unless it returns non-empty AND `picked.reduce((s,c)=>s+c.amount,0) === requested`. This makes every pending payout closable exactly.
+> 2. **Task 13 `markPayoutPaid`:** before stamping any commission, recompute the same covered-check against the payout amount; if `covered !== payout.amount`, reject and mark NOTHING paid.
+> 3. **Task 10 TOCTOU:** re-check the recomputed available balance *after* inserting the pending payout (or wrap in a single transaction) so two concurrent requests cannot oversubscribe the pool.
+
 **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run src/lib/__tests__/partner.commissions.test.ts`
@@ -285,7 +292,8 @@ git commit -m "feat(partners): commission math, balance and FIFO payout selectio
 -- profiles: partner identity (no expiry; Pro is granted purely by is_partner)
 alter table public.profiles
   add column is_partner boolean not null default false,
-  add column partner_code text,
+  add column partner_code text
+    check (partner_code is null or partner_code ~ '^[a-z0-9_]{3,60}_[a-z0-9]{4,8}$'),
   add column commission_rate integer not null default 30
     check (commission_rate between 1 and 100);
 
@@ -306,6 +314,24 @@ create index idx_referrals_partner on public.referrals(partner_id);
 
 alter table public.referrals enable row level security;
 
+-- is_active_partner: security-definer helper so RLS policies (and later the app
+-- lookup) can check partner status even for profiles hidden by the profiles
+-- SELECT policy (is_public = false). Avoids policy recursion on public.profiles.
+create or replace function public.is_active_partner(p_profile_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = p_profile_id and is_partner
+  );
+$$;
+
+grant execute on function public.is_active_partner(uuid) to anon, authenticated;
+
 create policy "Partner can view their referrals"
   on public.referrals for select
   using (partner_id = auth.uid());
@@ -315,7 +341,7 @@ create policy "Referred user attributes themselves once"
   with check (
     referred_user_id = auth.uid()
     and partner_id <> referred_user_id
-    and exists (select 1 from public.profiles p where p.id = partner_id and p.is_partner)
+    and public.is_active_partner(partner_id)
   );
 
 -- payments: one row per confirmed provider payment. Idempotency anchor.
@@ -324,7 +350,7 @@ create table public.payments (
   profile_id uuid not null references auth.users(id) on delete cascade,
   provider text not null check (provider in ('whop','chariow')),
   provider_payment_id text not null unique,
-  amount integer not null,
+  amount integer not null check (amount > 0),
   currency text not null default 'XOF',
   interval text not null default 'monthly' check (interval in ('monthly','yearly')),
   plan text not null default 'pro',
@@ -357,7 +383,8 @@ create table public.payouts (
   details text,
   status text not null default 'pending' check (status in ('pending','paid','rejected')),
   created_at timestamptz not null default now(),
-  paid_at timestamptz
+  paid_at timestamptz,
+  check ((status = 'paid') = (paid_at is not null))
 );
 
 create index idx_payouts_partner on public.payouts(partner_id);
@@ -371,15 +398,15 @@ create policy "Partner can view their payouts"
 
 create policy "Partner can request their payouts"
   on public.payouts for insert
-  with check (partner_id = auth.uid());
+  with check (partner_id = auth.uid() and public.is_active_partner(partner_id));
 
 -- commissions: one per payment, created by webhooks, linked to a payout when paid.
 create table public.commissions (
   id uuid primary key default gen_random_uuid(),
-  partner_id uuid not null references public.profiles(id) on delete cascade,
-  referred_user_id uuid not null references public.profiles(id) on delete cascade,
-  payment_id uuid not null unique references public.payments(id) on delete cascade,
-  amount integer not null,
+  partner_id uuid not null references public.profiles(id) on delete restrict,
+  referred_user_id uuid not null references public.profiles(id) on delete restrict,
+  payment_id uuid not null unique references public.payments(id) on delete restrict,
+  amount integer not null check (amount > 0),
   status text not null default 'approved' check (status in ('pending','approved','paid')),
   payout_id uuid references public.payouts(id) on delete set null,
   created_at timestamptz not null default now()

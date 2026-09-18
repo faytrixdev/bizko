@@ -24,12 +24,13 @@ describe("partner tracking utils", () => {
 
   it("builds a referral link with optional source", () => {
     expect(buildReferralLink("faytrix_x8k2")).toContain("ref=faytrix_x8k2");
-    expect(buildReferralLink("faytrix_x8k2", "profile")).toContain("source=profile");
+    expect(buildReferralLink("faytrix_x8k2", "partner_profile")).toContain("source=profile");
+    expect(buildReferralLink("faytrix_x8k2", "partner_link")).not.toContain("source");
   });
 
   it("serializes and parses the ref cookie value", () => {
     const cookie = serializeRefCookieValue({ ref: "faytrix_x8k2", source: "partner_profile" });
-    expect(cookie).toContain("faytrix_x8k2");
+    expect(cookie).toBe("faytrix_x8k2|partner_profile");
     expect(parseRefCookieValue(cookie)).toEqual({ ref: "faytrix_x8k2", source: "partner_profile" });
     expect(parseRefCookieValue("garbage")).toBeNull();
     expect(parseRefCookieValue("")).toBeNull();

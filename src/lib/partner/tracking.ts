@@ -4,6 +4,8 @@ export const REF_COOKIE_NAME = "bizko_ref";
 
 export type ReferralSource = "partner_link" | "partner_profile";
 
+export type RefCookieValue = { ref: string; source: ReferralSource };
+
 export const PARTNER_CODE_PATTERN = /^[a-z0-9_]{3,60}_[a-z0-9]{4,8}$/;
 
 export function isValidRefCode(code: string): boolean {
@@ -20,22 +22,20 @@ export function generatePartnerCode(username: string): string {
   return `${slug}_${suffix}`;
 }
 
-export function buildReferralLink(code: string, source?: "link" | "profile"): string {
+export function buildReferralLink(code: string, source?: ReferralSource): string {
   const base = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
   const params = new URLSearchParams({ ref: code });
-  if (source === "profile") {
+  if (source === "partner_profile") {
     params.set("source", "profile");
   }
   return `${base}/?${params.toString()}`;
 }
 
-export function serializeRefCookieValue(v: { ref: string; source: ReferralSource }): string {
+export function serializeRefCookieValue(v: RefCookieValue): string {
   return `${v.ref}|${v.source}`;
 }
 
-export function parseRefCookieValue(
-  raw?: string | null
-): { ref: string; source: ReferralSource } | null {
+export function parseRefCookieValue(raw?: string | null): RefCookieValue | null {
   if (!raw) return null;
   const [refPart, sourcePart] = raw.split("|");
   if (!refPart || !isValidRefCode(refPart)) return null;

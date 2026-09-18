@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buildWaLink, buildMainWaMessage } from "@/lib/utils";
+import { buildReferralLink } from "@/lib/partner/tracking";
 import { getTemplate } from "@/lib/templates";
 import type { Messages } from "@/lib/i18n/messages";
 import type { PublicProfileData } from "@/lib/supabase/queries";
@@ -32,6 +33,11 @@ export function ProfileView({
   const trackClick = (type: string, to: string) =>
     `/api/track-click?pid=${pid}&type=${type}&to=${encodeURIComponent(to)}`;
 
+  const madeWithHref =
+    profile.is_partner && profile.partner_code
+      ? buildReferralLink(profile.partner_code, "partner_profile")
+      : "/";
+
   const props: TemplateProps = {
     profile,
     services,
@@ -53,7 +59,7 @@ export function ProfileView({
 
         <p className={`text-center text-xs mt-12 ${template.bgClass === "bg-[#0B0B0F]" ? "text-white/30" : "text-gray-400"}`}>
           {msg.profile.madeWith}{" "}
-          <Link href="/" className="font-medium text-accent">
+          <Link href={madeWithHref} className="font-medium text-accent">
             Bizko
           </Link>{" "}
           - bizko.pro/{profile.username}

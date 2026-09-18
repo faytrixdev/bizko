@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { ProfileView } from "../ProfileView";
 import type { Messages } from "@/lib/i18n/messages";
+import type { Profile } from "@/types/database";
 
 vi.mock("@/lib/supabase/client", () => ({
   createClient: () => ({ rpc: () => Promise.resolve({ error: null }) }),
@@ -49,11 +50,28 @@ function props(template = "studio") {
   };
 }
 
+function renderProfileView(profileOverrides: Partial<Profile> = {}) {
+  const base = props();
+  return render(<ProfileView {...base} profile={{ ...base.profile, ...profileOverrides }} />);
+}
+
 describe("ProfileView", () => {
   it("renders the resolved template and tracked CTA", () => {
     render(<ProfileView {...props("studio")} />);
     expect(screen.getByText("Awa Konaté")).toBeInTheDocument();
     const wa = screen.getAllByRole("link").find((a) => (a as HTMLAnchorElement).getAttribute("href")?.includes("api/track-click"));
     expect(wa).toBeTruthy();
+  });
+
+  it("points the Bizko link at the referral URL when the owner is a partner", () => {
+    const view = renderProfileView({ is_partner: true, partner_code: "faytrix_x8k2" });
+    const link = view.container.querySelector('a[href*="ref=faytrix_x8k2"]');
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute("href")).toContain("source=profile");
+  });
+
+  it("keeps a plain home link for non-partners", () => {
+    const view = renderProfileView({});
+    expect(view.container.querySelector('a[href="/"]')).not.toBeNull();
   });
 });

@@ -11,6 +11,9 @@ export interface Profile {
   template: string;
   locale: string;
   avatar_url: string | null;
+  is_partner?: boolean;
+  partner_code?: string | null;
+  commission_rate?: number | null;
 }
 
 export interface Service {

@@ -67,11 +67,13 @@ describe("ProfileView", () => {
     const view = renderProfileView({ is_partner: true, partner_code: "faytrix_x8k2" });
     const link = view.container.querySelector('a[href*="ref=faytrix_x8k2"]');
     expect(link).not.toBeNull();
+    expect(link?.textContent).toBe("Bizko");
     expect(link?.getAttribute("href")).toContain("source=profile");
   });
 
   it("keeps a plain home link for non-partners", () => {
     const view = renderProfileView({});
-    expect(view.container.querySelector('a[href="/"]')).not.toBeNull();
+    const link = view.container.querySelector('a[href="/"]');
+    expect(link?.textContent).toBe("Bizko");
   });
 });

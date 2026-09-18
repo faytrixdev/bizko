@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { REF_COOKIE_NAME, isValidRefCode, serializeRefCookieValue } from "@/lib/partner/tracking";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -19,6 +20,23 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(
       new URL(`/auth/callback?code=${encodeURIComponent(code)}`, request.url)
     );
+  }
+
+  // Partner referral attribution: capture ?ref= on the landing page into a
+  // HttpOnly cookie that survives multi-page navigation until account creation.
+  if (pathname === "/") {
+    const ref = url.searchParams.get("ref") ?? "";
+    if (isValidRefCode(ref) && !request.cookies.has(REF_COOKIE_NAME)) {
+      const source = url.searchParams.get("source") === "profile" ? "partner_profile" : "partner_link";
+      const res = NextResponse.redirect(new URL("/", request.url));
+      res.cookies.set(REF_COOKIE_NAME, serializeRefCookieValue({ ref, source }), {
+        maxAge: 60 * 60 * 24 * 30,
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      });
+      return res;
+    }
   }
 
   const publicRoutes = [

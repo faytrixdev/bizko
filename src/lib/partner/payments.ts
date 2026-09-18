@@ -16,7 +16,7 @@ interface QueryResult {
 }
 
 /** ADMIN/authenticated Supabase client contract used by this module. */
-interface AdminClient {
+export interface AdminClient {
   from(table: string): {
     select(columns: string): {
       eq(column: string, value: string): {

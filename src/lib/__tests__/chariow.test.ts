@@ -9,6 +9,8 @@ import {
   CHARIOW_LICENSE_DAYS,
   isYearlyChariowProductConfigured,
   localizePhone,
+  extractSaleAmount,
+  getSale,
 } from "../chariow";
 
 const ENV_BACKUP = { ...process.env };
@@ -241,5 +243,27 @@ describe("verifyPulse", () => {
   it("throws when the pulse secret is not configured", () => {
     const body = JSON.stringify({ event: "successful.sale" });
     expect(() => verifyPulse({}, body, "")).toThrow("CHARIOW_PULSE_SECRET is not configured");
+  });
+});
+
+describe("sale amount extraction + lookup", () => {
+  function mockFetch(mock: ReturnType<typeof vi.fn>) {
+    globalThis.fetch = mock as unknown as typeof fetch;
+    return mock;
+  }
+
+  it("extractSaleAmount returns total/amount and null when missing", () => {
+    expect(extractSaleAmount({ total: 5000 })).toEqual({ amount: 5000, currency: "XOF" });
+    expect(extractSaleAmount({ amount: 5000 })).toEqual({ amount: 5000, currency: "XOF" });
+    expect(extractSaleAmount({ id: "s1" })).toBeNull();
+  });
+
+  it("getSale calls GET /sales/s1 and resolves to the payload data", async () => {
+    process.env.CHARIOW_API_KEY = "sk_test";
+    mockFetch(vi.fn(async () => new Response(JSON.stringify({ data: { id: "s1", total: 5000 } }), { status: 200 })));
+    await expect(getSale("s1")).resolves.toEqual({ id: "s1", total: 5000 });
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining("/sales/s1"), expect.objectContaining({ headers: expect.objectContaining({ Authorization: expect.stringContaining("Bearer") }) }));
+    mockFetch(vi.fn(async () => new Response("nope", { status: 404 })));
+    await expect(getSale("s1")).resolves.toBeNull();
   });
 });

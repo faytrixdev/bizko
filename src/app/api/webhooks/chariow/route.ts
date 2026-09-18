@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPulse, resolveChariowInterval, chariowPeriodEnd } from "@/lib/chariow";
+import { verifyPulse, resolveChariowInterval, chariowPeriodEnd, extractSaleAmount, getSale } from "@/lib/chariow";
+import { handleConfirmedPayment, type AdminClient } from "@/lib/partner/payments";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // Service-role writes bypass RLS; signature verification is the only gate.
@@ -105,6 +106,29 @@ export async function applyPulse({ deliveryId, event, payload }: PulseArgs): Pro
         sale_id: saleId ?? null,
         profile_id: profileId,
       });
+    }
+
+    // Payment ledger + partner commission (idempotent).
+    let amountInfo = extractSaleAmount(sale);
+    if (!amountInfo && saleId) {
+      const fetched = await getSale(saleId);
+      amountInfo = fetched && fetched.total != null ? { amount: fetched.total, currency: fetched.currency ?? "XOF" } : null;
+    }
+    if (amountInfo && profileId) {
+      await handleConfirmedPayment({
+        client: admin as unknown as AdminClient,
+        seed: {
+          profileId,
+          provider: "chariow",
+          providerPaymentId: saleId ?? `sale_${Date.now()}`,
+          amount: amountInfo.amount,
+          currency: amountInfo.currency,
+          interval,
+          plan: "pro",
+        },
+      });
+    } else {
+      console.warn("[chariow-webhook] successful.sale without a resolvable amount; no payment/commission recorded");
     }
   } else if (event === "failed.sale" || event === "abandoned.sale") {
     if (deliveryId) {

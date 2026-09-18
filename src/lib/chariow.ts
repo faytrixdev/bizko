@@ -171,3 +171,36 @@ export function verifyPulse(headers: Headers, rawBody: string, secret: string): 
   }
   return JSON.parse(rawBody) as Record<string, unknown>;
 }
+
+export interface ChariowSale {
+  id?: string;
+  total?: number;
+  amount?: number;
+  currency?: string;
+  status?: string;
+  product?: { id?: string } | null;
+  product_id?: string;
+}
+
+/** Fetches a Chariow sale by id (fallback when the webhook payload lacks the amount). */
+export async function getSale(saleId: string): Promise<ChariowSale | null> {
+  const apiKey = process.env.CHARIOW_API_KEY;
+  if (!apiKey) throw new ChariowApiError("Chariow not configured", 500);
+  const res = await fetch(`${BASE_URL}/sales/${saleId}`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+  if (!res.ok) {
+    if (res.status === 404) return null;
+    throw new ChariowApiError(`Chariow GET /sales failed (${res.status})`, res.status);
+  }
+  const json = (await res.json()) as { data?: ChariowSale };
+  return json.data ?? null;
+}
+
+/** Best-effort amount from a Chariow sale payload; returns null when unknown. */
+export function extractSaleAmount(sale: Record<string, unknown>): { amount: number; currency: string } | null {
+  const candidates = [sale.total, sale.amount, (sale.purchase as Record<string, unknown> | undefined)?.total];
+  const amount = candidates.find((c): c is number => typeof c === "number");
+  const currency = typeof sale.currency === "string" ? sale.currency : "XOF";
+  return amount === undefined ? null : { amount, currency: currency.toUpperCase() };
+}

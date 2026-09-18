@@ -4,7 +4,8 @@
 -- profiles: partner identity (no expiry; Pro is granted purely by is_partner)
 alter table public.profiles
   add column is_partner boolean not null default false,
-  add column partner_code text,
+  add column partner_code text
+    check (partner_code is null or partner_code ~ '^[a-z0-9_]{3,60}_[a-z0-9]{4,8}$'),
   add column commission_rate integer not null default 30
     check (commission_rate between 1 and 100);
 
@@ -25,6 +26,24 @@ create index idx_referrals_partner on public.referrals(partner_id);
 
 alter table public.referrals enable row level security;
 
+-- is_active_partner: security-definer helper so RLS policies (and later the app
+-- lookup) can check partner status even for profiles hidden by the profiles
+-- SELECT policy (is_public = false). Avoids policy recursion on public.profiles.
+create or replace function public.is_active_partner(p_profile_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = p_profile_id and is_partner
+  );
+$$;
+
+grant execute on function public.is_active_partner(uuid) to anon, authenticated;
+
 create policy "Partner can view their referrals"
   on public.referrals for select
   using (partner_id = auth.uid());
@@ -34,7 +53,7 @@ create policy "Referred user attributes themselves once"
   with check (
     referred_user_id = auth.uid()
     and partner_id <> referred_user_id
-    and exists (select 1 from public.profiles p where p.id = partner_id and p.is_partner)
+    and public.is_active_partner(partner_id)
   );
 
 -- payments: one row per confirmed provider payment. Idempotency anchor.
@@ -43,7 +62,7 @@ create table public.payments (
   profile_id uuid not null references auth.users(id) on delete cascade,
   provider text not null check (provider in ('whop','chariow')),
   provider_payment_id text not null unique,
-  amount integer not null,
+  amount integer not null check (amount > 0),
   currency text not null default 'XOF',
   interval text not null default 'monthly' check (interval in ('monthly','yearly')),
   plan text not null default 'pro',
@@ -76,7 +95,8 @@ create table public.payouts (
   details text,
   status text not null default 'pending' check (status in ('pending','paid','rejected')),
   created_at timestamptz not null default now(),
-  paid_at timestamptz
+  paid_at timestamptz,
+  check ((status = 'paid') = (paid_at is not null))
 );
 
 create index idx_payouts_partner on public.payouts(partner_id);
@@ -90,15 +110,15 @@ create policy "Partner can view their payouts"
 
 create policy "Partner can request their payouts"
   on public.payouts for insert
-  with check (partner_id = auth.uid());
+  with check (partner_id = auth.uid() and public.is_active_partner(partner_id));
 
 -- commissions: one per payment, created by webhooks, linked to a payout when paid.
 create table public.commissions (
   id uuid primary key default gen_random_uuid(),
-  partner_id uuid not null references public.profiles(id) on delete cascade,
-  referred_user_id uuid not null references public.profiles(id) on delete cascade,
-  payment_id uuid not null unique references public.payments(id) on delete cascade,
-  amount integer not null,
+  partner_id uuid not null references public.profiles(id) on delete restrict,
+  referred_user_id uuid not null references public.profiles(id) on delete restrict,
+  payment_id uuid not null unique references public.payments(id) on delete restrict,
+  amount integer not null check (amount > 0),
   status text not null default 'approved' check (status in ('pending','approved','paid')),
   payout_id uuid references public.payouts(id) on delete set null,
   created_at timestamptz not null default now()

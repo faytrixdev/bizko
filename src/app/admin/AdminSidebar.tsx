@@ -13,6 +13,7 @@ import {
   Users,
   Globe,
   Smartphone,
+  Handshake,
   ArrowLeft,
   X,
 } from "lucide-react";
@@ -27,6 +28,7 @@ const NAV_ITEMS = [
   { href: "/admin/retention", label: "Rétention", icon: Users },
   { href: "/admin/audience", label: "Audience", icon: Globe },
   { href: "/admin/technology", label: "Technologie", icon: Smartphone },
+  { href: "/admin/partners", label: "Partenaires", icon: Handshake },
 ];
 
 export function AdminSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {

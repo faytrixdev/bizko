@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyWebhook, WhopEvent } from "@/lib/whop";
+import { verifyWebhook, WhopEvent, extractWhopAmount, getPayment, listMembershipPayments, derivePlanInfo } from "@/lib/whop";
+import { handleConfirmedPayment, type AdminClient } from "@/lib/partner/payments";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // Service-role writes bypass RLS; the signature check above is the only gate.
@@ -113,6 +114,35 @@ async function applyEvent(event: WhopEvent): Promise<void> {
       const profileId = await resolveProfileId(event);
       if (!profileId) return; // no checkout metadata + no prior row; nothing to map
       await upsertActive(profileId, event);
+
+      // Payment ledger + partner commission (idempotent).
+      const data = (event.data ?? {}) as Record<string, unknown>;
+      let amountInfo = extractWhopAmount(data);
+      if (!amountInfo) {
+        const paymentId = typeof data.id === "string" ? data.id : event.id;
+        const membershipId = typeof data.membership_id === "string" ? data.membership_id
+          : (data.member as { membership?: { id?: string } } | undefined)?.membership?.id;
+        const fallback = paymentId
+          ? (await getPayment(paymentId)) ?? (membershipId ? (await listMembershipPayments(membershipId)).find((p) => p.id === paymentId) ?? null : null)
+          : null;
+        if (fallback && fallback.total != null) amountInfo = { amount: fallback.total, currency: fallback.currency ?? "XOF" };
+      }
+      if (amountInfo && profileId) {
+        const paymentId = typeof data.id === "string" ? data.id : event.id;
+        const intervalRaw = typeof data.plan_id === "string" ? data.plan_id : undefined;
+        await handleConfirmedPayment({
+          client: supabase() as unknown as AdminClient,
+          seed: {
+            profileId,
+            provider: "whop",
+            providerPaymentId: paymentId,
+            amount: amountInfo.amount,
+            currency: amountInfo.currency,
+            interval: derivePlanInfo(intervalRaw).period,
+            plan: "pro",
+          },
+        });
+      }
       break;
     }
     case "membership.activated": {

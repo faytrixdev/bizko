@@ -291,6 +291,33 @@ export async function listMembershipPayments(membershipId: string): Promise<Whop
   return data.data ?? [];
 }
 
+/**
+ * Fetches a single Whop payment by id (fallback when the webhook payload lacks the amount).
+ */
+export async function getPayment(paymentId: string): Promise<WhopPayment | null> {
+  const apiKey = process.env.WHOP_API_KEY;
+  if (!apiKey) throw new WhopApiError("Whop not configured", 500);
+  const res = await fetch(`${BASE_URL}/payments/${paymentId}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+  if (!res.ok) {
+    if (res.status === 404) return null;
+    throw new WhopApiError(`Whop GET /payments/${paymentId} failed (${res.status})`, res.status);
+  }
+  return (await res.json()) as WhopPayment;
+}
+
+/**
+ * Best-effort amount from a Whop payment event payload; XOF has zero decimals.
+ */
+export function extractWhopAmount(data: Record<string, unknown>): { amount: number; currency: string } | null {
+  const raw = data.amount ?? data.total ?? (data.payment as Record<string, unknown> | undefined)?.total;
+  const amount = typeof raw === "number" ? raw : typeof raw === "string" && /^\d+$/.test(raw) ? Number(raw) : null;
+  const currency = typeof data.currency === "string" ? data.currency.toUpperCase() : "XOF";
+  return amount === null ? null : { amount, currency };
+}
+
 export function derivePlanInfo(planId?: string | null): { period: "monthly" | "yearly" } {
   if (planId && process.env.WHOP_PLAN_ID_PRO_YEARLY && planId === process.env.WHOP_PLAN_ID_PRO_YEARLY) {
     return { period: "yearly" };

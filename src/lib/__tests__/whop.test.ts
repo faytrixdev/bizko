@@ -1,6 +1,6 @@
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { createHmac } from "crypto";
-import { resolveProPlanId, isYearlyProPlanConfigured, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay, findMembershipByCheckout } from "../whop";
+import { resolveProPlanId, isYearlyProPlanConfigured, verifyWebhook, createCheckoutConfig, getMembership, cancelMembership, uncancelMembership, listMembershipPayments, derivePlanInfo, subscriptionDisplay, findMembershipByCheckout, extractWhopAmount, getPayment } from "../whop";
 
 const ENV_BACKUP = { ...process.env };
 
@@ -546,5 +546,49 @@ describe("findMembershipByCheckout", () => {
     process.env.WHOP_PLAN_ID_PRO = "plan_monthly";
 
     await expect(findMembershipByCheckout("ch_x")).rejects.toMatchObject({ status: 403 });
+  });
+});
+
+describe("extractWhopAmount / getPayment", () => {
+  type FetchLike = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
+
+  it("extractWhopAmount uppercases the currency from the payload", () => {
+    expect(extractWhopAmount({ amount: 5000, currency: "xof" })).toEqual({ amount: 5000, currency: "XOF" });
+  });
+
+  it("extractWhopAmount returns null when no amount is present", () => {
+    expect(extractWhopAmount({})).toBeNull();
+  });
+
+  it("getPayment GETs /payments/pay_1 and returns the payment object", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({
+        ok: true,
+        status: 200,
+        json: async () => ({ id: "pay_1", total: 5000, currency: "xof" }),
+      }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    const payment = await getPayment("pay_1");
+
+    const calledUrl = String(mock.mock.calls[0][0]);
+    expect(calledUrl).toContain("/payments/pay_1");
+    expect(mock).toHaveBeenCalledWith(
+      expect.stringContaining("/payments/pay_1"),
+      expect.objectContaining({ method: "GET" })
+    );
+    expect(payment).toMatchObject({ id: "pay_1", total: 5000 });
+  });
+
+  it("getPayment returns null on a 404", async () => {
+    const mock = vi.fn<FetchLike>(async () =>
+      ({ ok: false, status: 404, json: async () => ({}) }) as unknown as Response
+    );
+    globalThis.fetch = mock as unknown as typeof fetch;
+    process.env.WHOP_API_KEY = "apik_test";
+
+    await expect(getPayment("pay_missing")).resolves.toBeNull();
   });
 });

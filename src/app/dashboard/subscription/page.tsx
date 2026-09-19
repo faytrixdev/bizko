@@ -5,6 +5,7 @@ import { isProSubscription, getSwitchGraceInfo, type BillingInterval } from "@/l
 import { resolveChariowInterval } from "@/lib/chariow";
 import { getMembership, listMembershipPayments, findMembershipByCheckout, isYearlyProPlanConfigured, type WhopMembership, type WhopPayment } from "@/lib/whop";
 import { SubscriptionClient } from "./SubscriptionClient";
+import { PartnerProCard } from "./PartnerProCard";
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +42,12 @@ export default async function SubscriptionPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase.from("profiles").select("id").eq("id", user.id).single();
+  const { data: profile } = await supabase.from("profiles").select("id, is_partner").eq("id", user.id).single();
   if (!profile) redirect("/onboarding");
+
+  if (profile.is_partner) {
+    return <PartnerProCard />;
+  }
 
   const { data: subRes } = await supabase
     .from("subscriptions")

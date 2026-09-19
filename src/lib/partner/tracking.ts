@@ -1,5 +1,3 @@
-import { randomBytes } from "node:crypto";
-
 export const REF_COOKIE_NAME = "bizko_ref";
 
 export type ReferralSource = "partner_link" | "partner_profile";
@@ -18,7 +16,9 @@ export function generatePartnerCode(username: string): string {
     .replace(/[^a-z0-9_]/g, "_")
     .replace(/_+/g, "_")
     .slice(0, 30);
-  const suffix = randomBytes(3).toString("hex");
+  const bytes = new Uint8Array(3);
+  crypto.getRandomValues(bytes);
+  const suffix = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
   return `${slug}_${suffix}`;
 }
 

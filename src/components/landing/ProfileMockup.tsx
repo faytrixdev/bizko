@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { getTemplate } from "@/lib/templates";
 import { DEMO_FIXTURES } from "@/app/demo/fixtures";
 import type { TemplateProps } from "@/components/templates/types";
@@ -10,11 +11,15 @@ interface ProfileMockupProps {
   demo: Template;
   /** Sections à afficher : full = tout, detailed = header + services. */
   variant?: "full" | "detailed";
-  /** Coque mobile réaliste (hero) : dimensions iPhone fixes + scroll interne. */
+  /**
+   * Coque mobile réaliste (hero) : dimensions fixes + scroll-jack.
+   * L'utilisateur scrolle la PAGE → le contenu DEDANS la coque défile (translaté)
+   * jusqu'à épuisement, puis l'accès à la section suivante se libère.
+   */
   frame?: boolean;
 }
 
-/** Masque les sections non voulues : le template réel ignore les tableaux vides et la bio absente. */
+/** Masque les sections non voulues : le template réel ignore les sections vides et la bio absente. */
 function trimFixture(fixture: TemplateProps, variant: "full" | "detailed"): TemplateProps {
   if (variant === "full") return fixture;
   return { ...fixture, portfolio: [], socials: [], testimonials: [] };
@@ -38,32 +43,74 @@ function TemplateContent({
   );
 }
 
-export function ProfileMockup({
+function FrameMockup({
   demo,
-  variant = "full",
-  frame = false,
-}: ProfileMockupProps) {
-  if (frame) {
-    return (
-      /* Coque mobile réaliste : SEUL élément qui porte la sémantique (mockup décoratif → aria-hidden sur tout ce qui est dedans). */
+  variant,
+}: {
+  demo: Template;
+  variant: "full" | "detailed";
+}) {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [overflow, setOverflow] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [vh, setVh] = useState(800);
+
+  useEffect(() => {
+    setVh(window.innerHeight);
+    const onResize = () => setVh(window.innerHeight);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    const measure = () => {
+      if (!contentRef.current) return;
+      const screenH = window.innerWidth >= 640 ? 688 : 644;
+      setOverflow(Math.max(0, contentRef.current.offsetHeight - screenH));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (contentRef.current) ro.observe(contentRef.current);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+  }, [demo, variant]);
+
+  useEffect(() => {
+    if (overflow <= 0) return;
+    let raf = 0;
+    const update = () => {
+      const el = sectionRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const sectionH = el.offsetHeight;
+      const travel = sectionH - vh;
+      if (travel <= 0) return;
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
+      setOffset(progress * overflow);
+    };
+    const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); };
+  }, [overflow, vh]);
+
+  const screenW = "w-[300px] sm:w-[320px]";
+  const screenH = "h-[644px] sm:h-[688px]";
+  const sectionH = overflow > 0 ? vh + overflow + 120 : vh;
+
+  return (
+    <div ref={sectionRef} className="relative" style={{ height: sectionH }}>
+      {/* Coque : SEUL élément qui porte la sémantique (mockup décoratif → aria-hidden sur tout ce qui est dedans). */}
       <div
         role="img"
         aria-label="Aperçu du profil Bizko dans une coque de téléphone mobile"
-        className="relative mx-auto"
+        className="sticky top-24 mx-auto w-fit"
       >
-        {/* Lumière ambiante */}
-        <div aria-hidden className="absolute -inset-6 bg-gradient-to-b from-accent/[0.07] via-transparent to-transparent rounded-[3rem] blur-3xl pointer-events-none" />
-
-        {/* Boutons latéraux de la coque (décoratifs : silencieux, volume, power) */}
-        <div aria-hidden className="absolute -left-[7px] top-[14%] h-7 w-[3px] rounded-l bg-gray-800" />
-        <div aria-hidden className="absolute -left-[7px] top-[23%] h-11 w-[3px] rounded-l bg-gray-800" />
-        <div aria-hidden className="absolute -left-[7px] top-[33%] h-11 w-[3px] rounded-l bg-gray-800" />
-        <div aria-hidden className="absolute -right-[7px] top-[25%] h-14 w-[3px] rounded-r bg-gray-800" />
-
         {/* Corps du téléphone */}
-        <div className="relative bg-gray-900 rounded-[2.75rem] p-[12px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3),0_0_40px_rgba(255,107,53,0.06)]">
-          {/* Écran : dimensions FIXES (set explicite), contenu qui scrolle DEDANS */}
-          <div className="relative bg-white rounded-[2rem] overflow-hidden w-[300px] h-[644px] sm:w-[320px] sm:h-[688px]">
+        <div className="relative bg-gray-900 rounded-[2.75rem] p-[12px] shadow-[0_8px_40px_-8px_rgba(0,0,0,0.25)]">
+          <div className={`relative bg-white rounded-[2rem] overflow-hidden ${screenW} ${screenH}`}>
             {/* Barre de statut + encoche */}
             <div className="relative flex items-center justify-between px-5 pt-3 pb-1 bg-white">
               <span aria-hidden className="text-[11px] font-semibold text-gray-900">9:41</span>
@@ -81,14 +128,29 @@ export function ProfileMockup({
               </div>
             </div>
 
-            {/* Contenu scrollable : le scroll se fait ici, la coque ne bouge pas */}
-            <div aria-hidden className="h-[calc(100%-3rem)] overflow-y-auto overscroll-contain">
+            {/* Contenu : plus haut que l'écran, translaté par le scroll de la PAGE (scroll-jack). */}
+            <div
+              ref={contentRef}
+              aria-hidden
+              className="will-change-transform"
+              style={{ transform: `translate3d(0, ${-offset}px, 0)` }}
+            >
               <TemplateContent demo={demo} variant={variant} />
             </div>
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
+}
+
+export function ProfileMockup({
+  demo,
+  variant = "full",
+  frame = false,
+}: ProfileMockupProps) {
+  if (frame) {
+    return <FrameMockup demo={demo} variant={variant} />;
   }
 
   return (

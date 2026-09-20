@@ -32,7 +32,7 @@ export default async function Home() {
       <LandingNavbar />
 
       {/* ─── HERO ─── */}
-      <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden">
+      <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-clip">
         {/* Gradient background */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -128,12 +128,10 @@ export default async function Home() {
             </p>
           </SectionReveal>
 
-          {/* Mockup - below everything */}
-          <SectionReveal delay={300}>
-            <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px] mockup-float transition-transform duration-500">
-              <ProfileMockup demo="studio" frame />
-            </div>
-          </SectionReveal>
+          {/* Mockup scroll-jack (hors SectionReveal : transform brise sticky) */}
+          <div className="mt-14 sm:mt-20 mx-auto max-w-[340px] sm:max-w-[380px]">
+            <ProfileMockup demo="studio" frame />
+          </div>
         </div>
       </section>
 

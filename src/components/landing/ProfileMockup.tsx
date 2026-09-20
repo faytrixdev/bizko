@@ -67,7 +67,9 @@ function FrameMockup({
     const measure = () => {
       if (!contentRef.current) return;
       const screenH = window.innerWidth >= 640 ? 688 : 644;
-      setOverflow(Math.max(0, contentRef.current.offsetHeight - screenH));
+      const statusBarH = 44;
+      const available = screenH - statusBarH;
+      setOverflow(Math.max(0, contentRef.current.offsetHeight - available));
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -106,12 +108,12 @@ function FrameMockup({
       <div
         role="img"
         aria-label="Aperçu du profil Bizko dans une coque de téléphone mobile"
-        className="sticky top-24 mx-auto w-fit"
+        className="sticky top-16 sm:top-20 mx-auto w-fit"
       >
         {/* Corps du téléphone */}
         <div className="relative bg-gray-900 rounded-[2.75rem] p-[12px] shadow-[0_8px_40px_-8px_rgba(0,0,0,0.25)]">
           <div className={`relative bg-white rounded-[2rem] overflow-hidden ${screenW} ${screenH}`}>
-            {/* Barre de statut + encoche */}
+            {/* Barre de statut + encoche (fixe, ne défile pas) */}
             <div className="relative flex items-center justify-between px-5 pt-3 pb-1 bg-white">
               <span aria-hidden className="text-[11px] font-semibold text-gray-900">9:41</span>
               {/* Dynamic Island */}
@@ -128,7 +130,7 @@ function FrameMockup({
               </div>
             </div>
 
-            {/* Contenu : plus haut que l'écran, translaté par le scroll de la PAGE (scroll-jack). */}
+            {/* Contenu : translaté par le scroll de la PAGE (scroll-jack). */}
             <div
               ref={contentRef}
               aria-hidden

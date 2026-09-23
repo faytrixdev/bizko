@@ -52,3 +52,7 @@ tsconfig.tsbuildinfo
 
 # progression locale d'installation (jamais commitée)
 INSTALLATION-AGENTS.local.md
+
+# prospection / SEO / autorite (PII prospects : noms, emails, LinkedIn) - jamais commitees
+.protocole/
+prospects/

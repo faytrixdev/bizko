@@ -48,10 +48,10 @@ const P = {
   minimalCouple: "/portfolios-demo/minimal-couple.jpg", // cérémonie africaine
   minimalKiss: "/portfolios-demo/minimal-kiss.jpg", // couple nigérian
   basketWeave: "/portfolios-demo/portfolio-baskets.jpg", // paniers tissés géométriques
-  artisanBowls: "/portfolios-demo/portfolio-bowls.png", // bols artisanaux marocains
+  artisanBowls: "/portfolios-demo/portfolio-bowls.jpg", // bols artisanaux marocains
   afroInterior: "/portfolios-demo/portfolio-interior.jpg", // intérieur art africain
   bwPortrait1: "/portfolios-demo/studio-portrait1.jpg", // portrait N&B
-  bwPortrait2: "/portfolios-demo/studio-portrait2.png", // portrait N&B Lagos
+  bwPortrait2: "/portfolios-demo/studio-portrait2.jpg", // portrait N&B Lagos
   bwPortrait3: "/portfolios-demo/studio-portrait3.jpg", // portrait N&B dramatique
   bambooDecor: "/portfolios-demo/edito-bamboo.jpg", // déco bambou chaleureuse
   moroccanCeiling: "/portfolios-demo/edito-moroccan.jpg", // plafond marocain

@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { buildDigestEmail, type DigestEmailInput } from "@/lib/digest/renderEmail";
+import { signUnsubToken } from "@/lib/digest/signature";
 import { getMessages } from "@/lib/i18n/messages";
 import { currentWeekKey } from "@/lib/digest/week";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const RESEND_FROM = process.env.RESEND_FROM;
 const CRON_SECRET = process.env.CRON_SECRET;
+const DIGEST_SECRET = process.env.DIGEST_SECRET;
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -58,7 +61,13 @@ export async function GET(req: NextRequest) {
       top_service_name: string | null;
       top_service_count: number;
       has_activity: boolean;
-    };
+    } | null;
+
+    if (!digest) {
+      console.error(`[cron-digest] Empty digest payload for ${profileId}`);
+      errors++;
+      continue;
+    }
 
     if (!digest.has_activity) {
       skipped++;
@@ -76,7 +85,17 @@ export async function GET(req: NextRequest) {
       continue;
     }
 
-    const unsubUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/digest/unsubscribe?profile=${profileId}&sig=${""}`;
+    // Lien de désabonnement signé (HMAC profile_id) : attendu par
+    // /api/digest/unsubscribe sous la forme ?profileId=&token=.
+    if (!DIGEST_SECRET) {
+      console.error("[cron-digest] DIGEST_SECRET not configured; skipping sends to avoid broken unsub links");
+      errors++;
+      continue;
+    }
+    const unsubUrl = `${SITE_URL}/api/digest/unsubscribe?profileId=${encodeURIComponent(profileId)}&token=${signUnsubToken(profileId, DIGEST_SECRET)}`;
+
+    const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: profileId });
+    const pro = Boolean(isPro);
 
     const emailInput: DigestEmailInput = {
       displayName: profile.display_name,
@@ -85,9 +104,10 @@ export async function GET(req: NextRequest) {
       prevViews: digest.prev_views,
       prevClicks: digest.prev_clicks,
       topServiceName: digest.top_service_name || undefined,
-      suggestion: !digest.has_activity ? null : { type: "pro_cta", label: d.proCtaLabel, url: d.proCtaUrl },
+      // CTA Pro uniquement pour les membres Free.
+      suggestion: pro ? null : { type: "pro_cta", label: d.proCtaLabel, url: d.proCtaUrl },
       unsubUrl,
-      isPro: false,
+      isPro: pro,
       messages,
     };
 

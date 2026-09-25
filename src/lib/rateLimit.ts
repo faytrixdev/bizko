@@ -15,10 +15,25 @@ interface RateLimitOptions {
 const buckets = new Map<string, Bucket>();
 
 function clientKey(request: NextRequest): string {
+  // `x-real-ip` est posé par la plateforme (Vercel) et n'est pas influençable
+  // par le client. À défaut, on prend le DERNIER maillon de `x-forwarded-for`
+  // (le plus proche de notre infrastructure) : le premier maillon peut être
+  // forgé par l'appelant, ce qui permettait de contourner la limite en
+  // changeant d'en-tête à chaque requête.
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
   const forwarded = request.headers.get("x-forwarded-for");
-  const realIp = request.headers.get("x-real-ip");
-  const ip = forwarded?.split(",")[0]?.trim() || realIp?.trim() || "unknown";
-  return ip;
+  if (forwarded) {
+    const hops = forwarded
+      .split(",")
+      .map((h) => h.trim())
+      .filter(Boolean);
+    const last = hops[hops.length - 1];
+    if (last) return last;
+  }
+
+  return "unknown";
 }
 
 function sweep(): void {

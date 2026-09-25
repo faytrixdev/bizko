@@ -1,5 +1,17 @@
+import type { Metadata } from "next";
 import { getServerMessages } from "@/lib/i18n/messages-server";
 import { LegalHeader } from "@/components/LegalHeader";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const msg = await getServerMessages();
+  return {
+    title: msg.legal.termsTitle,
+    description: msg.legal.termsIntro,
+    alternates: {
+      canonical: "https://bizko.pro/legal/terms",
+    },
+  };
+}
 
 export default async function TermsPage() {
   const msg = await getServerMessages();

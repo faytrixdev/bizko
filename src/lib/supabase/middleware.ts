@@ -52,7 +52,11 @@ export async function updateSession(request: NextRequest) {
   const publicApiRoutes = [
     "/api/check-username",
     "/api/track-click",
+    "/api/track-view",
     "/api/supabase-health",
+    "/api/webhooks/",
+    "/api/digest/unsubscribe",
+    "/api/cron/",
   ];
   const isBlogRoute = pathname === "/blog" || pathname.startsWith("/blog/");
   const isPublicRoute = publicRoutes.includes(pathname) || isBlogRoute;
@@ -172,23 +176,29 @@ export async function updateSession(request: NextRequest) {
       }
     }
 
-    // Admin protection
+    // Admin protection. `is_admin` n'est plus lisible via SELECT (privilèges
+    // colonne, migration 20260923000008) : on passe par la RPC dédiée, qui
+    // ne répond que pour l'appelant lui-même.
     if (pathname.startsWith("/admin")) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("is_admin")
-        .eq("id", user.id)
-        .single();
+      const { data: isAdmin } = await supabase.rpc("is_admin");
 
-      if (!profile || !profile.is_admin) {
+      if (isAdmin !== true) {
         return new NextResponse("Forbidden", { status: 403 });
       }
     }
   } else {
+    // Fail-closed sur les routes API : seules les routes listées dans
+    // publicApiRoutes sont accessibles sans session (elles portent leurs
+    // propres contrôles : signature, CRON_SECRET, HMAC ou rate-limit).
+    // Toute nouvelle route API est ainsi protégée par défaut au lieu d'être
+    // publique par oubli.
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+
     if (
       !isPublicRoute &&
       !isRootPublicProfile &&
-      !pathname.startsWith("/api/") &&
       !pathname.startsWith("/legal") &&
       pathname !== "/" &&
       pathname !== "/demo"

@@ -8,18 +8,23 @@ vi.mock("@/lib/supabase/client", () => ({
   isSupabaseConfigured: () => true,
 }));
 
+const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+vi.stubGlobal("fetch", fetchMock);
+
 afterEach(() => {
   cleanup();
+  fetchMock.mockClear();
 });
 
 function mockClient(rpc: ReturnType<typeof vi.fn>) {
   return { rpc } as unknown as ReturnType<typeof createClient>;
 }
 
-// ViewTracker records BOTH a legacy "record_event" and a platform
-// "track_analytics_event" per mount, so each mount produces 2 rpc calls.
-function recordEventCalls(rpc: ReturnType<typeof vi.fn>) {
-  return rpc.mock.calls.filter(([name]) => name === "record_event");
+// ViewTracker records the legacy view counter via POST /api/track-view
+// (record_event is no longer callable with the anon key) and a platform
+// "track_analytics_event" rpc per mount.
+function trackViewCalls() {
+  return fetchMock.mock.calls.filter(([url]) => url === "/api/track-view");
 }
 
 describe("ViewTracker", () => {
@@ -30,12 +35,12 @@ describe("ViewTracker", () => {
     const { container } = render(<ViewTracker profileId="p1" />);
 
     expect(container).toBeEmptyDOMElement();
-    const calls = recordEventCalls(rpc);
+    const calls = trackViewCalls();
     expect(calls).toHaveLength(1);
-    expect(calls[0]).toEqual([
-      "record_event",
-      { p_profile_id: "p1", p_type: "view" },
-    ]);
+    expect(calls[0][1]).toMatchObject({
+      method: "POST",
+      body: JSON.stringify({ profileId: "p1" }),
+    });
   });
 
   it("records only one event per mount (per profile)", () => {
@@ -45,7 +50,7 @@ describe("ViewTracker", () => {
     const { rerender } = render(<ViewTracker profileId="p1" />);
     rerender(<ViewTracker profileId="p1" />);
 
-    expect(recordEventCalls(rpc)).toHaveLength(1);
+    expect(trackViewCalls()).toHaveLength(1);
   });
 
   it("records a new event after a fresh mount (different profile)", () => {
@@ -56,11 +61,10 @@ describe("ViewTracker", () => {
     unmount();
     render(<ViewTracker profileId="p2" />);
 
-    const calls = recordEventCalls(rpc);
+    const calls = trackViewCalls();
     expect(calls).toHaveLength(2);
-    expect(calls[1]).toEqual([
-      "record_event",
-      { p_profile_id: "p2", p_type: "view" },
-    ]);
+    expect(calls[1][1]).toMatchObject({
+      body: JSON.stringify({ profileId: "p2" }),
+    });
   });
 });

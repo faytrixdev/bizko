@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: msg.explore.title,
     description: msg.explore.description,
     alternates: {
-      canonical: "/explore",
+      canonical: "https://bizko.pro/explore",
     },
   };
 }

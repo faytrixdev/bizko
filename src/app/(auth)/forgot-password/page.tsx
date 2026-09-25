@@ -8,6 +8,10 @@ import { authErrorText } from "@/components/auth/errorMessage";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function ForgotPassword() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || undefined;

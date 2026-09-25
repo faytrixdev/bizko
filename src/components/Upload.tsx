@@ -50,8 +50,10 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
           }
         } catch { /* ignore cleanup failure */ }
       }
-    } catch (err) {
-      alert(String(err));
+    } catch {
+      // Jamais de message d'erreur brut (noms de tables/colonnes PostgREST)
+      // affiché à l'utilisateur.
+      alert(t("upload.uploadError"));
     } finally {
       setUploading(false);
     }
@@ -98,8 +100,8 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
         throw insertErr;
       }
       router.refresh();
-    } catch (err) {
-      alert(String(err));
+    } catch {
+      alert(t("upload.uploadError"));
     } finally {
       setUploading(false);
     }
@@ -174,17 +176,44 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
         alert(t("upload.videoUploadError"));
         return;
       }
-      const { uploadUrl, publicUrl, key } = await signRes.json();
+      const { uploadUrl, publicUrl, key, contentType } = await signRes.json();
       r2Key = key;
+      const signedContentType: string =
+        typeof contentType === "string" ? contentType : "video/mp4";
 
       let putRes: Response;
       try {
-        putRes = await fetch(uploadUrl, { method: "PUT", body: compressedVideo });
+        // L'en-tête doit correspondre EXACTEMENT au Content-Type figé dans la
+        // signature présignée, sinon S3/R2 rejette la requête.
+        putRes = await fetch(uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": signedContentType },
+          body: compressedVideo,
+        });
       } catch {
         if (r2Key) await deleteR2OnServer(r2Key);
         throw new Error("R2 upload failed");
       }
       if (!putRes.ok) throw new Error("R2 PUT failed");
+
+      // La taille annoncée avant signature est déclarative : on fait vérifier
+      // l'objet réellement stocké (HEAD côté serveur). Un fichier hors limites
+      // ou de type non conforme est supprimé par l'API.
+      const verifyRes = await fetch("/api/r2/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key }),
+      });
+      if (!verifyRes.ok) {
+        r2Key = null; // l'objet a déjà été supprimé côté serveur
+        const verifyBody = (await verifyRes.json().catch(() => ({}))) as { error?: string };
+        if (verifyBody.error === "size_too_large") {
+          alert(t("upload.videoTooLarge"));
+          return;
+        }
+        alert(t("upload.videoUploadError"));
+        return;
+      }
 
       const compressedThumb = await imageCompression(thumbFile, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
       thumbPath = `${profileId}/${Date.now()}-thumb.webp`;
@@ -204,8 +233,8 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
         throw insertErr;
       }
       router.refresh();
-    } catch (err) {
-      alert(String(err));
+    } catch {
+      alert(t("upload.videoUploadError"));
     } finally {
       setUploading(false);
       setStatus("");
@@ -230,8 +259,8 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
     try {
       const thumbFile = await extractVideoThumbnail(videoFile);
       await startVideoUpload(videoFile, thumbFile);
-    } catch (err) {
-      alert(String(err));
+    } catch {
+      alert(t("upload.videoUploadError"));
     }
   };
 

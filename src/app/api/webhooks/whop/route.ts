@@ -176,4 +176,5 @@ async function applyEvent(event: WhopEvent): Promise<void> {
   }
 }
 
-export { applyEvent, resolveProfileId };
+// Pas d'exports additionnels : Next.js n'autorise que les handlers HTTP
+// (GET/POST/…) et la config de route dans un route.ts.

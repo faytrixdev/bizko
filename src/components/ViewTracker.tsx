@@ -12,19 +12,20 @@ export function ViewTracker({ profileId }: { profileId: string }) {
 
     console.log("[ViewTracker] tracking profile_viewed for", profileId);
 
+    // Compteur de vues legacy : via une route serveur. `record_event` n'est
+    // plus exécutable avec la clé anon (migration 20260923000005) : l'appel
+    // direct permettait de gonfler les compteurs sans limite.
+    void fetch("/api/track-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileId }),
+    }).catch(() => {
+      // Suivi non bloquant : une erreur réseau ne doit rien casser.
+    });
+
     if (!isSupabaseConfigured()) return;
 
     const supabase = createClient();
-
-    // Legacy event tracking
-    void supabase
-      .rpc("record_event", { p_profile_id: profileId, p_type: "view" })
-      .then(
-        () => {},
-        (err: unknown) => {
-          console.error("view tracking failed:", err);
-        }
-      );
 
     // Analytics platform tracking
     void supabase

@@ -35,9 +35,11 @@ async function fetchPublicProfileData(
 ): Promise<PublicProfileData | null> {
   const supabase = createPublicClient();
 
+  // Colonnes explicites : aligné sur la liste blanche de la migration
+  // 20260923000008 (is_admin/commission_rate sont illisibles via PostgREST).
   const { data: profile } = await supabase
     .from("profiles")
-    .select("*")
+    .select("id, username, display_name, tagline, bio, avatar_url, city, country, phone_e164, email_public, template, locale, is_public, category, is_partner, partner_code, created_at, updated_at")
     .eq("username", username.toLowerCase())
     .eq("is_public", true)
     .single();

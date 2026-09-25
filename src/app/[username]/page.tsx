@@ -3,9 +3,22 @@ import type { Metadata } from "next";
 import { getMessages } from "@/lib/i18n/messages";
 import { resolveServerLocale } from "@/lib/i18n/messages-server";
 import { getCachedPublicProfileData } from "@/lib/supabase/queries";
+import { createPublicClient } from "@/lib/supabase/public-client";
 import { ProfileView } from "./ProfileView";
 
 type Props = { params: Promise<{ username: string }> };
+
+export async function generateStaticParams() {
+  const supabase = createPublicClient();
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("is_public", true)
+    .order("updated_at", { ascending: false })
+    .limit(500);
+
+  return (profiles ?? []).map((p) => ({ username: p.username }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params;

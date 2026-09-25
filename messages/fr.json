@@ -489,6 +489,7 @@
     "compressing": "Compression de la vidéo...",
     "uploading": "Upload vers le stockage...",
     "videoUploadError": "Erreur lors de l'upload de la vidéo.",
+    "uploadError": "Erreur lors de l'upload. Réessaie.",
     "videosLimit": "Limite de vidéos atteinte. Passe à Bizko Pro pour en ajouter plus.",
     "portfolioLimit": "Limite du portfolio atteinte. Passe à Bizko Pro pour en ajouter plus."
   },

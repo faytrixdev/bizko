@@ -489,6 +489,7 @@
     "compressing": "Compressing video...",
     "uploading": "Uploading to storage...",
     "videoUploadError": "Error uploading the video.",
+    "uploadError": "Upload failed. Please try again.",
     "videosLimit": "Video limit reached. Upgrade to Bizko Pro to add more.",
     "portfolioLimit": "Portfolio limit reached. Upgrade to Bizko Pro to add more."
   },

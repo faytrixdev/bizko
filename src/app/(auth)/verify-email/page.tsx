@@ -8,6 +8,10 @@ import { resendConfirmationEmail } from "../actions";
 import { useI18n } from "@/lib/i18n/provider";
 import { useCleanUrl } from "@/lib/hooks";
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 const COOLDOWN_SECONDS = 60;
 
 type ResendState = { error: string } | { success: string };

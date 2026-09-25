@@ -48,7 +48,7 @@ type PulseArgs = {
   rawBody: string;
 };
 
-export async function applyPulse({ deliveryId, event, payload }: PulseArgs): Promise<void> {
+async function applyPulse({ deliveryId, event, payload }: PulseArgs): Promise<void> {
   const admin = createAdminClient();
 
   if (deliveryId) {

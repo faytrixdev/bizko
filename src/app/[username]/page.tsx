@@ -28,7 +28,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!data) return { title: `${msg.notFound.title} | Bizko` };
 
-  const { profile } = data;
+  const { profile, services, portfolio } = data;
+  const hasContent = profile.bio?.trim() || services.length > 0 || portfolio.length > 0;
+
+  if (!hasContent) {
+    return {
+      title: `${profile.display_name} - ${profile.tagline} | Bizko`,
+      robots: { index: false, follow: true },
+      alternates: {
+        canonical: `https://bizko.pro/${profile.username}`,
+      },
+    };
+  }
+
   const title = `${profile.display_name} - ${profile.tagline} | Bizko`;
   const description =
     profile.bio?.slice(0, 155) ||

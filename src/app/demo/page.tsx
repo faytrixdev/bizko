@@ -1,33 +1,27 @@
 import type { Metadata } from "next";
-import { getServerMessages } from "@/lib/i18n/messages-server";
-import { DemoClient } from "./DemoClient";
+import DemoClient from "./DemoClient";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const msg = await getServerMessages();
-  return {
-    title: msg.demo?.title ?? "Démo Bizko — Aperçu des templates",
-    description:
-      msg.demo?.description ??
-      "Découvrez les templates Bizko : minimal, portfolio, édito, urban. Testez l'affichage de vos services, prix et portfolio avant de créer votre profil.",
-    alternates: {
-      canonical: "https://bizko.pro/demo",
-    },
-    openGraph: {
-      title: msg.demo?.title ?? "Démo Bizko — Aperçu des templates",
-      description:
-        msg.demo?.description ??
-        "Découvrez les templates Bizko : minimal, portfolio, édito, urban. Testez l'affichage de vos services, prix et portfolio avant de créer votre profil.",
-      url: "https://bizko.pro/demo",
-      type: "website",
-    },
-    twitter: {
-      card: "summary",
-      title: msg.demo?.title ?? "Démo Bizko",
-      description:
-        msg.demo?.description ?? "Aperçu des templates Bizko pour indépendants.",
-    },
-  };
-}
+const TITLE = "Démo Bizko — Aperçu des templates";
+const DESCRIPTION =
+  "Découvrez les templates Bizko : minimal, portfolio, édito, urban. Testez l'affichage de vos services, vos prix et votre portfolio avant de créer votre page.";
+const CANONICAL = "https://bizko.pro/demo";
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: CANONICAL },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: CANONICAL,
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+};
 
 export default function DemoPage() {
   return <DemoClient />;

@@ -5,8 +5,8 @@ import { LegalHeader } from "@/components/LegalHeader";
 export async function generateMetadata(): Promise<Metadata> {
   const msg = await getServerMessages();
   return {
-    title: msg.legal.privacyTitle,
-    description: msg.legal.privacyIntro,
+    title: msg.legal.privacyMetaTitle,
+    description: msg.legal.privacyMetaDescription,
     alternates: {
       canonical: "https://bizko.pro/legal/privacy",
     },

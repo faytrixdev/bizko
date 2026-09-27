@@ -4,6 +4,7 @@ import { AdminMobileMenu } from "./AdminMobileMenu";
 
 export const metadata: Metadata = {
   title: "Bizko Analytics",
+  robots: { index: false, follow: false },
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

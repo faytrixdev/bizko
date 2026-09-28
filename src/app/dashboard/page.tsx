@@ -8,7 +8,20 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+  // Colonnes explicites : `select("*")` échoue avec un 42501 depuis la migration
+  // 20260923000008, qui retire is_admin/commission_rate des droits SELECT. Le
+  // profile revenait null, la page partait en `redirect("/onboarding")` et le
+  // client rendait un écran vide au lieu de suivre la redirection.
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, username, display_name, tagline, bio, city, country, phone_e164, email_public, template, locale, avatar_url, is_partner, partner_code")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError) {
+    throw new Error(`dashboard: profil illisible (${profileError.code})`, { cause: profileError });
+  }
+
   if (!profile) redirect("/onboarding");
 
   const [

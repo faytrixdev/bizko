@@ -1,5 +1,5 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
-import Image from "next/image";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { SocialIcon } from "@/components/socialIcons";
 import { Avatar, formatTestimonialDate } from "./shared";
 import type { TemplateProps } from "./types";
@@ -63,13 +63,8 @@ export function PortfolioTemplate({ profile, services, portfolio, socials, testi
       {portfolio.length > 0 && (
         <section className="mt-10">
           <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">{msg.portfolio}</h2>
-          <div data-testid="portfolio" className="mt-3 grid grid-cols-3 gap-2.5">
-            {portfolio.map((p, i) => (
-              <div key={p.id} className={`relative overflow-hidden rounded-2xl border border-stone-200 bg-white ${i % 4 === 0 ? "col-span-3 aspect-[16/10]" : "aspect-square"}`}>
-                <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 100vw, 420px" className="object-cover" />
-              </div>
-            ))}
-          </div>
+<PortfolioGrid items={portfolio} variant="portfolio" />
+
         </section>
       )}
 

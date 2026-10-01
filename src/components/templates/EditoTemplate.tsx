@@ -1,5 +1,5 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
-import Image from "next/image";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { SocialIcon } from "@/components/socialIcons";
 import { Avatar, formatTestimonialDate } from "./shared";
 import type { TemplateProps } from "./types";
@@ -65,16 +65,8 @@ export function EditoTemplate({ profile, services, portfolio, socials, testimoni
       {portfolio.length > 0 && (
         <section className="mt-10">
           <h2 style={SERIF} className="text-xl italic text-[#1C1917]">{msg.portfolio}</h2>
-          <div data-testid="portfolio" className="mt-5 grid grid-cols-2 gap-4">
-            {portfolio.map((p) => (
-              <figure key={p.id} className="text-center">
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#EFE9DD]">
-                  <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 50vw, 300px" className="object-cover" />
-                </div>
-                {p.title && <figcaption style={SERIF} className="mt-2 text-sm italic text-[#1C1917]/70">{p.title}</figcaption>}
-              </figure>
-            ))}
-          </div>
+<PortfolioGrid items={portfolio} variant="edito" captionStyle={SERIF} />
+
         </section>
       )}
 

@@ -1,5 +1,5 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
-import Image from "next/image";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { SocialIcon } from "@/components/socialIcons";
 import { Avatar, formatTestimonialDate } from "./shared";
 import type { TemplateProps } from "./types";
@@ -60,13 +60,8 @@ export function StudioTemplate({ profile, services, portfolio, socials, testimon
       {portfolio.length > 0 && (
         <section className="mt-10">
           <h2 style={CONDENSED} className="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">{msg.portfolio}</h2>
-          <div data-testid="portfolio" className="mt-4 grid grid-cols-2 gap-2">
-            {portfolio.map((p) => (
-              <div key={p.id} className="relative aspect-[3/4] overflow-hidden rounded-xl bg-gray-100 grayscale transition-all duration-300 hover:grayscale-0">
-                <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 50vw, 300px" className="object-cover" />
-              </div>
-            ))}
-          </div>
+<PortfolioGrid items={portfolio} variant="studio" />
+
         </section>
       )}
 

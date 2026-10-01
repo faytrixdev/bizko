@@ -1,5 +1,6 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
 import Image from "next/image";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { SocialIcon } from "@/components/socialIcons";
 import { Star } from "lucide-react";
 import { initials, formatTestimonialDate } from "./shared";
@@ -75,13 +76,8 @@ export function UrbanTemplate({ profile, services, portfolio, socials, testimoni
       {portfolio.length > 0 && (
         <section className="mt-9">
           <h2 style={DISPLAY} className="text-sm font-bold text-gray-900">{msg.portfolio}</h2>
-          <div data-testid="portfolio" className="mt-4 grid grid-cols-2 gap-2.5">
-            {portfolio.map((p, i) => (
-              <div key={p.id} className={`relative overflow-hidden rounded-3xl ${i % 3 === 0 ? "col-span-2 aspect-[16/10]" : "aspect-square"}`}>
-                <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 50vw, 300px" className="object-cover" />
-              </div>
-            ))}
-          </div>
+<PortfolioGrid items={portfolio} variant="urban" />
+
         </section>
       )}
 

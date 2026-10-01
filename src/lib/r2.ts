@@ -1,5 +1,12 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { isAllowedContentType, type R2MediaKind } from "./mediaKinds";
+
+/**
+ * S3/R2 primitives. Server-only: this module constructs the AWS SDK client, so
+ * it must never be imported from a client component. The pure media-kind
+ * policy lives in `mediaKinds.ts` precisely so client code can use it safely.
+ */
 
 const accountId = process.env.R2_ACCOUNT_ID!;
 const bucket = process.env.R2_BUCKET!;
@@ -16,21 +23,12 @@ const client = new S3Client({
 export const R2_CONFIG = {
   // Absolute safety ceiling for a single video object (>= highest plan limit).
   maxVideoSizeBytes: 500 * 1024 * 1024,
+  // Bucket-level ceiling for image objects. The real cap is the portfolio
+  // image limit (see `imageSizeLimitBytes`); this only backstops a client
+  // that lies about its own output before signing.
+  maxImageSizeBytes: 8 * 1024 * 1024,
   presignExpiresSec: 600,
 };
-
-/**
- * Types MIME acceptés pour les vidéos de portfolio. Le type est validé côté
- * serveur avant signature (une URL présignée PUT fige le Content-Type) : sans
- * cela, un client pouvait déposer du `text/html` dans le bucket public servi
- * par media.bizko.pro.
- */
-export const VIDEO_CONTENT_TYPE = "video/mp4";
-export const ALLOWED_VIDEO_CONTENT_TYPES: readonly string[] = ["video/mp4", "video/webm"];
-
-export function isAllowedVideoContentType(value: string): boolean {
-  return ALLOWED_VIDEO_CONTENT_TYPES.includes(value);
-}
 
 export function isS3Configured(): boolean {
   return Boolean(accountId && bucket && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY);
@@ -40,9 +38,13 @@ export function isValidR2Config(): boolean {
   return isS3Configured() && Boolean(process.env.R2_PUBLIC_URL);
 }
 
-export async function createPresignedPut(key: string, contentType: string): Promise<string | null> {
+export async function createPresignedPut(
+  key: string,
+  contentType: string,
+  kind: R2MediaKind
+): Promise<string | null> {
   if (!isS3Configured()) return null;
-  if (!isAllowedVideoContentType(contentType)) return null;
+  if (!isAllowedContentType(kind, contentType)) return null;
   const command = new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType });
   return getSignedUrl(client, command, { expiresIn: R2_CONFIG.presignExpiresSec });
 }
@@ -67,7 +69,7 @@ export async function headR2Object(
 /**
  * Nombre d'objets sous un préfixe (ex: `portfolio/<uid>/`). Permet de plafonner
  * les fichiers orphelins : sans cela, un utilisateur pouvait téléverser des
- * vidéos sans jamais créer la ligne `portfolio_items` correspondante, et donc
+ * médias sans jamais créer la ligne `portfolio_items` correspondante, et donc
  * sans jamais atteindre la limite de son plan.
  */
 export async function countR2Objects(prefix: string, hardCap = 5000): Promise<number | null> {
@@ -114,3 +116,7 @@ export function keyFromPublicUrl(publicUrl: string): string | null {
   if (!publicUrl.startsWith(base + "/")) return null;
   return publicUrl.slice(base.length + 1);
 }
+
+// Re-exported so server routes have a single import for the storage surface,
+// while the pure policy stays importable from the client.
+export * from "./mediaKinds";

@@ -16,8 +16,11 @@ export function DashboardHeader({ username, isPro }: DashboardHeaderProps) {
   const { t } = useI18n();
 
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)] border-b border-gray-100/60">
-      <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between">
+      <header className="bg-white">
+      {/* Variante 1 : le header vit dans la colonne de 640px au lieu d'être
+          une barre pleine largeur. Le filet s'arrête à 640px, donc il n'y a
+          plus deux largeurs en concurrence sur la page. */}
+      <div className="max-w-[640px] mx-auto px-4 h-14 flex items-center justify-between border-b border-gray-100">
         <Link href="/" className="inline-flex">
           <Logo size="md" />
         </Link>

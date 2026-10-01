@@ -76,6 +76,42 @@ export function videoSizeLimitBytes(plan: Plan): number {
   return plan === "pro" ? 500 * 1024 * 1024 : 200 * 1024 * 1024;
 }
 
+/**
+ * Portfolio photo ceiling.
+ *
+ * The old pipeline crushed every upload to 0.3 MB / 1200 px WebP, which threw
+ * away the detail a photographer needs when zooming into a full-screen view:
+ * the grid showed a ~q65 file and the lightbox showed the same destroyed file
+ * at 1:1. 2560 px on the long edge is roughly 2.3x what a desktop viewport can
+ * display in the lightbox at 85vh, so zooming never reveals an upscaled file,
+ * and WebP at that size stays under 3.5 MB.
+ */
+export const PORTFOLIO_IMAGE_MAX_MB = 3.5;
+export const PORTFOLIO_IMAGE_MAX_DIMENSION_PX = 2560;
+
+/** Hard server-side cap for any image object. The client compresses to the value above. */
+export function imageSizeLimitBytes(): number {
+  return Math.round(PORTFOLIO_IMAGE_MAX_MB * 1024 * 1024);
+}
+
+/**
+ * Grid-sized images that are never opened full-screen: video thumbnails and
+ * avatars. They stay small on purpose — nothing zooms into them.
+ */
+export const THUMBNAIL_MAX_MB = 0.3;
+export const THUMBNAIL_MAX_DIMENSION_PX = 1200;
+export const AVATAR_MAX_MB = 0.3;
+export const AVATAR_MAX_DIMENSION_PX = 800;
+
+/** Hard server-side caps for grid-sized images, kept separate from the photo cap. */
+export function thumbnailSizeLimitBytes(): number {
+  return Math.round(THUMBNAIL_MAX_MB * 1024 * 1024);
+}
+
+export function avatarSizeLimitBytes(): number {
+  return Math.round(AVATAR_MAX_MB * 1024 * 1024);
+}
+
 export interface ComparisonRow {
   /** i18n key for the row label, e.g. "pricing.services" */
   labelKey: string;

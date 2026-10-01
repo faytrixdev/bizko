@@ -9,6 +9,7 @@ import { SectionReveal } from "@/components/landing/SectionReveal";
 import { ProfileMockup } from "@/components/landing/ProfileMockup";
 import { ExampleCard } from "@/components/landing/ExampleCard";
 import { FaqItem } from "@/components/landing/FaqItem";
+import { getLimits } from "@/lib/plans";
 
 const EXAMPLE_DEMOS: Template[] = ["portfolio", "edito", "urban"];
 const IDENTITY_DEMO = DEMO_FIXTURES.obsidienne;
@@ -26,6 +27,26 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const msg = await getServerMessages();
+  const free = getLimits("free");
+  const pro = getLimits("pro");
+  const cap = (n: number) => (Number.isFinite(n) ? String(n) : msg.pricing.unlimited);
+
+  const freeFeatures = [
+    { label: msg.landing.pricingFeatureServices, value: cap(free.services) },
+    { label: msg.landing.pricingFeaturePortfolio, value: cap(free.portfolioItems) },
+    { label: msg.landing.pricingFeatureTestimonials, value: cap(free.publishedTestimonials) },
+    { label: msg.landing.pricingFreeWhatsapp, value: null },
+    { label: msg.landing.pricingFreeLink, value: null },
+  ];
+
+  const proFeatures = [
+    { label: msg.landing.pricingFeatureServices, value: cap(pro.services) },
+    { label: msg.landing.pricingFeaturePortfolio, value: cap(pro.portfolioItems) },
+    { label: msg.landing.pricingFeatureTestimonials, value: cap(pro.publishedTestimonials) },
+    { label: msg.landing.pricingFeatureVideos, value: cap(pro.videos) },
+    { label: msg.landing.pricingFeatureBranding, value: null },
+    { label: msg.landing.pricingProSupport, value: null },
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -686,6 +707,172 @@ export default async function Home() {
               </SectionReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ─── PRICING ─── */}
+      <section id="tarifs" className="py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          <SectionReveal>
+            <div className="text-center max-w-lg mx-auto mb-14">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight font-display text-gray-900">
+                {msg.landing.pricingSectionTitle}
+              </h2>
+              <p className="mt-4 text-gray-500 leading-7">
+                {msg.landing.pricingSectionDesc}
+              </p>
+            </div>
+          </SectionReveal>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Gratuit */}
+            <SectionReveal delay={100}>
+              <div className="h-full rounded-2xl border border-gray-100/80 bg-white p-6 sm:p-8 flex flex-col">
+                <h3 className="font-display text-xl font-semibold tracking-tight text-gray-900">
+                  {msg.landing.pricingFreeName}
+                </h3>
+                <div className="mt-5">
+                  <span className="text-3xl sm:text-4xl font-bold font-display text-gray-900">
+                    {msg.landing.pricingFreePrice}
+                  </span>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {msg.landing.pricingFreeNote}
+                  </p>
+                </div>
+                <ul className="mt-6 flex-1 flex flex-col gap-3">
+                  {freeFeatures.map((f) => (
+                    <li
+                      key={f.label}
+                      className="flex items-start gap-2.5 text-sm text-gray-600"
+                    >
+                      <svg
+                        className="mt-0.5 w-4 h-4 shrink-0 text-accent"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2.5}
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                      <span>
+                        {f.label}
+                        {f.value && (
+                          <>
+                            {" "}
+                            <strong className="font-semibold text-gray-900">
+                              {f.value}
+                            </strong>
+                          </>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup"
+                  className="mt-8 w-full rounded-full border border-gray-300 py-3 text-center text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+                >
+                  {msg.landing.pricingFreeCta}
+                </Link>
+              </div>
+            </SectionReveal>
+
+            {/* Pro */}
+            <SectionReveal delay={180}>
+              <div className="h-full rounded-2xl border border-accent/20 bg-white p-6 sm:p-8 flex flex-col ring-1 ring-accent/10 shadow-[0_4px_24px_rgba(255,107,53,0.08)]">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-display text-xl font-semibold tracking-tight text-gray-900">
+                    {msg.landing.pricingProName}
+                  </h3>
+                  <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white">
+                    {msg.landing.pricingProTag}
+                  </span>
+                </div>
+                <div className="mt-5">
+                  <span className="text-3xl sm:text-4xl font-bold font-display text-gray-900">
+                    {msg.pricing.monthlyAmount}
+                  </span>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {msg.landing.pricingPerMonth} &middot; {msg.landing.pricingOr}{" "}
+                    <strong className="font-semibold text-gray-900">
+                      {msg.pricing.yearlyAmount}
+                    </strong>{" "}
+                    {msg.landing.pricingPerYear}
+                  </p>
+                </div>
+                <ul className="mt-6 flex-1 flex flex-col gap-3">
+                  {proFeatures.map((f) => (
+                    <li
+                      key={f.label}
+                      className="flex items-start gap-2.5 text-sm text-gray-600"
+                    >
+                      <svg
+                        className="mt-0.5 w-4 h-4 shrink-0 text-accent"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2.5}
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m4.5 12.75 6 6 9-13.5"
+                        />
+                      </svg>
+                      <span>
+                        {f.label}
+                        {f.value && (
+                          <>
+                            {" "}
+                            <strong className="font-semibold text-gray-900">
+                              {f.value}
+                            </strong>
+                          </>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup?next=/pricing"
+                  className="mt-8 w-full rounded-full bg-accent hover:bg-accent-hover py-3 text-center text-sm font-semibold text-white shadow-md shadow-[#FF6B35]/25 transition-all duration-200"
+                >
+                  {msg.landing.pricingProCta}
+                </Link>
+              </div>
+            </SectionReveal>
+          </div>
+
+          <SectionReveal delay={240}>
+            <div className="mt-10 text-center">
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-gray-900 hover:text-accent transition-colors group"
+              >
+                {msg.landing.pricingSeeAll}
+                <svg
+                  className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12l-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </Link>
+              <p className="mt-3 text-xs text-gray-400">
+                {msg.landing.pricingPaymentNote}
+              </p>
+            </div>
+          </SectionReveal>
         </div>
       </section>
 

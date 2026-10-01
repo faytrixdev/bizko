@@ -1,5 +1,5 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
-import Image from "next/image";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { SocialIcon } from "@/components/socialIcons";
 import { Avatar, formatTestimonialDate } from "./shared";
 import type { TemplateProps } from "./types";
@@ -69,16 +69,8 @@ export function ObsidienneTemplate({ profile, services, portfolio, socials, test
       {portfolio.length > 0 && (
         <section className="mt-10">
           <h2 style={CONDENSED} className="text-xs font-bold uppercase tracking-[0.25em] text-white/50">{msg.portfolio}</h2>
-          <div data-testid="portfolio" className="mt-4 grid grid-cols-6 gap-2">
-            {portfolio.map((p, i) => {
-              const span = i % 4 === 0 ? "col-span-4" : i % 4 === 1 ? "col-span-2" : "col-span-3";
-              return (
-                <div key={p.id} className={`relative aspect-square overflow-hidden rounded-xl border border-white/10 ${span}`}>
-                  <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 50vw, 320px" className="object-cover" />
-                </div>
-              );
-            })}
-          </div>
+<PortfolioGrid items={portfolio} variant="obsidienne" />
+
         </section>
       )}
 

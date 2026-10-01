@@ -3,6 +3,10 @@ import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
   images: {
+    // Next 16 requires every quality to be allow-listed; the default is [75].
+    // Grids serve q75, and the lightbox serves q90 for photos the user chose to
+    // open full-screen, so both must be declared or the optimizer 400s.
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "https",
@@ -18,6 +22,15 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
+  },
+  async redirects() {
+    return [
+      // Page removed: the duplicate pricing page drifted out of sync with
+      // /pricing (annual price, mobile money, free-tier limits). The permanent
+      // redirect (308) keeps the link equity instead of serving a 404 on an
+      // indexed URL.
+      { source: "/pricing-africa", destination: "/pricing", permanent: true },
+    ];
   },
   async headers() {
     return [

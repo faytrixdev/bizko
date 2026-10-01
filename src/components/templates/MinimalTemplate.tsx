@@ -1,7 +1,7 @@
 import { buildWaLink, buildServiceWaMessage } from "@/lib/utils";
 import { Star } from "lucide-react";
-import Image from "next/image";
 import { SocialIcon } from "@/components/socialIcons";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { Avatar, formatTestimonialDate } from "./shared";
 import type { TemplateProps } from "./types";
 
@@ -72,13 +72,7 @@ export function MinimalTemplate({ profile, services, portfolio, socials, testimo
       {portfolio.length > 0 && (
         <section className="mt-12">
           <h2 className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{msg.portfolio}</h2>
-          <div data-testid="portfolio" className="mt-4 grid grid-cols-3 gap-2">
-            {portfolio.map((p) => (
-              <div key={p.id} className="relative aspect-square overflow-hidden rounded-2xl">
-                <Image src={p.thumbnail_url || p.media_url} alt={p.title || ""} fill sizes="(max-width: 768px) 33vw, 200px" className="object-cover" />
-              </div>
-            ))}
-          </div>
+          <PortfolioGrid items={portfolio} variant="minimal" />
         </section>
       )}
 

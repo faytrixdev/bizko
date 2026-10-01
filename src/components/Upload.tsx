@@ -2,23 +2,24 @@
 import { createClient } from "@/lib/supabase/client";
 import { useRef, useState } from "react";
 import { useRouter, redirect } from "next/navigation";
+// Aliased: `cropToSquare` below uses the DOM `Image` constructor to measure and
+// re-render the file on a canvas, which is a different thing entirely.
+import NextImage from "next/image";
 import imageCompression from "browser-image-compression";
 import { useI18n } from "@/lib/i18n/provider";
 import { validateVideoFile, validateVideoDuration } from "@/lib/portfolioVideo";
-import { videoDurationLimitSec, videoSizeLimitBytes } from "@/lib/plans";
+import {
+  AVATAR_MAX_DIMENSION_PX,
+  AVATAR_MAX_MB,
+  PORTFOLIO_IMAGE_MAX_DIMENSION_PX,
+  PORTFOLIO_IMAGE_MAX_MB,
+  THUMBNAIL_MAX_DIMENSION_PX,
+  THUMBNAIL_MAX_MB,
+  videoDurationLimitSec,
+  videoSizeLimitBytes,
+} from "@/lib/plans";
 import { compressVideo } from "@/lib/clientTranscoder";
-
-async function deleteR2OnServer(key: string) {
-  try {
-    await fetch("/api/r2/delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key }),
-    });
-  } catch {
-    // cleanup is best-effort; ignore failures
-  }
-}
+import { deleteR2OnServer, R2UploadError, uploadR2Object } from "@/lib/clientUpload";
 
 export function AvatarUpload({ profileId, currentUrl }: { profileId: string; currentUrl?: string | null }) {
   const { t } = useI18n();
@@ -33,26 +34,39 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
     try {
       const oldUrl = currentUrl;
       const squared = await cropToSquare(file);
-      const compressed = await imageCompression(squared, { maxSizeMB: 0.3, maxWidthOrHeight: 800, useWebWorker: true });
-      const path = `${profileId}/avatar-${Date.now()}.jpg`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
-      if (upErr) throw upErr;
-      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      const { error: dbErr } = await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", profileId);
+      const compressed = await imageCompression(squared, {
+        maxSizeMB: AVATAR_MAX_MB,
+        maxWidthOrHeight: AVATAR_MAX_DIMENSION_PX,
+        useWebWorker: true,
+      });
+
+      // Avatars move to R2 with the rest of the media. The object key is
+      // derived server-side from the authenticated user, never from
+      // `profileId` passed by the client.
+      const { publicUrl } = await uploadR2Object(compressed, "avatar", "avatar");
+
+      const { error: dbErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: publicUrl })
+        .eq("id", profileId);
       if (dbErr) throw dbErr;
       router.refresh();
-      // Best-effort: remove the previous avatar from storage to avoid orphans.
+
+// Best-effort: drop the previous avatar so the bucket does not
+      // accumulate one object per change. The server resolves the URL to a key
+      // and checks ownership, so a legacy Supabase-hosted avatar is simply
+      // left alone (the resolve yields no key and the delete is a no-op).
       if (oldUrl) {
-        try {
-          const base = supabase.storage.from("avatars").getPublicUrl("").data.publicUrl.replace(/\/$/, "");
-          if (oldUrl.startsWith(base)) {
-            await supabase.storage.from("avatars").remove([oldUrl.slice(base.length + 1)]);
-          }
-        } catch { /* ignore cleanup failure */ }
+        await deleteR2OnServer({ publicUrl: oldUrl }, "avatar");
       }
-    } catch {
-      // Jamais de message d'erreur brut (noms de tables/colonnes PostgREST)
-      // affiché à l'utilisateur.
+
+    } catch (err) {
+      // Never surface a raw storage/database error (PostgREST and S3 both leak
+      // table and column names) to the user.
+      if (err instanceof R2UploadError && err.code === "unauthorized") {
+        try { redirect("/login"); } catch { /* NEXT_REDIRECT flows through */ }
+        return;
+      }
       alert(t("upload.uploadError"));
     } finally {
       setUploading(false);
@@ -61,7 +75,15 @@ export function AvatarUpload({ profileId, currentUrl }: { profileId: string; cur
 
   return (
     <div className="flex items-center gap-3">
-      {currentUrl ? <img src={currentUrl} alt="avatar" className="h-12 w-12 rounded-full object-cover border border-gray-200" /> : <div className="h-12 w-12 rounded-full bg-gray-100" />}
+      {currentUrl ? (
+        <NextImage
+          src={currentUrl}
+          alt="avatar"
+          width={48}
+          height={48}
+          className="h-12 w-12 rounded-full object-cover border border-gray-200"
+        />
+      ) : <div className="h-12 w-12 rounded-full bg-gray-100" />}
       <label className="text-sm font-medium border border-gray-200 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 text-gray-700">
         {uploading ? "Upload..." : t("upload.changeAvatar")}
         <input type="file" accept="image/*" className="hidden" onChange={onChange} disabled={uploading} />
@@ -85,24 +107,64 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
 
   const uploadImage = async (file: File) => {
     setUploading(true);
+    setStatus(t("upload.compressingImage"));
+    let uploadedKey: string | null = null;
     try {
-      const compressed = await imageCompression(file, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
-      const safeName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9-_]/g, "-");
-      const path = `${profileId}/${Date.now()}-${safeName}.webp`;
-      const { error: upErr } = await supabase.storage.from("portfolio").upload(path, compressed, { contentType: "image/webp" });
-      if (upErr) throw upErr;
-      const { data } = supabase.storage.from("portfolio").getPublicUrl(path);
-      const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
+      // 2560 px / 3.5 MB: the previous 1200 px / 0.3 MB WebP pass destroyed
+      // detail permanently, which is why photos uploaded before this change
+      // can never be recovered - only re-uploaded from the original.
+      const compressed = await imageCompression(file, {
+        maxSizeMB: PORTFOLIO_IMAGE_MAX_MB,
+        maxWidthOrHeight: PORTFOLIO_IMAGE_MAX_DIMENSION_PX,
+        useWebWorker: true,
+        fileType: "image/webp",
+        initialQuality: 0.92,
+      });
+
+      setStatus(t("upload.uploading"));
+      const { publicUrl, key } = await uploadR2Object(compressed, "image", file.name);
+      uploadedKey = key;
+
+      const { data: existing } = await supabase
+        .from("portfolio_items")
+        .select("position")
+        .eq("profile_id", profileId)
+        .order("position", { ascending: false })
+        .limit(1);
       const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
-      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: data.publicUrl, media_type: "image", thumbnail_url: null, position: nextPos });
+
+      const { error: insertErr } = await supabase
+        .from("portfolio_items")
+        .insert({
+          profile_id: profileId,
+          media_url: publicUrl,
+          media_type: "image",
+          thumbnail_url: null,
+          position: nextPos,
+        });
       if (insertErr) {
-        await supabase.storage.from("portfolio").remove([path]);
+        await deleteR2OnServer({ key }, "image");
+        uploadedKey = null;
         throw insertErr;
       }
       router.refresh();
-    } catch {
+    } catch (err) {
+      // The size the browser reports after compressing is not binding: the
+      // server re-reads the real object and rejects it. Map its error code to a
+      // translated message, never surface a raw Supabase/S3 error.
+      if (err instanceof R2UploadError) {
+        if (err.code === "unauthorized") {
+          try { redirect("/login"); } catch { /* NEXT_REDIRECT flows through */ }
+          return;
+        }
+        if (err.code === "size_too_large") { alert(t("upload.imageTooLarge")); return; }
+        if (err.code === "images_limit" || err.code === "portfolio_limit") { alert(t("upload.imagesLimit")); return; }
+        alert(t("upload.imageUploadError"));
+        return;
+      }
       alert(t("upload.uploadError"));
     } finally {
+      void uploadedKey;
       setUploading(false);
     }
   };
@@ -154,7 +216,8 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
     setUploading(true);
     setStatus(t("upload.compressing"));
     let r2Key: string | null = null;
-    let thumbPath: string | null = null;
+    let thumbKey: string | null = null;
+    let thumbPublicUrl: string | null = null;
     try {
       const compressedVideo = await compressVideo(videoFile);
 
@@ -162,7 +225,7 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
       const signRes = await fetch("/api/r2/sign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ size: compressedVideo.size, name: videoFile.name, contentType: compressedVideo.type || "video/mp4" }),
+        body: JSON.stringify({ kind: "video", size: compressedVideo.size, name: videoFile.name, contentType: compressedVideo.type || "video/mp4" }),
       });
       if (!signRes.ok) {
         const { error } = await signRes.json();
@@ -191,7 +254,7 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
           body: compressedVideo,
         });
       } catch {
-        if (r2Key) await deleteR2OnServer(r2Key);
+        if (r2Key) await deleteR2OnServer({ key: r2Key }, "video");
         throw new Error("R2 upload failed");
       }
       if (!putRes.ok) throw new Error("R2 PUT failed");
@@ -202,7 +265,7 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
       const verifyRes = await fetch("/api/r2/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key }),
+        body: JSON.stringify({ kind: "video", key }),
       });
       if (!verifyRes.ok) {
         r2Key = null; // l'objet a déjà été supprimé côté serveur
@@ -215,25 +278,30 @@ export function PortfolioUpload({ profileId, isPro }: { profileId: string; isPro
         return;
       }
 
-      const compressedThumb = await imageCompression(thumbFile, { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true, fileType: "image/webp" });
-      thumbPath = `${profileId}/${Date.now()}-thumb.webp`;
-      const { error: tErr } = await supabase.storage.from("portfolio").upload(thumbPath, compressedThumb, { contentType: "image/webp" });
-      if (tErr) {
-        if (r2Key) await deleteR2OnServer(r2Key);
-        throw tErr;
-      }
-      const { data: tData } = supabase.storage.from("portfolio").getPublicUrl(thumbPath);
+      const compressedThumb = await imageCompression(thumbFile, {
+        maxSizeMB: THUMBNAIL_MAX_MB,
+        maxWidthOrHeight: THUMBNAIL_MAX_DIMENSION_PX,
+        useWebWorker: true,
+        fileType: "image/webp",
+      });
+      const thumb = await uploadR2Object(compressedThumb, "thumb", "thumb");
+      thumbKey = thumb.key;
+      thumbPublicUrl = thumb.publicUrl;
 
       const { data: existing } = await supabase.from("portfolio_items").select("position").eq("profile_id", profileId).order("position", { ascending: false }).limit(1);
       const nextPos = existing && existing[0] ? existing[0].position + 1 : 0;
-      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: publicUrl, media_type: "video", thumbnail_url: tData.publicUrl, position: nextPos });
+      const { error: insertErr } = await supabase.from("portfolio_items").insert({ profile_id: profileId, media_url: publicUrl, media_type: "video", thumbnail_url: thumbPublicUrl, position: nextPos });
       if (insertErr) {
-        if (thumbPath) await supabase.storage.from("portfolio").remove([thumbPath]);
-        if (r2Key) await deleteR2OnServer(r2Key);
+        if (thumbKey) await deleteR2OnServer({ key: thumbKey }, "thumb");
+        if (r2Key) await deleteR2OnServer({ key: r2Key }, "video");
         throw insertErr;
       }
       router.refresh();
-    } catch {
+    } catch (err) {
+      if (err instanceof R2UploadError && err.code === "unauthorized") {
+        try { redirect("/login"); } catch { /* NEXT_REDIRECT flows through */ }
+        return;
+      }
       alert(t("upload.videoUploadError"));
     } finally {
       setUploading(false);

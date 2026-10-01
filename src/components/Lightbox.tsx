@@ -42,6 +42,9 @@ export function Lightbox({ items, startIndex = 0, onClose }: LightboxProps) {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={items[current]?.alt || "Aperçu du média"}
       className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center"
       onClick={onClose}
     >
@@ -94,10 +97,18 @@ export function Lightbox({ items, startIndex = 0, onClose }: LightboxProps) {
             className="max-h-[85vh] w-auto max-w-[90vw] rounded-lg"
           />
         ) : (
-          <img
+          <Image
+            // Remount per slide so the optimizer re-requests the new photo.
+            key={items[current].src}
             src={items[current].src}
             alt={items[current].alt}
-            className="max-h-[85vh] w-auto object-contain rounded-lg"
+            width={2560}
+            height={1707}
+            // The reason this lightbox was worth adding: q90 at near-full
+            // viewport, instead of the q75 the grid already served.
+            quality={90}
+            sizes="90vw"
+            className="max-h-[85vh] max-w-[90vw] w-auto h-auto object-contain rounded-lg"
           />
         )}
         {items[current].alt && (

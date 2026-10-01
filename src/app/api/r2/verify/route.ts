@@ -1,57 +1,59 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import {
-  isAllowedVideoContentType,
-  R2_CONFIG,
   deleteR2Object,
   headR2Object,
+  isAllowedContentType,
+  isOwnedR2Key,
+  isR2MediaKind,
+  type R2MediaKind,
 } from "@/lib/r2";
-import { getLimits, videoSizeLimitBytes } from "@/lib/plans";
+import { mediaSpec } from "@/lib/mediaPolicy";
+import { getLimits, type Plan } from "@/lib/plans";
+
+interface VerifyBody {
+  kind?: unknown;
+  key?: unknown;
+}
 
 /**
- * Vérification post-upload d'une vidéo R2.
+ * Post-upload verification of one R2 object.
  *
- * Une URL présignée PUT ne permet pas de borner la taille du corps envoyé :
- * `size` transmis par le navigateur avant signature est déclaratif. On relit
- * donc l'objet réel (HEAD) et on supprime immédiatement tout fichier qui
- * dépasse la limite du plan ou dont le Content-Type n'est pas celui imposé.
+ * A presigned PUT does not bound the request body: the `size` the browser
+ * declared before signing is advisory. The real object is therefore re-read
+ * (HEAD) and anything over the plan limit, or carrying a Content-Type outside
+ * the kind's allowlist, is deleted immediately.
  */
 export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  let body: { key?: string };
+  let body: VerifyBody;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
 
-  // Même contrôle que /api/r2/delete : clé confinée au dossier du membre.
-  const prefix = `portfolio/${user.id}/`;
-  if (
-    typeof body.key !== "string" ||
-    !body.key.startsWith(prefix) ||
-    body.key.includes("..")
-  ) {
+  const kind: R2MediaKind = isR2MediaKind(body.kind) ? body.kind : "video";
+
+  // Confine the key to the member's own folder for this kind: keeps one member
+  // from deleting another's objects, and rejects traversal.
+  if (!isOwnedR2Key(kind, user.id, body.key)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-
   const key = body.key;
 
   const head = await headR2Object(key);
-  if (!head) {
-    return NextResponse.json({ error: "not_found" }, { status: 404 });
-  }
+  if (!head) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
   const { data: isPro } = await supabase.rpc("is_pro", { p_profile_id: user.id });
-  const plan = isPro ? "pro" : "free";
-  const limits = getLimits(plan);
-  const sizeLimit = Math.min(videoSizeLimitBytes(plan), R2_CONFIG.maxVideoSizeBytes);
-  const expectedTotal = limits.videos;
+  const plan: Plan = isPro ? "pro" : "free";
+  const spec = mediaSpec(kind);
+  const sizeLimit = spec.sizeLimitBytes(plan);
 
-  if (head.contentType !== null && !isAllowedVideoContentType(head.contentType)) {
+  if (head.contentType !== null && !isAllowedContentType(kind, head.contentType)) {
     await deleteR2Object(key);
     return NextResponse.json({ error: "invalid_content_type" }, { status: 415 });
   }
@@ -61,13 +63,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "size_too_large" }, { status: 413 });
   }
 
-  // Le quota de vidéos est déjà contrôlé avant signature (lignes
-  // portfolio_items + objets R2 présents) : rien à faire ici, on renvoie la
-  // taille réelle pour information.
+  // The row/orphan caps were enforced before signing; the real size is returned
+  // so the caller can report what was actually stored.
+  const cap = spec.rowCap ? spec.rowCap(getLimits(plan)) : null;
   return NextResponse.json({
     ok: true,
+    kind,
     size: head.size,
     contentType: head.contentType,
-    videoLimit: Number.isFinite(expectedTotal) ? expectedTotal : null,
+    sizeLimit,
+    itemCap: cap,
   });
 }
